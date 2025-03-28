@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>New Booking</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+        crossorigin="anonymous"></script>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.14.1/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+  <script src="https://code.jquery.com/ui/1.14.1/jquery-ui.js"></script>
+
+
+<script>
+ $( function() {
+    $( "#guest_name" ).autocomplete({
+      source: "/guests/autocomplete",
+      minLength: 3,
+      select: function(event, ui) {
+        this.value = ui.item.label;
+        $("#guest").val(ui.item.value);
+        return false;
+      }
+
+    });
+
+    $( "#room_number" ).autocomplete({
+      source: "/rooms/autocomplete",
+      minLength: 1,
+      select: function(event, ui) {
+        this.value = ui.item.label;
+        $("#room").val(ui.item.value);
+        calculateTotal();
+        return false;
+      }
+
+    });
+});
+</script>
+
+</head>
+
+<body>
+    <div th:insert="~{index :: menu('booking')}"></div>
+    <div class="row">
+        <div class="col-11">
+            <h2>New Booking</h2>
+            <form action="#" th:action="@{/bookings/ins}" th:object="${booking}" method="post">
+                <div th:if="${error}" class="alert alert-danger" role="alert">
+                    <span th:text="${error}"></span>
+                </div>
+                
+                <div class="mb-3">
+                    <label for="guest_name" class="form-label">Guest</label>
+                    <input type="text" class="form-control" id="guest_name" placeholder="Search guest..." required>
+                    <input type="hidden" id="guest" th:field="*{guest.id}"/>
+                </div>
+
+                <div class="mb-3">
+                    <label for="checkIn" class="form-label">Check In</label>
+                    <input type="date" class="form-control" id="checkIn" th:field="*{checkIn}" required>
+                </div>
+
+                <div class="mb-3">
+                    <label for="checkOut" class="form-label">Check Out</label>
+                    <input type="date" class="form-control" id="checkOut" th:field="*{checkOut}" required>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Check-in Time</label>
+                    <div class="d-flex gap-3">
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="checkInTime" id="checkIn1000" value="10:00" th:field="*{checkInTime}" required>
+                            <label class="form-check-label" for="checkIn1000">10:00 AM</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="checkInTime" id="checkIn1500" value="15:00" th:field="*{checkInTime}" required>
+                            <label class="form-check-label" for="checkIn1500">3:00 PM</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Check-out Time</label>
+                    <div class="d-flex gap-3">
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="checkOutTime" id="checkOut1000" value="10:00" th:field="*{checkOutTime}" required>
+                            <label class="form-check-label" for="checkOut1000">10:00 AM</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="checkOutTime" id="checkOut1500" value="15:00" th:field="*{checkOutTime}" required>
+                            <label class="form-check-label" for="checkOut1500">3:00 PM</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label for="roomType" class="form-label">Room Type</label>
+                    <select class="form-select" id="roomType" required>
+                        <option value="">Select room type</option>
+                        <option th:each="type : ${T(hotel.booking.model.Room.RoomType).values()}"
+                                th:value="${type}"
+                                th:text="${type}">
+                        </option>
+                    </select>
+                </div>
+
+                <div class="mb-3">
+                    <label for="room_number" class="form-label">Available Rooms</label>
+                    <select class="form-select" id="room_number" required disabled>
+                        <option value="">First select dates and room type...</option>
+                    </select>
+                    <input type="hidden" id="room" th:field="*{room.id}"/>
+                </div>
+
+                <div class="mb-3">
+                    <label for="price" class="form-label">Total Amount</label>
+                    <div class="input-group">
+                        <input type="text" class="form-control" id="price" th:field="*{totalAmount}" 
+                               readonly placeholder="Select dates and room">
+                        <div id="calculateSpinner" class="spinner-border text-primary" role="status" style="display: none;">
+                            <span class="visually-hidden">Calculating...</span>
+                        </div>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-primary">Save</button>
+                <a th:href="@{/}" class="btn btn-secondary">Cancel</a>
+            </form>
+        </div>
+    </div>
+
+    <!-- Add calculation script -->
+
+
+    <script>
+function calculateTotal() {
+    const checkIn = document.getElementById('checkIn').value;
+    const checkOut = document.getElementById('checkOut').value;
+    const roomId = document.getElementById('room').value;
+    const priceInput = document.getElementById('price');
+    const spinner = document.getElementById('calculateSpinner');
+
+    // Clear previous value
+    priceInput.value = '';
+    
+    // Only proceed if all required fields are filled
+    if (!checkIn || !checkOut || !roomId || roomId === "0") {
+        console.log('Not all required fields are filled:', { checkIn, checkOut, roomId });
+        return;
+    }
+
+    console.log('All fields present, calculating total for:', { roomId, checkIn, checkOut });
+    spinner.style.display = 'inline-block';
+
+    const url = `/bookings/calculate?roomId=${roomId}&checkIn=${checkIn}&checkOut=${checkOut}`;
+    console.log('Request URL:', url);
+
+    fetch(url)
+        .then(response => {
+            if (!response.ok) {
+                return response.json().then(data => {
+                    throw new Error(data.error || 'Network response was not ok');
+                });
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log('Calculation response:', data);
+            spinner.style.display = 'none';
+            if (data.error) {
+                throw new Error(data.error);
+            }
+            priceInput.value = parseFloat(data.totalAmount).toFixed(2);
+            console.log(`Calculated: ${data.nights} nights at ${data.pricePerNight} per night = ${data.totalAmount}`);
+        })
+        .catch(error => {
+            console.error('Calculation error:', error);
+            spinner.style.display = 'none';
+            priceInput.value = '';
+            alert('Error calculating price: ' + error.message);
+        });
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialize controls
+    const checkIn = document.getElementById('checkIn');
+    const checkOut = document.getElementById('checkOut');
+    const roomType = document.getElementById('roomType');
+    const roomSelect = document.getElementById('room_number');
+    const roomIdInput = document.getElementById('room');
+
+    function loadAvailableRooms() {
+        const checkInValue = checkIn.value;
+        const checkOutValue = checkOut.value;
+        const roomTypeValue = roomType.value;
+
+        // Reset room selection
+        roomSelect.disabled = true;
+        roomIdInput.value = '';
+        document.getElementById('price').value = '';
+
+        if (!checkInValue || !checkOutValue || !roomTypeValue) {
+            roomSelect.innerHTML = '<option value="">First select dates and room type...</option>';
+            return;
+        }
+
+        roomSelect.innerHTML = '<option value="">Loading available rooms...</option>';
+
+        console.log('Fetching available rooms:', { roomTypeValue, checkInValue, checkOutValue });
+
+        fetch(`/rooms/available?roomType=${roomTypeValue}&checkIn=${checkInValue}&checkOut=${checkOutValue}`)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(rooms => {
+                console.log('Received rooms:', rooms);
+                roomSelect.innerHTML = '<option value="">Select a room...</option>';
+                
+                if (rooms.length === 0) {
+                    roomSelect.innerHTML = '<option value="">No rooms available</option>';
+                    roomSelect.disabled = true;
+                    return;
+                }
+
+                rooms.forEach(room => {
+                    const option = document.createElement('option');
+                    option.value = room.id;
+                    option.textContent = `Room ${room.roomNumber} - ${room.price}€/night`;
+                    roomSelect.appendChild(option);
+                });
+                
+                roomSelect.disabled = false;
+            })
+            .catch(error => {
+                console.error('Error loading rooms:', error);
+                roomSelect.innerHTML = '<option value="">Error loading rooms</option>';
+                roomSelect.disabled = true;
+            });
+    }
+
+    // Add event listeners
+    checkIn.addEventListener('change', loadAvailableRooms);
+    checkOut.addEventListener('change', loadAvailableRooms);
+    roomType.addEventListener('change', loadAvailableRooms);
+    
+    roomSelect.addEventListener('change', function() {
+        roomIdInput.value = this.value;
+        if (this.value) {
+            calculateTotal();
+        }
+    });
+
+    // Remove jQuery autocomplete for room selection since we're using select
+    if ($.fn.autocomplete) {
+        $("#room_number").autocomplete("destroy");
+    }
+
+    // Add listeners for date changes
+    document.getElementById('checkIn').addEventListener('change', function() {
+        if (document.getElementById('room').value) {
+            calculateTotal();
+        }
+        loadAvailableRooms();
+    });
+
+    document.getElementById('checkOut').addEventListener('change', function() {
+        if (document.getElementById('room').value) {
+            calculateTotal();
+        }
+        loadAvailableRooms();
+    });
+});
+</script>
+</body>
+</html>

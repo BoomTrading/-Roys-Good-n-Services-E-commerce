@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Payments</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+        crossorigin="anonymous"></script>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+    <div th:insert="~{index :: menu('payments')}"></div>
+    <div class="container">
+        <h3>Payments</h3>
+        <table class="table table-striped table-responsive-md">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Amount Paid</th>
+                    <th>Payment Date</th>
+                    <th>Status</th>
+                    <th>Booking</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="payment : ${payments}">
+                    <td th:text="${payment.id}">1</td>
+                    <td th:text="${payment.amountPaid}">1000.00</td>
+                    <td th:text="${payment.paymentDate}">2023-01-01T12:00:00</td>
+                    <td th:text="${payment.status}">Paid</td>
+                    <td th:text="${payment.booking.id}">1</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>
