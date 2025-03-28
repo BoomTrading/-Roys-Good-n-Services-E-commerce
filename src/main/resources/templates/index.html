@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Bookings</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+        crossorigin="anonymous"></script>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+
+<body>
+    <div th:fragment="menu (activepage)" th:with="activepage='booking'">
+        <nav class="navbar navbar-expand-lg bg-primary" data-bs-theme="dark">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="/">HOTEL</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                    aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                        <li class="nav-item">
+                            <a class="nav-link" th:classappend="${activepage == 'booking' ? 'active': ''}"
+                                href="/">BOOKING</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" th:classappend="${activepage == 'rooms' ? 'active': ''}"
+                                th:href="@{/rooms/all}">ROOMS</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" th:classappend="${activepage == 'guests' ? 'active': ''}"
+                                th:href="@{/guests/all}">GUESTS</a>
+                        </li>
+                        <li class="nav-item">
+                            <form th:action="@{/logout}" method="post" style="margin: 0;">
+                                <button type="submit" class="nav-link" style="background: none; border: none;">LOG OUT</button>
+                            </form>
+                        </li>
+                    </ul>
+                    <form th:if="${activepage != 'rooms'}" class="d-flex ml-auto" role="search" th:action="@{/guests/search}" method="post">
+                        <input class="form-control me-2" type="search" placeholder="Search Clients" aria-label="Search"
+                            name="pattern" id="pattern">
+                        <button class="btn btn-secondary my-2 my-sm-0" type="submit">Search</button>
+                    </form>
+                </div>
+            </div>
+        </nav>
+        <hr>
+    </div>
+    <form th:action="@{/}" method="get">
+        <div class="row">
+            <div class="col-3">
+                <h3>BOOKINGS</h3>
+            </div>
+
+
+            <div class="col-2" style="text-align: right;">
+                <label for="sdate">Date:</label>
+                <input type="date" id="sdate" name="sdate" th:value="${sdate}" />
+            </div>
+            <div class="col-2">
+                <button class="btn btn-primary btn-sm mb-3" type="submit">Search</button>
+                <button class="btn  btn-secondary btn-sm mb-3" type="button"
+                    onclick="document.getElementById('sdate').value = ''">Reset</button>
+            </div>
+
+
+
+            <div class="col-5" style="text-align: right;">
+                <a th:href="@{/bookings/new}" class="btn btn-primary btn-sm">New Booking</a>
+            </div>
+        </div>
+    </form>
+
+
+
+    <table border="1" class="table table-striped table-responsive-md">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>checkIn</th>
+                <th>checkOut</th>
+                <th>Guest</th>
+                <th>Room</th>
+                <th>Type</th>
+                <th>Total</th>
+                <th colspan="2">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="reservation : ${bookings}">
+                <td th:text="${reservation.booking_id}">1</td>
+                <td th:text="${reservation.check_in}"></td>
+                <td th:text="${reservation.check_out}"></td>
+                <td th:text="${reservation.lastName +' '+ reservation.firstName}">Guest</td>
+                <td th:text="${reservation.room_number}">Room</td>
+                <td th:text="${reservation.type}">Single</td>
+                <td th:text="${reservation.price}">100.00</td>
+                <td>
+                    <a th:href="@{/bookings/edit/{id}(id=${reservation.booking_id})}"
+                        class="btn btn-primary btn-sm mb-3">Edit</a>
+                </td>
+                <td>
+                    <a th:href="@{/bookings/delete/{id}(id=${reservation.booking_id})}"
+                        class="btn btn-primary btn-sm mb-3">Del</a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</body>
+
+</html>
