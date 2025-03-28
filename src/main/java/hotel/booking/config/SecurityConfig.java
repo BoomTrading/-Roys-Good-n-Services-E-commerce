@@ -19,12 +19,13 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
             .csrf(csrf -> csrf.disable())
-            .userDetailsService(userDetailsService)  // Usa il servizio custom
+            .userDetailsService(userDetailsService)
             .authorizeHttpRequests(authorize -> authorize
+                // Public resources
                 .requestMatchers("/login", "/css/**", "/js/**", "/images/**").permitAll()
-                .requestMatchers("/rooms/new", "/rooms/delete/**").hasRole("ADMIN")
-                .requestMatchers("/guests/delete/**").hasRole("ADMIN")
-                .anyRequest().hasAnyRole("USER", "ADMIN"))
+                // Require authentication for everything else
+                .anyRequest().authenticated()
+            )
             .formLogin(form -> form
                 .loginPage("/login")
                 .defaultSuccessUrl("/", true)
