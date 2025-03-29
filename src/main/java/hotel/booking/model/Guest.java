@@ -10,6 +10,7 @@ public class Guest {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private int id;
     
     @Column(name = "firstName")
@@ -21,8 +22,8 @@ public class Guest {
     @Column(name = "email")
     private String email;
     
-    @Column(name = "password")
-    private String password; // Campo aggiunto per l'autenticazione
+    @Column(name = "password") // Campo per l'autenticazione
+    private String password;
     
     @Column(name = "phone")
     private String phone;
@@ -52,8 +53,8 @@ public class Guest {
     @Column(name = "identityCard")
     private String identityCard;
     
-    @Column(name = "role")
-    private String role; // Campo aggiunto per i ruoli (es. "USER", "ADMIN")
+    @Column(name = "role") // Campo per i ruoli (es. "USER", "ADMIN")
+    private String role;
     
     // Getter e Setter
     public int getId() { return id; }
