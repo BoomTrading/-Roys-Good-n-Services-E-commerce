@@ -20,15 +20,12 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        AdmUser user = admUserRepository.findByUsername(username);
-        if (user == null) {
-            throw new UsernameNotFoundException("User not found");
-        }
+        AdmUser user = admUserRepository.findByUsername(username)
+            .orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
-        // Usa la password dal database direttamente, senza crittografia
         return User.builder()
             .username(user.getUsername())
-            .password("{noop}" + user.getPassword()) // {noop} dice a Spring di non usare crittografia
+            .password("{noop}" + user.getPassword())
             .roles(user.getRoles().split(","))
             .build();
     }

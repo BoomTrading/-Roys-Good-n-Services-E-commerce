@@ -26,87 +26,91 @@ import hotel.booking.repository.GuestRepository;
 import hotel.booking.repository.RoomRepository;
 import hotel.booking.model.Booking;
 import hotel.booking.model.Guest;
-import hotel.booking.model.Room;;
+import hotel.booking.model.Room;
 
 @Controller
 public class BookingController {
     
-	@Autowired
-	private BookingRepository bookingRepository;
+    @Autowired
+    private BookingRepository bookingRepository;
 
-	@Autowired
-	private GuestRepository guestRepository;
+    @Autowired
+    private GuestRepository guestRepository;
 
-	@Autowired
-	private RoomRepository roomRepository;
+    @Autowired
+    private RoomRepository roomRepository;
 
     @GetMapping("/")
-	public String viewHomePage(@RequestParam(name="sdate", required=false, defaultValue="") String sdate,  Model model) {
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-		String strDate = LocalDateTime.now().minusDays(60).format(formatter);
+    public String viewHomePage(@RequestParam(name = "sdate", required = false, defaultValue = "") String sdate, Model model) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        String strDate = LocalDateTime.now().minusDays(60).format(formatter);
 
-		List<Map<String,Object>> bookings = bookingRepository.findAllWithGuestRoom(sdate.isEmpty()? "NOW() - INTERVAL 60 DAY" : sdate);
-		model.addAttribute("bookings", bookings);
-		model.addAttribute("sdate", sdate.isEmpty() ? strDate : sdate);
-		return "index";	
-	}
+        List<Map<String, Object>> bookings = bookingRepository.findAllWithGuestRoom(sdate.isEmpty() ? "NOW() - INTERVAL 60 DAY" : sdate);
+        model.addAttribute("bookings", bookings);
+        model.addAttribute("sdate", sdate.isEmpty() ? strDate : sdate);
+        return "index";
+    }
 
-	@GetMapping("/test")
-	@ResponseBody
-	public List<Map<String,Object>> test(@RequestParam(name="sdate", required=false, defaultValue="NOW() - INTERVAL 60 DAY") String sdate){
-		return bookingRepository.findAllWithGuestRoom(sdate);
-	}
+    @GetMapping("/test")
+    @ResponseBody
+    public List<Map<String, Object>> test(@RequestParam(name = "sdate", required = false, defaultValue = "NOW() - INTERVAL 60 DAY") String sdate) {
+        return bookingRepository.findAllWithGuestRoom(sdate);
+    }
 
-	@GetMapping("/login")
-	public String viewLogin() {
-		
-		return "login";	
-	}
+    @GetMapping("/login")
+    public String viewLogin() {
+        return "login";
+    }
 
-	@GetMapping("/bookings/new")
-	public String showNewForm(Model model) {
-		model.addAttribute("booking", new Booking());
-		return "newBooking";
-	}
+    @GetMapping("/bookings/new")
+    public String showNewForm(Model model) {
+        model.addAttribute("booking", new Booking());
+        return "newBooking";
+    }
 
-	@PostMapping("/bookings/ins")
-	public String save(@ModelAttribute("booking") Booking booking, Model model) {
+    @PostMapping("/bookings/ins")
+    public String save(@ModelAttribute("booking") Booking booking, Model model) {
         try {
             validateBookingDates(booking, 0);
             bookingRepository.save(booking);
+            model.addAttribute("successMessage", "Booking saved successfully!");
             return "redirect:/";
         } catch (IllegalArgumentException e) {
-            model.addAttribute("error", e.getMessage());
+            model.addAttribute("errorMessage", e.getMessage());
             model.addAttribute("booking", booking);
             return "newBooking";
         }
     }
 
-	@GetMapping("/bookings/edit/{id}")
-	public String showEditForm(@PathVariable("id") int id, Model model) {
-		if(bookingRepository.existsById(id)) {
-			Booking booking = bookingRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid booking Id:" + id));
-			int guestId = booking.getGuest().getId();
-			Guest guest = guestRepository.findById(guestId).orElseThrow(() -> new IllegalArgumentException("Invalid guest Id:" + id));
-			int roomId = booking.getRoom().getId();
-			Room room = roomRepository.findById(roomId).orElseThrow(() -> new IllegalArgumentException("Invalid room Id:" + id));
-			model.addAttribute("booking", booking);
-			model.addAttribute( "guestName", guest.getLastName() +" "+  guest.getFirstName());
-			model.addAttribute("roomNumber", room.getRoomNumber() +" - "+ room.getType());
-			return "editBooking";
-		}
-		else return "redirect:/";
-		
-	}
+    @GetMapping("/bookings/edit/{id}")
+    public String showEditForm(@PathVariable("id") int id, Model model) {
+        if (bookingRepository.existsById(id)) {
+            Booking booking = bookingRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid booking Id:" + id));
+            int guestId = booking.getGuest().getId();
+            Guest guest = guestRepository.findById(guestId)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid guest Id:" + guestId));
+            int roomId = booking.getRoom().getId();
+            Room room = roomRepository.findById(roomId)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid room Id:" + roomId));
+            model.addAttribute("booking", booking);
+            model.addAttribute("guestName", guest.getLastName() + " " + guest.getFirstName());
+            model.addAttribute("roomNumber", room.getRoomNumber() + " - " + room.getType());
+            return "editBooking";
+        } else {
+            return "redirect:/";
+        }
+    }
 
-	@PostMapping("/bookings/upd")
-	public String update(@ModelAttribute("booking") Booking booking, Model model) {
+    @PostMapping("/bookings/upd")
+    public String update(@ModelAttribute("booking") Booking booking, Model model) {
         try {
             validateBookingDates(booking, booking.getId());
             bookingRepository.save(booking);
+            model.addAttribute("successMessage", "Booking updated successfully!");
             return "redirect:/";
         } catch (IllegalArgumentException e) {
-            model.addAttribute("error", e.getMessage());
+            model.addAttribute("errorMessage", e.getMessage());
             model.addAttribute("booking", booking);
             Room room = booking.getRoom();
             Guest guest = booking.getGuest();
@@ -116,47 +120,59 @@ public class BookingController {
         }
     }
 
-	@GetMapping("/bookings/delete/{id}")
-	public String delete(@PathVariable("id") int id) {
-		if(bookingRepository.existsById(id)) 
-			bookingRepository.deleteById(id);;
-		return "redirect:/";
-	}
+    @GetMapping("/bookings/delete/{id}")
+    public String delete(@PathVariable("id") int id, Model model) {
+        if (bookingRepository.existsById(id)) {
+            bookingRepository.deleteById(id);
+            model.addAttribute("successMessage", "Booking deleted successfully!");
+        }
+        return "redirect:/";
+    }
 
-	@GetMapping("/bookings/calculate")
-	@ResponseBody
-	public ResponseEntity<?> calculateBookingPrice(
-	        @RequestParam int roomId,
-	        @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate checkIn,
-	        @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate checkOut) {
-	    
-	    System.out.println("Calculate request - roomId: " + roomId + ", checkIn: " + checkIn + ", checkOut: " + checkOut);
-	    
-	    try {
-	        Room room = roomRepository.findById(roomId)
-	            .orElseThrow(() -> new IllegalArgumentException("Room not found: " + roomId));
+    @GetMapping("/bookings/guest/{guestId}")
+    public String listBookingsByGuest(@PathVariable("guestId") int guestId, Model model) {
+        Guest guest = guestRepository.findById(guestId)
+            .orElseThrow(() -> new IllegalArgumentException("Invalid guest Id:" + guestId));
+        List<Booking> bookings = bookingRepository.findByGuest(guest);
+        model.addAttribute("bookings", bookings);
+        model.addAttribute("guestName", guest.getLastName() + " " + guest.getFirstName());
+        return "guestBookings";
+    }
 
-	        long nights = ChronoUnit.DAYS.between(checkIn, checkOut);
-	        if (nights <= 0) {
-	            throw new IllegalArgumentException("Check-out must be after check-in");
-	        }
+    @GetMapping("/bookings/calculate")
+    @ResponseBody
+    public ResponseEntity<?> calculateBookingPrice(
+            @RequestParam int roomId,
+            @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate checkIn,
+            @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate checkOut) {
+        
+        System.out.println("Calculate request - roomId: " + roomId + ", checkIn: " + checkIn + ", checkOut: " + checkOut);
+        
+        try {
+            Room room = roomRepository.findById(roomId)
+                .orElseThrow(() -> new IllegalArgumentException("Room not found: " + roomId));
 
-	        BigDecimal totalPrice = room.getPrice().multiply(BigDecimal.valueOf(nights));
-	        
-	        Map<String, Object> response = new HashMap<>();
-	        response.put("totalAmount", totalPrice);
-	        response.put("nights", nights);
-	        response.put("pricePerNight", room.getPrice());
-	        
-	        System.out.println("Calculation successful - total: " + totalPrice + ", nights: " + nights);
-	        return ResponseEntity.ok(response);
-	    } catch (Exception e) {
-	        System.err.println("Calculation error: " + e.getMessage());
-	        Map<String, Object> errorResponse = new HashMap<>();
-	        errorResponse.put("error", e.getMessage());
-	        return ResponseEntity.badRequest().body(errorResponse);
-	    }
-	}
+            long nights = ChronoUnit.DAYS.between(checkIn, checkOut);
+            if (nights <= 0) {
+                throw new IllegalArgumentException("Check-out must be after check-in");
+            }
+
+            BigDecimal totalPrice = room.getPrice().multiply(BigDecimal.valueOf(nights));
+            
+            Map<String, Object> response = new HashMap<>();
+            response.put("totalAmount", totalPrice);
+            response.put("nights", nights);
+            response.put("pricePerNight", room.getPrice());
+            
+            System.out.println("Calculation successful - total: " + totalPrice + ", nights: " + nights);
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            System.err.println("Calculation error: " + e.getMessage());
+            Map<String, Object> errorResponse = new HashMap<>();
+            errorResponse.put("error", e.getMessage());
+            return ResponseEntity.badRequest().body(errorResponse);
+        }
+    }
 
     private void validateBookingDates(Booking booking, int excludeBookingId) {
         if (booking.getCheckOut().isBefore(booking.getCheckIn())) {
@@ -171,5 +187,4 @@ public class BookingController {
             throw new IllegalArgumentException("Room is already booked for the selected dates");
         }
     }
-
 }

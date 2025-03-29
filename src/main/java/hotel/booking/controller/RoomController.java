@@ -1,12 +1,10 @@
 package hotel.booking.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.security.access.prepost.PreAuthorize;
 
 import hotel.booking.model.Autocomplete;
 import hotel.booking.model.Room;
@@ -18,6 +16,8 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import org.springframework.format.annotation.DateTimeFormat;
 
 @Controller
 @RequestMapping("/rooms")
@@ -51,33 +51,56 @@ public class RoomController {
 
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/ins")
-    public String saveRoom(@ModelAttribute("room") Room room) {
-        roomRepository.save(room);
-        return "redirect:/rooms/all";
+    public String saveRoom(@ModelAttribute("room") Room room, Model model) {
+        try {
+            if (roomRepository.existsByRoomNumber(room.getRoomNumber())) {
+                model.addAttribute("errorMessage", "Room number already exists.");
+                return "newRoom";
+            }
+            roomRepository.save(room);
+            model.addAttribute("successMessage", "Room saved successfully!");
+            return "redirect:/rooms/all";
+        } catch (Exception e) {
+            model.addAttribute("errorMessage", "Error saving room: " + e.getMessage());
+            return "newRoom";
+        }
     }
 
     @GetMapping("/edit/{id}")
     public String showEditRoomForm(@PathVariable("id") int id, Model model) {
-        Room room = roomRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid room Id:" + id));
+        Room room = roomRepository.findById(id)
+            .orElseThrow(() -> new IllegalArgumentException("Invalid room Id:" + id));
         model.addAttribute("room", room);
         return "editRoom";
     }
 
     @PostMapping("/upd")
-    public String updateRoom(@ModelAttribute("room") Room room) {
-        roomRepository.save(room);
-        return "redirect:/rooms/all";
+    public String updateRoom(@ModelAttribute("room") Room room, Model model) {
+        try {
+            if (roomRepository.existsByRoomNumberAndIdNot(room.getRoomNumber(), room.getId())) {
+                model.addAttribute("errorMessage", "Room number already exists.");
+                return "editRoom";
+            }
+            roomRepository.save(room);
+            model.addAttribute("successMessage", "Room updated successfully!");
+            return "redirect:/rooms/all";
+        } catch (Exception e) {
+            model.addAttribute("errorMessage", "Error updating room: " + e.getMessage());
+            return "editRoom";
+        }
     }
 
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/delete/{id}")
-    public String deleteRoom(@PathVariable("id") int id) {
+    public String deleteRoom(@PathVariable("id") int id, Model model) {
         try {
             if (roomRepository.existsById(id)) {
                 roomRepository.deleteById(id);
+                model.addAttribute("successMessage", "Room deleted successfully!");
             }
             return "redirect:/rooms/all";
-        } catch (DataIntegrityViolationException e) {
+        } catch (Exception e) {
+            model.addAttribute("errorMessage", "Cannot delete room: associated bookings exist.");
             return "error/roomDeleteError";
         }
     }
@@ -92,7 +115,7 @@ public class RoomController {
     @GetMapping("/autocomplete")
     @ResponseBody
     public List<Autocomplete> autocomplete(@RequestParam String term) {
-        List<Autocomplete> autoList = new ArrayList<Autocomplete>();
+        List<Autocomplete> autoList = new ArrayList<>();
         List<Room> rooms = roomRepository.findByPatternLike(term);
         for (Room room : rooms) {
             Autocomplete item = new Autocomplete();
@@ -118,6 +141,14 @@ public class RoomController {
             .map(room -> new RoomDTO(room.getId(), room.getRoomNumber(), room.getPrice()))
             .collect(Collectors.toList());
     }
+
+    @GetMapping("/{id}")
+    public String showRoomDetails(@PathVariable("id") int id, Model model) {
+        Room room = roomRepository.findById(id)
+            .orElseThrow(() -> new IllegalArgumentException("Invalid room Id:" + id));
+        model.addAttribute("room", room);
+        return "roomDetails";
+    }
 }
 
 class RoomDTO {
@@ -131,7 +162,6 @@ class RoomDTO {
         this.price = price;
     }
 
-    // Getters
     public int getId() { return id; }
     public String getRoomNumber() { return roomNumber; }
     public BigDecimal getPrice() { return price; }

@@ -1,21 +1,26 @@
 package hotel.booking.repository;
 
+import hotel.booking.model.Room;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.NativeQuery;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-import hotel.booking.model.Room;
-
-@Repository
 public interface RoomRepository extends JpaRepository<Room, Integer> {
 
-    @NativeQuery("SELECT * FROM Rooms WHERE roomNumber LIKE %?1% AND is_available=1")
-    List<Room> findByPatternLike(String pattern);
+    // Cerca stanze in base a un pattern (usato per la ricerca e l'autocompletamento)
+    @Query("SELECT r FROM Room r WHERE r.roomNumber LIKE %:pattern% OR r.type LIKE %:pattern%")
+    List<Room> findByPatternLike(@Param("pattern") String pattern);
 
-    @Query("SELECT r FROM Room r WHERE r.type = :type AND r.is_available = true")
-    List<Room> findAvailableRoomsByType(@Param("type") Room.RoomType type);
+    // Trova stanze disponibili per tipo
+    @Query("SELECT r FROM Room r WHERE r.type = :roomType AND r.isAvailable = true")
+    List<Room> findAvailableRoomsByType(@Param("roomType") Room.RoomType roomType);
+
+    // Verifica se esiste una stanza con un determinato numero
+    boolean existsByRoomNumber(String roomNumber);
+
+    // Verifica se esiste una stanza con un determinato numero, escludendo un ID specifico
+    @Query("SELECT COUNT(r) > 0 FROM Room r WHERE r.roomNumber = :roomNumber AND r.id != :id")
+    boolean existsByRoomNumberAndIdNot(@Param("roomNumber") String roomNumber, @Param("id") int id);
 }
