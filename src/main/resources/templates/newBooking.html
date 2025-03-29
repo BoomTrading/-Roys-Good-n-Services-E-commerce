@@ -14,6 +14,10 @@
     <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
   <script src="https://code.jquery.com/ui/1.14.1/jquery-ui.js"></script>
 
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 
 <script>
  $( function() {
@@ -62,17 +66,15 @@
 
                 <div class="mb-3">
                     <label for="checkIn" class="form-label">Check In</label>
-                    <input type="date" class="form-control" id="checkIn" th:field="*{checkIn}" required>
+                    <input type="text" class="form-control flatpickr" id="checkIn" th:field="*{checkIn}" required>
                 </div>
 
                 <div class="mb-3">
                     <label for="checkOut" class="form-label">Check Out</label>
-                    <input type="date" class="form-control" id="checkOut" th:field="*{checkOut}" required>
+                    <input type="text" class="form-control flatpickr" id="checkOut" th:field="*{checkOut}" required>
                 </div>
 
                 <div class="mb-3">
-                    <label class="form-label">Check-in Time</label>
-                    <div class="d-flex gap-3">
                         <div class="form-check">
                             <input class="form-check-input" type="radio" name="checkInTime" id="checkIn1000" value="10:00" th:field="*{checkInTime}" required>
                             <label class="form-check-label" for="checkIn1000">10:00 AM</label>
@@ -277,6 +279,14 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         loadAvailableRooms();
     });
+});
+
+flatpickr(".flatpickr", {
+    dateFormat: "Y-m-d",
+    minDate: "today",
+    altInput: true,
+    altFormat: "F j, Y",
+    enableTime: false
 });
 </script>
 </body>

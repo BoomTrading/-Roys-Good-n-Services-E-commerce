@@ -1,4 +1,180 @@
-body {
-    margin: 20px;
+/* Reset di base */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
 
+/* Stile generale */
+body {
+    font-family: 'Playfair Display', serif; /* Font elegante */
+    background-color: #f5f1e9; /* Crema chiaro */
+    color: #333;
+}
+
+/* Barra di navigazione */
+nav {
+    background-color: #1a2526; /* Nero elegante */
+    padding: 20px 0;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    position: fixed;
+    width: 100%;
+    top: 0;
+    z-index: 1000;
+}
+
+nav a {
+    color: #d4af37; /* Oro */
+    text-decoration: none;
+    margin: 0 20px;
+    font-size: 18px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    transition: color 0.3s ease;
+}
+
+nav a:hover {
+    color: #fff; /* Cambia colore al passaggio del mouse */
+}
+
+/* Contenitore principale */
+.container {
+    margin-top: 100px; /* Spazio per la nav fissa */
+    padding: 40px;
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* Titolo della sezione */
+h1 {
+    font-size: 48px;
+    color: #1a2526;
+    text-align: center;
+    margin-bottom: 40px;
+    letter-spacing: 3px;
+    font-weight: 400;
+}
+
+/* Tabella */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #fff;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+th, td {
+    padding: 20px;
+    text-align: left;
+    font-size: 16px;
+}
+
+th {
+    background-color: #d4af37; /* Oro */
+    color: #fff;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+tr:hover {
+    background-color: #f0e6d2; /* Crema chiaro al passaggio del mouse */
+}
+
+/* Pulsanti */
+button, .btn {
+    background-color: #1a2526;
+    color: #d4af37;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: background-color 0.3s ease, transform 0.1s ease;
+}
+
+button:hover, .btn:hover {
+    background-color: #d4af37;
+    color: #1a2526;
+    transform: scale(1.05);
+}
+
+/* Input e filtri */
+input[type="text"], input[type="date"] {
+    padding: 10px;
+    border: 1px solid #d4af37;
+    border-radius: 5px;
+    font-family: 'Playfair Display', serif;
+    font-size: 16px;
+    background-color: #fff;
+    color: #333;
+}
+
+input[type="text"]::placeholder {
+    color: #999;
+}
+
+/* Animazioni */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.container {
+    animation: fadeIn 1s ease-in-out;
+}
+
+.img-thumbnail {
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    transition: transform 0.2s ease-in-out;
+}
+
+.img-thumbnail:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+/* Footer */
+footer {
+    background-color: #1a2526;
+    color: #d4af37;
+    text-align: center;
+    padding: 20px;
+    margin-top: 40px;
+    position: relative;
+    bottom: 0;
+    width: 100%;
+}
+
+/* Logo */
+.navbar-brand img {
+    height: 40px;
+    margin-right: 10px;
+    vertical-align: middle;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    nav a {
+        display: block;
+        margin: 10px 0;
+        text-align: center;
+    }
+    .container {
+        padding: 20px;
+    }
+    table, th, td {
+        font-size: 14px;
+    }
+    .navbar-brand img {
+        height: 30px;
+    }
 }

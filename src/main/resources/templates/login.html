@@ -9,12 +9,73 @@
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
         crossorigin="anonymous"></script>
     <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
     <body>
         <div th:insert="~{index :: menu('')}"></div>
         <div th:if="${param.error}">
             Invalid username and password.
-        </div>
+        </div> Aggiungi un Footer Elegante
+        Aggiungi un footer a tutte le pagine per un tocco professionale.
+        Esempio di footer:
+        html
+        
+        <footer style="background-color: #1a2526; color: #d4af37; text-align: center; padding: 20px; margin-top: 40px;">
+            <p>&copy; 2025 Hotel System - Inspired by Four Seasons</p>
+        </footer>
+        
+        c. Usa un Logo Lussuoso
+        Crea o scarica un logo elegante per il tuo hotel.
+        
+        Salvalo in src/main/resources/static/images/logo.png.
+        
+        Aggiungilo alla barra di navigazione:
+        html
+        
+        <nav>
+            <img src="/images/logo.png" alt="Hotel Logo" style="height: 40px; margin-left: 20px; vertical-align: middle;">
+            <a th:href="@{/index}">HOTEL</a>
+            <!-- Altri link -->
+        </nav>
+        
+        5. Testa e Ottimizza
+        Testa il design: Avvia l’applicazione con mvn spring-boot:run e verifica che il nuovo stile sia applicato correttamente.
+        
+        Ottimizza per dispositivi mobili: Aggiungi media query al CSS per rendere il design responsive:
+        css
+        
+        @media (max-width: 768px) {
+            nav a {
+                display: block;
+                margin: 10px 0;
+                text-align: center;
+            }
+            .container {
+                padding: 20px;
+            }
+            table, th, td {
+                font-size: 14px;
+            }
+        }
+        
+        Prossimi Passaggi
+        Modifica i file HTML e CSS:
+        Ho fornito esempi per booking.html e style.css. Se hai bisogno di modificare altri file (es. index.html, rooms.html), condividi il codice e ti aiuterò ad adattarlo.
+        
+        Aggiungi immagini e risorse:
+        Scarica immagini di alta qualità per lo sfondo e le stanze.
+        
+        Aggiungi un logo personalizzato.
+        
+        Testa il progetto:
+        Verifica che tutto funzioni correttamente su desktop e mobile.
+        
+        Assicurati che le animazioni e le funzionalità (es. Flatpickr) siano fluide.
+        
+        Se hai bisogno del codice di un file specifico (es. index.html, rooms.html, o il codice attuale di style.css) per modificarlo, fammi vedere il codice e lo adatteremo insieme!
+        
+        
         <div th:if="${param.logout}">
             You have been logged out.
         </div>
