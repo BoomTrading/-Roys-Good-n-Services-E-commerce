@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Service Details</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+            crossorigin="anonymous"></script>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Playfair Display', serif;
+            background-color: #f8f9fa;
+        }
+        .service-details-card {
+            border-radius: 10px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        .service-image {
+            height: 300px;
+            background-size: cover;
+            background-position: center;
+        }
+        .btn-gold {
+            background-color: #d4af37;
+            border-color: #d4af37;
+            color: white;
+        }
+        .btn-gold:hover {
+            background-color: #b8960d;
+            border-color: #b8960d;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div th:insert="~{index :: menu('services')}"></div>
+    
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col-md-8 mx-auto">
+                <div class="service-details-card bg-white">
+                    <div class="service-image" th:style="${service.category == 'Transportation' ? 
+                                                        'background-image: url(/images/transportation.jpg)' : 
+                                                      service.category == 'Wellness' ? 
+                                                        'background-image: url(/images/wellness.jpg)' :
+                                                      service.category == 'Recreation' ? 
+                                                        'background-image: url(/images/recreation.jpg)' :
+                                                        'background-image: url(/images/services.jpg)'}">
+                    </div>
+                    <div class="p-4">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <h1 th:text="${service.name}" class="mb-3"></h1>
+                            <span class="badge rounded-pill fs-6" 
+                                  th:classappend="${service.available ? 'bg-success' : 'bg-danger'}"
+                                  th:text="${service.available ? 'Available' : 'Unavailable'}">
+                            </span>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <span class="badge rounded-pill" 
+                                  th:classappend="${
+                                    service.category == 'Transportation' ? 'bg-primary' : 
+                                    service.category == 'Wellness' ? 'bg-success' :
+                                    service.category == 'Recreation' ? 'bg-info' :
+                                    service.category == 'Events' ? 'bg-warning' : 'bg-secondary'
+                                  }"
+                                  th:text="${service.category}">
+                            </span>
+                        </div>
+                        
+                        <h5>Description</h5>
+                        <p class="mb-4" th:text="${service.description}"></p>
+                        
+                        <div class="d-flex justify-content-between align-items-center">
+                            <h3>€<span th:text="${#numbers.formatDecimal(service.price, 1, 2)}"></span></h3>
+                            <div>
+                                <a href="/cart/add?serviceId=${service.id}&quantity=1" class="btn btn-gold me-2">
+                                    <i class="fas fa-shopping-cart"></i> Book Now
+                                </a>
+                                <a th:href="@{/services/all}" class="btn btn-outline-secondary">
+                                    <i class="fas fa-arrow-left"></i> Back to Services
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Footer -->
+    <footer class="py-4 mt-5" style="background-color: #1a2526; color: #d4af37; text-align: center;">
+        <div class="container">
+            <p class="mb-0">© 2025 Hotel System - Luxury Services</p>
+        </div>
+    </footer>
+</body>
+</html>
