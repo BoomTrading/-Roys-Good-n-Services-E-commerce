@@ -1,138 +1,276 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Index</title>
+    <title>Rytami Luxury Experiences</title>
     <!-- Bootstrap CSS for styling and grid system -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/css/style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Playfair Display', serif;
+            background-color: #f8f9fa;
+        }
+        .booking-table {
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .btn-gold {
+            background-color: #d4af37;
+            border-color: #d4af37;
+            color: white;
+        }
+        .btn-gold:hover {
+            background-color: #b8960d;
+            border-color: #b8960d;
+            color: white;
+        }
+        .hero-section {
+            background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('https://images.unsplash.com/photo-1566073771259-6a8506099945?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');
+            background-size: cover;
+            background-position: center;
+            color: white;
+            padding: 100px 0;
+            margin-bottom: 50px;
+        }
+        .service-card {
+            transition: transform 0.3s;
+            margin-bottom: 20px;
+            border: none;
+        }
+        .service-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+        .card-img-top {
+            height: 200px;
+            object-fit: cover;
+        }
+        .service-icon {
+            border: 1px solid #1a2526;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+        }
+        .service-icon:hover {
+            background-color: #1a2526;
+            color: #d4af37;
+        }
+    </style>
 </head>
 <body>
-    <!-- Navigation bar fragment (unchanged) -->
-    <div th:fragment="menu">
-        <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #1a2526;">
-            <div class="container-fluid">
-                <img src="/images/logo.png" alt="Hotel Logo" style="height: 40px; margin-left: 20px; vertical-align: middle;">
-                <a class="navbar-brand" th:href="@{/index}">HOTEL</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="collapse navbar-collapse" id="navbarNav">
-                    <ul class="navbar-nav">
-                        <li class="nav-item">
-                            <a class="nav-link" th:href="@{/bookings}">Bookings</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" th:href="@{/rooms}">Rooms</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" th:href="@{/services}">Services</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" th:href="@{/products}">Products</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" th:href="@{/logout}">Logout</a>
-                        </li>
-                    </ul>
-                </div>
+    <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #1a2526;">
+        <div class="container">
+            <a class="navbar-brand" href="#">Rytami Luxury</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link active" href="#">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/services/all">Services</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/rooms/all">Accommodations</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/products/all">Shop</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/bookings/all">Bookings</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/guests/all">Guests</a></li>
+                </ul>
             </div>
-        </nav>
-    </div>
+        </div>
+    </nav>
 
-    <!-- Main content -->
-    <div class="container my-5">
+    <section class="hero-section text-center">
+        <div class="container">
+            <h1>Experience Unparalleled Luxury</h1>
+            <p class="lead">Indulge in our exclusive services and unforgettable experiences</p>
+            <a href="#services" class="btn btn-gold btn-lg">Explore Services</a>
+        </div>
+    </section>
+
+    <div class="container my-5" id="services">
         <!-- Enhanced welcome section -->
-        <h1 class="text-center mb-4">Welcome to Our Luxury Hotel</h1>
-        <p class="text-center lead mb-5">Experience the finest services and amenities</p>
+        <h1 class="text-center mb-4">Rytami Goods and Services</h1>
+        <p class="text-center lead mb-5">Corporation built-in. Experience the finest services and amenities</p>
 
-        <!-- Services grid -->
+        <!-- GRIGLIA TUTTI I SERVIZI -->
         <div class="row">
-            <!-- Rooms -->
+            <!-- ROOMS (ROOOMS DB) -->
             <div class="col-6 col-md-4 col-lg-3 mb-4">
-                <a href="/rooms" class="text-decoration-none text-dark">
-                    <div class="text-center p-4" style="border: 1px solid #ddd; border-radius: 5px;">
+                <a href="/rooms/all" class="text-decoration-none text-dark">
+                    <div class="text-center p-4 service-icon">
                         <i class="fas fa-bed fa-3x mb-2"></i>
                         <h5>Rooms</h5>
                     </div>
                 </a>
             </div>
-            <!-- Shop Luxury -->
+            <!-- SHOP LUXURY (PRODUCTS DB) -->
             <div class="col-6 col-md-4 col-lg-3 mb-4">
-                <a href="/shop-luxury" class="text-decoration-none text-dark">
-                    <div class="text-center p-4" style="border: 1px solid #ddd; border-radius: 5px;">
+                <a href="/products/all" class="text-decoration-none text-dark">
+                    <div class="text-center p-4 service-icon">
                         <i class="fas fa-shopping-bag fa-3x mb-2"></i>
                         <h5>Shop Luxury</h5>
                     </div>
                 </a>
             </div>
-            <!-- Spa -->
+            <!-- SPA -->
             <div class="col-6 col-md-4 col-lg-3 mb-4">
                 <a href="/spa" class="text-decoration-none text-dark">
-                    <div class="text-center p-4" style="border: 1px solid #ddd; border-radius: 5px;">
+                    <div class="text-center p-4 service-icon">
                         <i class="fas fa-spa fa-3x mb-2"></i>
                         <h5>Spa</h5>
                     </div>
                 </a>
             </div>
-            <!-- Restaurants -->
+            <!-- RESTAURANTS -->
             <div class="col-6 col-md-4 col-lg-3 mb-4">
                 <a href="/restaurants" class="text-decoration-none text-dark">
-                    <div class="text-center p-4" style="border: 1px solid #ddd; border-radius: 5px;">
+                    <div class="text-center p-4 service-icon">
                         <i class="fas fa-utensils fa-3x mb-2"></i>
                         <h5>Restaurants</h5>
                     </div>
                 </a>
             </div>
-            <!-- Services -->
+            <!-- SERVICES -->
             <div class="col-6 col-md-4 col-lg-3 mb-4">
-                <a href="/services" class="text-decoration-none text-dark">
-                    <div class="text-center p-4" style="border: 1px solid #ddd; border-radius: 5px;">
+                <a href="/services/all" class="text-decoration-none text-dark">
+                    <div class="text-center p-4 service-icon">
                         <i class="fas fa-concierge-bell fa-3x mb-2"></i>
                         <h5>Services</h5>
                     </div>
                 </a>
             </div>
-            <!-- Jet Private -->
-            <div class="col-6 col-md-4 col-lg-3 mb-4">
-                <a href="/jet-private" class="text-decoration-none text-dark">
-                    <div class="text-center p-4" style="border: 1px solid #ddd; border-radius: 5px;">
-                        <i class="fas fa-plane fa-3x mb-2"></i>
-                        <h5>Jet Private</h5>
-                    </div>
-                </a>
-            </div>
-            <!-- Yacht -->
-            <div class="col-6 col-md-4 col-lg-3 mb-4">
-                <a href="/yacht" class="text-decoration-none text-dark">
-                    <div class="text-center p-4" style="border: 1px solid #ddd; border-radius: 5px;">
-                        <i class="fas fa-ship fa-3x mb-2"></i>
-                        <h5>Yacht</h5>
-                    </div>
-                </a>
-            </div>
-            <!-- Golf -->
-            <div class="col-6 col-md-4 col-lg-3 mb-4">
-                <a href="/golf" class="text-decoration-none text-dark">
-                    <div class="text-center p-4" style="border: 1px solid #ddd; border-radius: 5px;">
-                        <i class="fas fa-golf-ball fa-3x mb-2"></i>
-                        <h5>Golf</h5>
-                    </div>
-                </a>
-            </div>
-            <!-- Helicopter -->
+            <!-- HELICOPTER -->
             <div class="col-6 col-md-4 col-lg-3 mb-4">
                 <a href="/helicopter" class="text-decoration-none text-dark">
-                    <div class="text-center p-4" style="border: 1px solid #ddd; border-radius: 5px;">
+                    <div class="text-center p-4 service-icon">
                         <i class="fas fa-helicopter fa-3x mb-2"></i>
                         <h5>Helicopter</h5>
                     </div>
                 </a>
             </div>
+            <!-- PRIVATE JET -->
+            <div class="col-6 col-md-4 col-lg-3 mb-4">
+                <a href="/jet-private" class="text-decoration-none text-dark">
+                    <div class="text-center p-4 service-icon">
+                        <i class="fas fa-plane fa-3x mb-2"></i>
+                        <h5>Private Jet</h5>
+                    </div>
+                </a>
+            </div>
+            <!-- YACHT -->
+            <div class="col-6 col-md-4 col-lg-3 mb-4">
+                <a href="/yacht" class="text-decoration-none text-dark">
+                    <div class="text-center p-4 service-icon">
+                        <i class="fas fa-ship fa-3x mb-2"></i>
+                        <h5>Yacht</h5>
+                    </div>
+                </a>
+            </div>
+            <!-- GOLF -->
+            <div class="col-6 col-md-4 col-lg-3 mb-4">
+                <a href="/golf" class="text-decoration-none text-dark">
+                    <div class="text-center p-4 service-icon">
+                        <i class="fas fa-golf-ball fa-3x mb-2"></i>
+                        <h5>Golf</h5>
+                    </div>
+                </a>
+            </div>
+            <!-- PERSONAL SHOPPING -->
+            <div class="col-6 col-md-4 col-lg-3 mb-4">
+                <a href="/shopping-concierge" class="text-decoration-none text-dark">
+                    <div class="text-center p-4 service-icon">
+                        <i class="fas fa-tshirt fa-3x mb-2"></i>
+                        <h5>Shopping Concierge</h5>
+                    </div>
+                </a>
+            </div>
+            <!-- WINE TASTING -->
+            <div class="col-6 col-md-4 col-lg-3 mb-4">
+                <a href="/wine-tasting" class="text-decoration-none text-dark">
+                    <div class="text-center p-4 service-icon">
+                        <i class="fas fa-wine-glass-alt fa-3x mb-2"></i>
+                        <h5>Wine Tasting</h5>
+                    </div>
+                </a>
+            </div>
+            <!-- GUESTS -->
+            <div class="col-6 col-md-4 col-lg-3 mb-4">
+                <a href="/guests/all" class="text-decoration-none text-dark">
+                    <div class="text-center p-4 service-icon">
+                        <i class="fas fa-users fa-3x mb-2"></i>
+                        <h5>Guests</h5>
+                    </div>
+                </a>
+            </div>
+        </div>
+        
+        <!-- Booking button -->
+        <div class="row mt-4">
+            <div class="col-12 text-center">
+                <a href="/bookings/new" class="btn btn-lg" style="background-color: #1a2526; color: #ffffff;">
+                    <i class="fas fa-calendar-plus"></i> New Booking
+                </a>
+            </div>
         </div>
     </div>
 
+    <section class="py-5 bg-light">
+        <div class="container">
+            <h2 class="text-center mb-5">Featured Luxury Experiences</h2>
+            <div class="row">
+                <!-- Helicopter Service -->
+                <div class="col-md-4">
+                    <div class="card service-card">
+                        <img src="https://images.unsplash.com/photo-1540962351504-03099e0a754b?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60" class="card-img-top" alt="Helicopter">
+                        <div class="card-body">
+                            <h5 class="card-title">Private Helicopter Tours</h5>
+                            <p class="card-text">Experience breathtaking aerial views with our exclusive helicopter services. From airport transfers to scenic tours.</p>
+                            <a href="/helicopter" class="btn btn-outline-dark">Explore</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Yacht Charter -->
+                <div class="col-md-4">
+                    <div class="card service-card">
+                        <img src="https://images.unsplash.com/photo-1565191999361-a8d5b61cc3c4?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60" class="card-img-top" alt="Yacht">
+                        <div class="card-body">
+                            <h5 class="card-title">Luxury Yacht Charter</h5>
+                            <p class="card-text">Sail the pristine waters on our luxury yachts with professional crew and personalized itineraries.</p>
+                            <a href="/yacht" class="btn btn-outline-dark">Explore</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Private Chef -->
+                <div class="col-md-4">
+                    <div class="card service-card">
+                        <img src="https://images.unsplash.com/photo-1556911220-bff31c812dba?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60" class="card-img-top" alt="Private Chef">
+                        <div class="card-body">
+                            <h5 class="card-title">Private Chef Experience</h5>
+                            <p class="card-text">Enjoy gourmet meals prepared by world-class chefs in the privacy of your suite or villa.</p>
+                            <a href="/chef" class="btn btn-outline-dark">Explore</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="bg-dark text-white py-4">
+        <div class="container text-center">
+            <h2>Experience Luxury Like Never Before</h2>
+            <p class="lead">Contact our concierge to create your personalized luxury experience</p>
+            <a href="#" class="btn btn-gold">Contact Concierge</a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="py-4 mt-5" style="background-color: #1a2526; color: #d4af37; text-align: center;">
+        <div class="container">
+            <p class="mb-0">Rytami Goods & Services. © - All rights reserved to Rytami Foundation © </p>
+        </div>
+    </footer>
+    
     <!-- Bootstrap JS (for navbar functionality) -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
