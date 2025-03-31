@@ -29,6 +29,12 @@ public class RoomController {
     @Autowired
     private BookingRepository bookingRepository;
 
+    // Add a redirect for the /rooms path
+    @GetMapping("")
+    public String redirectToRoomsList() {
+        return "redirect:/rooms/all";
+    }
+
     @GetMapping("/all")
     public String listRooms(Model model, @RequestParam(required = false) String sortType) {
         List<Room> rooms = roomRepository.findAll();

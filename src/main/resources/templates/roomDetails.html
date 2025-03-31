@@ -15,7 +15,7 @@
                 <p class="card-text">Available: <span th:text="${room.available ? 'Yes' : 'No'}"></span></p>
             </div>
         </div>
-        <a href="/rooms/all" class="btn btn-secondary mt-3">Back to Rooms</a>
+        <a th:href="@{/rooms/all}" class="btn btn-secondary mt-3">Back to Rooms</a>
     </div>
 </body>
 </html>
