@@ -7,15 +7,35 @@
 <body>
     <div class="container mt-5">
         <h1>Room Details</h1>
-        <div class="card">
-            <div class="card-body">
-                <h5 class="card-title">Room Number: <span th:text="${room.roomNumber}"></span></h5>
-                <p class="card-text">Type: <span th:text="${room.type}"></span></p>
-                <p class="card-text">Price: <span th:text="${room.price}"></span></p>
-                <p class="card-text">Available: <span th:text="${room.available ? 'Yes' : 'No'}"></span></p>
+        <div class="card mb-3">
+            <div class="row g-0">
+                <div class="col-md-6">
+                    <img th:src="${room.imageUrl != null && !room.imageUrl.isEmpty() ? room.imageUrl : 'https://via.placeholder.com/600x400?text=No+Image+Available'}" 
+                         class="img-fluid rounded-start" alt="Room Image" style="width: 100%; height: 100%; object-fit: cover;">
+                </div>
+                <div class="col-md-6">
+                    <div class="card-body">
+                        <h2 class="card-title">Room <span th:text="${room.roomNumber}"></span></h2>
+                        <h4 class="card-subtitle mb-2 text-muted" th:text="${room.type}"></h4>
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h5 class="card-text mb-0">$<span th:text="${room.price}"></span>/night</h5>
+                            <span class="badge" th:classappend="${room.available ? 'bg-success' : 'bg-danger'}" 
+                                  th:text="${room.available ? 'Available' : 'Not Available'}"></span>
+                        </div>
+                        <hr>
+                        <h5>Description</h5>
+                        <p class="card-text" th:text="${room.description != null && !room.description.isEmpty() ? room.description : 'No description available.'}"></p>
+                    </div>
+                </div>
             </div>
         </div>
-        <a th:href="@{/rooms/all}" class="btn btn-secondary mt-3">Back to Rooms</a>
+        <div class="d-flex justify-content-between">
+            <a th:href="@{/rooms/all}" class="btn btn-secondary">Back to Rooms</a>
+            <div>
+                <a th:href="@{/rooms/edit/{id}(id=${room.id})}" class="btn btn-warning">Edit Room</a>
+                <a th:if="${room.available}" href="#" class="btn btn-primary">Book Now</a>
+            </div>
+        </div>
     </div>
 </body>
 </html>

@@ -3,37 +3,79 @@
 <head>
     <title>Rooms</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .room-card {
+            transition: transform 0.3s;
+            height: 100%;
+        }
+        .room-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+        .room-image {
+            height: 200px;
+            object-fit: cover;
+        }
+        .card-footer {
+            background-color: transparent;
+            border-top: none;
+        }
+    </style>
 </head>
 <body>
     <div class="container mt-5">
-        <h1>Rooms</h1>
-        <a href="/rooms/new" class="btn btn-primary mb-3">Add New Room</a>
-        <table class="table table-bordered">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Room Number</th>
-                    <th>Type</th>
-                    <th>Price</th>
-                    <th>Available</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr th:each="room : ${rooms}">
-                    <td th:text="${room.id}"></td>
-                    <td th:text="${room.roomNumber}"></td>
-                    <td th:text="${room.type}"></td>
-                    <td th:text="${room.price}"></td>
-                    <td th:text="${room.available ? 'Yes' : 'No'}"></td>
-                    <td>
-                        <a th:href="@{/rooms/edit/{id}(id=${room.id})}" class="btn btn-sm btn-warning">Edit</a>
-                        <a th:href="@{/rooms/delete/{id}(id=${room.id})}" class="btn btn-sm btn-danger">Delete</a>
-                        <a th:href="@{/rooms/{id}(id=${room.id})}" class="btn btn-sm btn-info">Details</a>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1>Our Rooms</h1>
+            <a href="/rooms/new" class="btn btn-primary">Add New Room</a>
+        </div>
+        
+        <!-- Room Type Filter -->
+        <div class="mb-4">
+            <div class="btn-group" role="group">
+                <a href="/rooms/all" class="btn btn-outline-secondary">All Rooms</a>
+                <th:block th:each="type : ${roomTypes}">
+                    <a th:href="@{/rooms/all(sortType=${type})}" 
+                       th:class="'btn ' + (${param.sortType != null && param.sortType[0] == type} ? 'btn-secondary' : 'btn-outline-secondary')"
+                       th:text="${type}"></a>
+                </th:block>
+            </div>
+        </div>
+        
+        <!-- Room Cards -->
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+            <div class="col" th:each="room : ${rooms}">
+                <div class="card room-card h-100">
+                    <img th:src="${room.imageUrl != null && !room.imageUrl.isEmpty() ? room.imageUrl : 'https://via.placeholder.com/500x300?text=Room+' + room.roomNumber}" 
+                         class="card-img-top room-image" alt="Room Image">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <h5 class="card-title mb-0">Room <span th:text="${room.roomNumber}"></span></h5>
+                            <span class="badge" th:classappend="${room.available ? 'bg-success' : 'bg-danger'}" 
+                                  th:text="${room.available ? 'Available' : 'Booked'}"></span>
+                        </div>
+                        <h6 class="card-subtitle mb-2 text-muted" th:text="${room.type}"></h6>
+                        <p class="card-text" th:text="${room.description != null && !room.description.isEmpty() ? 
+                            (room.description.length() > 100 ? room.description.substring(0, 100) + '...' : room.description) : 
+                            'No description available.'}"></p>
+                        <h5 class="text-primary">$<span th:text="${room.price}"></span>/night</h5>
+                    </div>
+                    <div class="card-footer">
+                        <div class="d-flex justify-content-between">
+                            <a th:href="@{/rooms/{id}(id=${room.id})}" class="btn btn-sm btn-outline-primary">View Details</a>
+                            <div>
+                                <a th:href="@{/rooms/edit/{id}(id=${room.id})}" class="btn btn-sm btn-warning">Edit</a>
+                                <a th:href="@{/rooms/delete/{id}(id=${room.id})}" class="btn btn-sm btn-danger">Delete</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- No rooms message -->
+        <div class="alert alert-info mt-3" th:if="${rooms.empty}">
+            No rooms available based on your criteria. Please adjust your filters or add new rooms.
+        </div>
     </div>
 </body>
 </html>
