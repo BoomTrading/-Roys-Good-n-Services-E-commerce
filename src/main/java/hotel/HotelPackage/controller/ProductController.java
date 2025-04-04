@@ -21,7 +21,19 @@ public class ProductController {
     @GetMapping("/all")
     public String listProducts(Model model) {
         List<Product> products = productRepository.findAll();
+        List<String> categories = productRepository.findDistinctCategories();
         model.addAttribute("products", products);
+        model.addAttribute("categories", categories);
+        return "products";
+    }
+
+    @GetMapping("/category/{category}")
+    public String listProductsByCategory(@PathVariable("category") String category, Model model) {
+        List<Product> products = productRepository.findByCategory(category);
+        List<String> categories = productRepository.findDistinctCategories();
+        model.addAttribute("products", products);
+        model.addAttribute("categories", categories);
+        model.addAttribute("currentCategory", category);
         return "products";
     }
 
@@ -37,6 +49,9 @@ public class ProductController {
     @GetMapping("/new")
     public String showNewProductForm(Model model) {
         model.addAttribute("product", new Product());
+        // Add available categories to help with form selection
+        List<String> categories = productRepository.findDistinctCategories();
+        model.addAttribute("categories", categories);
         return "newProduct";
     }
 
@@ -49,6 +64,8 @@ public class ProductController {
             return "redirect:/products/all";
         } catch (Exception e) {
             model.addAttribute("errorMessage", "Error saving product: " + e.getMessage());
+            List<String> categories = productRepository.findDistinctCategories();
+            model.addAttribute("categories", categories);
             return "newProduct";
         }
     }
@@ -57,7 +74,9 @@ public class ProductController {
     public String showEditProductForm(@PathVariable("id") int id, Model model) {
         Product product = productRepository.findById(id)
             .orElseThrow(() -> new IllegalArgumentException("Invalid product Id:" + id));
+        List<String> categories = productRepository.findDistinctCategories();
         model.addAttribute("product", product);
+        model.addAttribute("categories", categories);
         return "editProduct";
     }
 
@@ -69,6 +88,8 @@ public class ProductController {
             return "redirect:/products/all";
         } catch (Exception e) {
             model.addAttribute("errorMessage", "Error updating product: " + e.getMessage());
+            List<String> categories = productRepository.findDistinctCategories();
+            model.addAttribute("categories", categories);
             return "editProduct";
         }
     }
@@ -91,7 +112,9 @@ public class ProductController {
     @PostMapping("/search")
     public String listProductsByPatternLike(Model model, @RequestParam String pattern) {
         List<Product> products = productRepository.findByPatternLike(pattern);
+        List<String> categories = productRepository.findDistinctCategories();
         model.addAttribute("products", products);
+        model.addAttribute("categories", categories);
         return "products";
     }
 }

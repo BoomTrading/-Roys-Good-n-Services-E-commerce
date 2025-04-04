@@ -45,7 +45,14 @@
                             </div>
                             <div class="mb-3">
                                 <label class="form-label">Category</label>
-                                <input type="text" class="form-control" th:field="*{category}" required>
+                                <div class="input-group">
+                                    <select class="form-select" th:field="*{category}" required>
+                                        <option value="">Select a category</option>
+                                        <option th:each="cat : ${categories}" th:value="${cat}" th:text="${cat}"></option>
+                                        <option value="new">+ Add new category</option>
+                                    </select>
+                                    <input type="text" class="form-control" id="newCategoryInput" style="display: none;" placeholder="Enter new category">
+                                </div>
                             </div>
                             <div class="mb-3">
                                 <label class="form-label">Price</label>
@@ -106,6 +113,19 @@
                 imagePreview.src = imageUrl;
             } else {
                 imagePreview.src = 'https://via.placeholder.com/300x200?text=No+Image+Available';
+            }
+        });
+        
+        // New category input handling
+        document.querySelector('select[name="category"]').addEventListener('change', function() {
+            const newCategoryInput = document.getElementById('newCategoryInput');
+            if (this.value === 'new') {
+                this.style.display = 'none';
+                newCategoryInput.style.display = 'block';
+                newCategoryInput.name = 'category';
+                newCategoryInput.required = true;
+                this.name = '';
+                this.required = false;
             }
         });
     </script>
