@@ -25,6 +25,14 @@ public class ProductController {
         return "products";
     }
 
+    @GetMapping("/details/{id}")
+    public String showProductDetails(@PathVariable("id") int id, Model model) {
+        Product product = productRepository.findById(id)
+            .orElseThrow(() -> new IllegalArgumentException("Invalid product Id:" + id));
+        model.addAttribute("product", product);
+        return "productDetails";
+    }
+
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/new")
     public String showNewProductForm(Model model) {
@@ -76,7 +84,7 @@ public class ProductController {
             return "redirect:/products/all";
         } catch (Exception e) {
             model.addAttribute("errorMessage", "Cannot delete product: associated orders exist.");
-            return "error/productDeleteError";
+            return "redirect:/products/all";
         }
     }
 
