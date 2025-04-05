@@ -198,3 +198,116 @@
       font-size: 36px; /* Ridotto per schermi più piccoli */
     }
   }
+  
+  /* Button Styles for Consistent CRUD Operations */
+  .product-btn {
+    border-radius: 50px;
+    padding: 8px 16px;
+    transition: all 0.3s ease;
+    border: none;
+    font-size: 0.85rem;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+  }
+  
+  .btn-details {
+    background-color: transparent;
+    color: #1a2526;
+    border: 1px solid #1a2526;
+  }
+  
+  .btn-details:hover {
+    background-color: #1a2526;
+    color: white;
+    transform: translateY(-2px);
+  }
+  
+  .btn-edit {
+    background-color: transparent;
+    color: #d4af37;
+    border: 1px solid #d4af37;
+    margin-right: 5px;
+  }
+  
+  .btn-edit:hover {
+    background-color: #d4af37;
+    color: white;
+    transform: translateY(-2px);
+  }
+  
+  .btn-delete {
+    background-color: transparent;
+    color: #dc3545;
+    border: 1px solid #dc3545;
+  }
+  
+  .btn-delete:hover {
+    background-color: #dc3545;
+    color: white;
+    transform: translateY(-2px);
+  }
+  
+  .btn-checkout {
+    background-color: transparent;
+    color: #28a745;
+    border: 1px solid #28a745;
+    border-radius: 50px;
+    padding: 10px 20px;
+    transition: all 0.3s ease;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+  }
+  
+  .btn-checkout:hover {
+    background-color: #28a745;
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+  }
+  
+  /* Toggle button and action buttons container */
+  .actions-container {
+    position: relative;
+  }
+  
+  .toggle-actions {
+    position: absolute;
+    top: -20px;
+    right: 10px;
+    background-color: white;
+    color: #d4af37;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    border: 1px solid #d4af37;
+    z-index: 5;
+    transition: transform 0.3s ease;
+  }
+  
+  .toggle-actions:hover {
+    transform: scale(1.1);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  }
+  
+  .toggle-actions.active {
+    transform: rotate(45deg);
+    background-color: #d4af37;
+    color: white;
+  }
+  
+  .product-actions {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.4s ease;
+    opacity: 0;
+  }
+  
+  .product-actions.show {
+    max-height: 150px;
+    opacity: 1;
+  }
