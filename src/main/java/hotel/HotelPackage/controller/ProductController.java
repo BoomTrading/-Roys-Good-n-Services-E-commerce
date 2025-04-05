@@ -104,8 +104,14 @@ public class ProductController {
             }
             return "redirect:/products/all";
         } catch (Exception e) {
-            model.addAttribute("errorMessage", "Cannot delete product: associated orders exist.");
-            return "redirect:/products/all";
+            // If deletion fails, add the product to the model and redirect to error page
+            try {
+                Product product = productRepository.findById(id).orElse(null);
+                model.addAttribute("product", product);
+            } catch (Exception ignored) {
+                // If we can't fetch the product, just continue without it
+            }
+            return "error/productDeleteError";
         }
     }
 
