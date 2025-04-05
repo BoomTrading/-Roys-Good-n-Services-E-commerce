@@ -3,23 +3,27 @@
 <head>
     <title>Hotel System</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-            <div class="container-fluid">
-                <a class="navbar-brand" th:href="@{/}">Hotel System</a>
+        <!-- Updated to consistent navbar style -->
+        <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #1a2526;">
+            <div class="container">
+                <a class="navbar-brand" href="/"> Roys Luxury Goods n' Services ® </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="collapse navbar-collapse" id="navbarNav">
-                    <ul class="navbar-nav">
-                        <li class="nav-item"><a class="nav-link" th:href="@{/rooms/all}">Rooms</a></li>
-                        <li class="nav-item"><a class="nav-link" th:href="@{/services/all}">Services</a></li>
-                        <li class="nav-item"><a class="nav-link" th:href="@{/products/all}">Products</a></li>
-                        <li class="nav-item"><a class="nav-link" th:href="@{/bookings/all}">Bookings</a></li>
-                        <li class="nav-item"><a class="nav-link" th:href="@{/cart}">Cart</a></li>
+                    <ul class="navbar-nav ms-auto">
+                        <li class="nav-item"><a class="nav-link" href="/">Home</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/services/all">Services</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/rooms/all">Accommodations</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/products/all">Shop</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/bookings/all">Bookings</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/guests/all">Guests</a></li>
                     </ul>
                 </div>
             </div>
@@ -28,8 +32,10 @@
     <main class="container mt-4">
         <div th:insert="~{::content}"></div>
     </main>
-    <footer class="bg-dark text-center text-white py-3">
-        <p>&copy; 2025 Hotel System - Inspired by 555</p>
+    <footer class="py-4 mt-5" style="background-color: #1a2526; color: #d4af37; text-align: center;">
+        <div class="container">
+            <p class="mb-0">Rytami Goods & Services. © - All rights reserved to Rytami Foundation © </p>
+        </div>
     </footer>
 </body>
 </html>

@@ -32,18 +32,39 @@
             color: #1a2526;
         }
         .login-header .logo {
-            color: #d4af37;
-            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+        .logo-icons {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
             margin-bottom: 0.5rem;
         }
+        .logo-icon {
+            color: #1a2526;
+            font-size: 2rem;
+            background: #ffffff;
+            width: 60px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            box-shadow: 0 3px 6px rgba(0,0,0,0.2);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .logo-icon:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.3);
+        }
         .btn-gold {
-            background-color: #d4af37;
-            border-color: #d4af37;
+            background-color: #1a2526;
+            border-color: #1a2526;
             color: white;
         }
         .btn-gold:hover {
-            background-color: #b8960d;
-            border-color: #b8960d;
+            background-color: #1a2526;
+            border-color: #1a2526;
             color: white;
         }
     </style>
@@ -54,10 +75,14 @@
     <div class="login-container">
         <div class="login-header">
             <div class="logo">
-                <i class="fas fa-hotel"></i>
+                <div class="logo-icons">
+                    <div class="logo-icon"><i class="fas fa-crown"></i></div>
+                    <div class="logo-icon"><i class="fas fa-gem"></i></div>
+                    <div class="logo-icon"><i class="fas fa-concierge-bell"></i></div>
+                </div>
             </div>
-            <h2>Hotel System</h2>
-            <p class="text-muted">Enter your credentials to access the system</p>
+            <h2>Roys Luxury Goods n' Services ®</h2>
+            <p class="text-muted">Enter your credentials to access the system, If you don't have credentials, will be provided by the High Society Offices.</p>
         </div>
         
         <div th:if="${param.error}" class="alert alert-danger">
@@ -88,10 +113,7 @@
                 </div>
             </div>
             
-            <div class="mb-3 form-check">
-                <input type="checkbox" class="form-check-input" id="remember-me" name="remember-me">
-                <label class="form-check-label" for="remember-me">Remember me</label>
-            </div>
+            
             
             <div class="d-grid">
                 <button type="submit" class="btn btn-gold">

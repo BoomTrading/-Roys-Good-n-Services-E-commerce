@@ -19,6 +19,7 @@
             border-radius: 10px;
             box-shadow: 0 8px 16px rgba(0,0,0,0.1);
             overflow: hidden;
+            margin-top: 20px;
         }
         .service-image {
             height: 300px;
@@ -38,8 +39,26 @@
     </style>
 </head>
 <body>
-    <div th:insert="~{index :: menu('services')}"></div>
-    
+    <!-- Added consistent navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #1a2526;">
+        <div class="container">
+            <a class="navbar-brand" href="/"> Roys Luxury Goods n' Services ® </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="/">Home</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="/services/all">Services</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/rooms/all">Accommodations</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/products/all">Shop</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/bookings/all">Bookings</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/guests/all">Guests</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
     <div class="container mt-5">
         <div class="row">
             <div class="col-md-8 mx-auto">
