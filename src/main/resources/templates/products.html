@@ -5,151 +5,125 @@
     <title>Luxury Shop - Rytami</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
-        crossorigin="anonymous"></script>
-    <link rel="stylesheet" th:href="@{/css/style.css}">
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=SF+Pro+Display:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         body {
-            font-family: 'Playfair Display', serif;
-            background-color: #f8f9fa;
+            font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: #f5f5f7;
+            color: #1d1d1f;
+            line-height: 1.5;
         }
-
+        .container {
+            max-width: 1200px;
+        }
+        h1 {
+            font-size: 48px;
+            font-weight: 600;
+            letter-spacing: -0.02em;
+            margin-bottom: 16px;
+        }
+        .navbar {
+            background-color: #000000 !important;
+        }
+        .navbar-brand, .nav-link {
+            color: #ffffff !important;
+        }
+        .nav-link:hover {
+            color: #d2d2d7 !important;
+        }
         .product-card {
-            transition: transform 0.3s;
+            background-color: #ffffff;
+            border-radius: 16px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
             height: 100%;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            border: none;
         }
-
         .product-card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
         }
-
         .product-image {
-            height: 200px;
+            height: 240px;
             object-fit: cover;
+            border-top-left-radius: 16px;
+            border-top-right-radius: 16px;
         }
-
-        .card-footer {
-            background-color: transparent;
-            border-top: none;
+        .card-body {
+            padding: 20px;
         }
-
+        .card-title {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+        .card-subtitle {
+            font-size: 16px;
+            color: #6e6e73;
+            margin-bottom: 12px;
+        }
+        .card-text {
+            font-size: 16px;
+            color: #6e6e73;
+            margin-bottom: 12px;
+        }
+        .text-primary {
+            color: #0071e3 !important;
+            font-weight: 600;
+        }
+        .badge {
+            font-size: 14px;
+            padding: 6px 12px;
+            border-radius: 12px;
+        }
+        .btn {
+            border-radius: 980px;
+            padding: 10px 24px;
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
         .btn-gold {
             background-color: #d4af37;
             border-color: #d4af37;
-            color: white;
+            color: #ffffff;
         }
-
         .btn-gold:hover {
             background-color: #b8960d;
             border-color: #b8960d;
-            color: white;
         }
-
-        /* New button styles */
-        .action-buttons-container {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+        .form-control {
+            border-radius: 8px;
+            border: 1px solid #d2d2d7;
+            font-size: 16px;
+            padding: 12px;
         }
-
-        .product-btn {
-            border-radius: 50px;
+        .btn-outline-secondary {
+            border-color: #d2d2d7;
+            color: #1d1d1f;
+        }
+        .btn-outline-secondary:hover {
+            background-color: #e8e8ed;
+        }
+        .dropdown-menu {
+            border-radius: 12px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .dropdown-item {
+            font-size: 16px;
             padding: 8px 16px;
-            transition: all 0.3s ease;
-            border: none;
-            font-size: 0.85rem;
-            font-weight: 500;
-            letter-spacing: 0.5px;
         }
-
-        .btn-details {
-            background-color: transparent;
-            color: #1a2526;
-            border: 1px solid #1a2526;
+        .dropdown-item:hover {
+            background-color: #f5f5f7;
         }
-
-        .btn-details:hover {
-            background-color: #1a2526;
-            color: white;
-            transform: translateY(-2px);
-        }
-
-        .btn-edit {
-            background-color: transparent;
-            color: #d4af37;
-            border: 1px solid #d4af37;
-            margin-right: 5px;
-        }
-
-        .btn-edit:hover {
-            background-color: #d4af37;
-            color: white;
-            transform: translateY(-2px);
-        }
-
-        .btn-delete {
-            background-color: transparent;
-            color: #dc3545;
-            border: 1px solid #dc3545;
-        }
-
-        .btn-delete:hover {
-            background-color: #dc3545;
-            color: white;
-            transform: translateY(-2px);
-        }
-
-        .btn-actions {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            background-color: rgba(255, 255, 255, 0.8);
-            border-radius: 50%;
-            width: 35px;
-            height: 35px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            border: none;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-        }
-
-        .btn-actions:hover {
-            background-color: white;
-            transform: rotate(90deg);
-        }
-
-        .actions-dropdown {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            z-index: 100;
-            display: none;
-        }
-
-        .product-card:hover .actions-dropdown {
-            display: block;
-        }
-
-        /* Toggle button and action buttons container */
         .actions-container {
             position: relative;
         }
-
         .toggle-actions {
             position: absolute;
             top: -20px;
             right: 10px;
-            background-color: white;
-            color: #d4af37;
+            background-color: #ffffff;
+            color: #0071e3;
             width: 30px;
             height: 30px;
             border-radius: 50%;
@@ -157,41 +131,81 @@
             justify-content: center;
             align-items: center;
             cursor: pointer;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-            border: 1px solid #d4af37;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            border: 1px solid #d2d2d7;
             z-index: 5;
-            transition: transform 0.3s ease;
+            transition: all 0.3s ease;
         }
-
         .toggle-actions:hover {
             transform: scale(1.1);
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
         }
-
         .toggle-actions.active {
             transform: rotate(45deg);
-            background-color: #d4af37;
-            color: white;
+            background-color: #0071e3;
+            color: #ffffff;
         }
-
         .product-actions {
             max-height: 0;
             overflow: hidden;
-            transition: max-height 0.4s ease;
+            transition: max-height 0.4s ease, opacity 0.4s ease;
             opacity: 0;
         }
-
         .product-actions.show {
             max-height: 150px;
-            /* Adjust based on your buttons' height */
             opacity: 1;
+        }
+        .product-btn {
+            border-radius: 980px;
+            padding: 8px 16px;
+            transition: all 0.3s ease;
+            font-size: 0.85rem;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+        }
+        .btn-details {
+            background-color: transparent;
+            color: #0071e3;
+            border: 1px solid #0071e3;
+        }
+        .btn-details:hover {
+            background-color: #0071e3;
+            color: #ffffff;
+            transform: translateY(-2px);
+        }
+        .btn-edit {
+            background-color: transparent;
+            color: #d4af37;
+            border: 1px solid #d4af37;
+            margin-right: 5px;
+        }
+        .btn-edit:hover {
+            background-color: #d4af37;
+            color: #ffffff;
+            transform: translateY(-2px);
+        }
+        .btn-delete {
+            background-color: transparent;
+            color: #ff3b30;
+            border: 1px solid #ff3b30;
+        }
+        .btn-delete:hover {
+            background-color: #ff3b30;
+            color: #ffffff;
+            transform: translateY(-2px);
+        }
+        footer {
+            background-color: #f5f5f7 !important;
+            color: #6e6e73 !important;
+            font-size: 14px;
+            text-align: center;
         }
     </style>
 </head>
 
 <body>
-    <!-- Navbar matching other luxury pages -->
-    <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #1a2526;">
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
         <div class="container">
             <a class="navbar-brand" href="/">Rytami Luxury</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
@@ -232,8 +246,7 @@
                 <div class="btn-group">
                     <button type="button" class="btn btn-outline-secondary dropdown-toggle" data-bs-toggle="dropdown">
                         <i class="fas fa-filter"></i>
-                        <span
-                            th:text="${currentCategory != null ? 'Category: ' + currentCategory : 'Filter by Category'}"></span>
+                        <span th:text="${currentCategory != null ? 'Category: ' + currentCategory : 'Filter by Category'}"></span>
                     </button>
                     <ul class="dropdown-menu dropdown-menu-end">
                         <li th:each="category : ${categories}">
@@ -255,7 +268,6 @@
                 <div class="card product-card h-100">
                     <img th:src="${product.imageUrl != null && !product.imageUrl.isEmpty() ? product.imageUrl : 'https://via.placeholder.com/500x300?text=Product+Image'}"
                         class="card-img-top product-image" alt="Product Image">
-
                     <div class="card-body">
                         <div class="d-flex justify-content-between align-items-center mb-2">
                             <h5 class="card-title mb-0" th:text="${product.name}"></h5>
@@ -266,8 +278,7 @@
                         <p class="card-text" th:text="${product.description != null && !product.description.isEmpty() ? 
                             (product.description.length() > 100 ? product.description.substring(0, 100) + '...' : product.description) : 
                             'No description available.'}"></p>
-                        <h5 class="text-primary">€<span th:text="${#numbers.formatDecimal(product.price, 1, 2)}"></span>
-                        </h5>
+                        <h5 class="text-primary">€<span th:text="${#numbers.formatDecimal(product.price, 1, 2)}"></span></h5>
                     </div>
                     <div class="card-footer pt-0 pb-3">
                         <div class="actions-container">
@@ -275,22 +286,18 @@
                             <div class="toggle-actions" onclick="toggleActions(this)">
                                 <i class="fas fa-ellipsis-h"></i>
                             </div>
-
                             <!-- Action buttons (initially hidden) -->
                             <div class="product-actions">
                                 <div class="d-grid gap-2 mt-2">
-                                    <a th:href="@{/products/details/{id}(id=${product.id})}"
-                                        class="btn product-btn btn-details">
+                                    <a th:href="@{/products/details/{id}(id=${product.id})}" class="btn product-btn btn-details">
                                         <i class="fas fa-info-circle me-2"></i> View Details
                                     </a>
                                     <div class="d-flex gap-2 mt-2">
-                                        <a th:href="@{/products/edit/{id}(id=${product.id})}"
-                                            class="btn product-btn btn-edit w-50">
+                                        <a th:href="@{/products/edit/{id}(id=${product.id})}" class="btn product-btn btn-edit w-50">
                                             <i class="fas fa-edit me-2"></i> Edit
                                         </a>
-                                        <a th:href="@{/products/delete/{id}(id=${product.id})}"
-                                            onclick="return confirm('Are you sure you want to delete this product?')"
-                                            class="btn product-btn btn-delete w-50">
+                                        <a th:href="@{/products/delete/{id}(id=${product.id})}" class="btn product-btn btn-delete w-50"
+                                            onclick="return confirm('Are you sure you want to delete this product?')">
                                             <i class="fas fa-trash-alt me-2"></i> Delete
                                         </a>
                                     </div>
@@ -304,36 +311,27 @@
 
         <!-- No products message -->
         <div th:if="${products.isEmpty()}" class="alert alert-info mt-3">
-            <i class="fas fa-info-circle"></i> No products available based on your criteria. Please adjust your filters
-            or add new products.
+            <i class="fas fa-info-circle"></i> No products available based on your criteria. Please adjust your filters or add new products.
         </div>
     </div>
 
     <!-- Footer -->
-    <footer class="py-4 mt-5" style="background-color: #1a2526; color: #d4af37; text-align: center;">
+    <footer class="py-4 mt-5">
         <div class="container">
             <p class="mb-0">Rytami Goods & Services. © - All rights reserved to Rytami Foundation © </p>
         </div>
     </footer>
 
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+        crossorigin="anonymous"></script>
     <script>
         function toggleActions(button) {
-            // Toggle the active class on the button
             button.classList.toggle('active');
-
-            // Find the product-actions container
             const actionsContainer = button.nextElementSibling;
-
-            // Toggle the show class to reveal or hide buttons
             actionsContainer.classList.toggle('show');
-
-            // Toggle icon between cog and times
             const icon = button.querySelector('i');
-            if (button.classList.contains('active')) {
-                icon.className = 'fas fa-times';
-            } else {
-                icon.className = 'fas fa-cog';
-            }
+            icon.className = button.classList.contains('active') ? 'fas fa-times' : 'fas fa-ellipsis-h';
         }
     </script>
 </body>
