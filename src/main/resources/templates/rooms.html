@@ -22,6 +22,55 @@
             letter-spacing: -0.02em;
             margin-bottom: 16px;
         }
+        /* Hero Section Styles */
+        .hero-section {
+            text-align: center;
+            padding: 40px 0;
+            background-color: #ffffff;
+            border-radius: 16px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            margin-bottom: 40px;
+        }
+        .filter-row {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            overflow-x: auto;
+            padding: 20px 0;
+            white-space: nowrap;
+        }
+        .filter-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-decoration: none;
+            color: #1d1d1f;
+            padding: 10px 15px;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+        }
+        .filter-item:hover {
+            background-color: #e8e8ed;
+            transform: translateY(-2px);
+        }
+        .filter-item.active {
+            background-color: #0071e3;
+            color: #ffffff;
+        }
+        .filter-item i {
+            font-size: 24px;
+            margin-bottom: 8px;
+        }
+        .filter-item span {
+            font-size: 16px;
+            font-weight: 500;
+        }
+        .add-room-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+        }
+        /* Room Card Styles */
         .room-card {
             background-color: #ffffff;
             border-radius: 16px;
@@ -80,13 +129,6 @@
         .btn-gold:hover {
             background-color: #b8960d;
             border-color: #b8960d;
-        }
-        .btn-outline-secondary {
-            border-color: #d2d2d7;
-            color: #1d1d1f;
-        }
-        .btn-outline-secondary:hover {
-            background-color: #e8e8ed;
         }
         .actions-container {
             position: relative;
@@ -196,19 +238,41 @@
         </div>
     </nav>
 
-    <div class="container-fluid mt-5 px-4">
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <h1 class="mb-0">Luxury Accommodations</h1>
-            <!-- Room Type Filter -->
-            <div class="btn-group" role="group">
-                <a href="/rooms/all" class="btn btn-outline-secondary">All Rooms</a>
-                <th:block th:each="type : ${roomTypes}">
-                    <a th:href="@{/rooms/all(sortType=${type})}"
-                        th:class="'btn ' + (${param.sortType != null && param.sortType[0] == type} ? 'btn-secondary' : 'btn-outline-secondary')"
-                        th:text="${type}"></a>
-                </th:block>
+    <div class="container mt-5">
+        <!-- Interactive Hero Section -->
+        <div class="hero-section position-relative">
+            <h1>Luxury Accommodations</h1>
+            <div class="filter-row">
+                <a href="/rooms/all" class="filter-item" th:classappend="${param.sortType == null ? 'active' : ''}">
+                    <i class="fas fa-th-large"></i>
+                    <span>All Rooms</span>
+                </a>
+                <a th:href="@{/rooms/all(sortType='Single')}" class="filter-item" th:classappend="${param.sortType != null && param.sortType[0] == 'Single' ? 'active' : ''}">
+                    <i class="fas fa-bed"></i>
+                    <span>Single</span>
+                </a>
+                <a th:href="@{/rooms/all(sortType='Double')}" class="filter-item" th:classappend="${param.sortType != null && param.sortType[0] == 'Double' ? 'active' : ''}">
+                    <i class="fas fa-bed fa-flip-horizontal"></i>
+                    <span>Double</span>
+                </a>
+                <a th:href="@{/rooms/all(sortType='Suite')}" class="filter-item" th:classappend="${param.sortType != null && param.sortType[0] == 'Suite' ? 'active' : ''}">
+                    <i class="fas fa-couch"></i>
+                    <span>Suite</span>
+                </a>
+                <a th:href="@{/rooms/all(sortType='Triple')}" class="filter-item" th:classappend="${param.sortType != null && param.sortType[0] == 'Triple' ? 'active' : ''}">
+                    <i class="fas fa-bed fa-rotate-90"></i>
+                    <span>Triple</span>
+                </a>
+                <a th:href="@{/rooms/all(sortType='Deluxe')}" class="filter-item" th:classappend="${param.sortType != null && param.sortType[0] == 'Deluxe' ? 'active' : ''}">
+                    <i class="fas fa-star"></i>
+                    <span>Deluxe</span>
+                </a>
+                <a th:href="@{/rooms/all(sortType='Penthouse')}" class="filter-item" th:classappend="${param.sortType != null && param.sortType[0] == 'Penthouse' ? 'active' : ''}">
+                    <i class="fas fa-building"></i>
+                    <span>Penthouse</span>
+                </a>
             </div>
-            <a href="/rooms/new" class="btn btn-gold">
+            <a href="/rooms/new" class="btn btn-gold add-room-btn">
                 <i class="fas fa-plus"></i> Add New Room
             </a>
         </div>

@@ -3,12 +3,116 @@
 <head>
     <title>Edit Room</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=SF+Pro+Display:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: #f5f5f7;
+            color: #1d1d1f;
+            line-height: 1.5;
+        }
+        .container {
+            max-width: 1200px;
+        }
+        h1 {
+            font-size: 48px;
+            font-weight: 600;
+            letter-spacing: -0.02em;
+            margin-bottom: 24px;
+        }
+        .navbar {
+            background-color: #000000 !important;
+        }
+        .navbar-brand, .nav-link {
+            color: #ffffff !important;
+        }
+        .nav-link:hover {
+            color: #d2d2d7 !important;
+        }
+        .card {
+            background-color: #ffffff;
+            border-radius: 16px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+        .card-body {
+            padding: 32px;
+        }
+        .form-label {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1d1d1f;
+            margin-bottom: 8px;
+        }
+        .form-control, .form-select {
+            border-radius: 8px;
+            border: 1px solid #d2d2d7;
+            font-size: 16px;
+            padding: 12px;
+            transition: border-color 0.2s ease;
+        }
+        .form-control:focus, .form-select:focus {
+            border-color: #0071e3;
+            box-shadow: none;
+        }
+        .input-group-text {
+            background-color: #f5f5f7;
+            border: 1px solid #d2d2d7;
+            border-radius: 8px 0 0 8px;
+            font-size: 16px;
+        }
+        .form-check-input {
+            margin-top: 4px;
+            border-radius: 4px;
+        }
+        .form-check-label {
+            font-size: 16px;
+            color: #6e6e73;
+        }
+        .form-text {
+            font-size: 14px;
+            color: #6e6e73;
+        }
+        .img-thumbnail {
+            border-radius: 12px;
+            max-height: 200px;
+            object-fit: cover;
+        }
+        .btn {
+            border-radius: 980px;
+            padding: 10px 24px;
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+        .btn-edit {
+            background-color: #d4af37;
+            border-color: #d4af37;
+            color: #ffffff;
+        }
+        .btn-edit:hover {
+            background-color: #b8960d;
+            border-color: #b8960d;
+        }
+        .btn-delete {
+            background-color: #ff3b30;
+            border-color: #ff3b30;
+            color: #ffffff;
+        }
+        .btn-delete:hover {
+            background-color: #e63930;
+            border-color: #e63930;
+        }
+        .alert-danger {
+            border-radius: 12px;
+            background-color: #ff3b30;
+            color: #ffffff;
+            font-size: 16px;
+        }
+    </style>
 </head>
 <body>
-    <!-- Added consistent navbar -->
-    <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #1a2526;">
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
         <div class="container">
             <a class="navbar-brand" href="/"> Roys Luxury Goods n' Services ® </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
@@ -81,7 +185,7 @@
                         <div class="col-md-6">
                             <div th:if="${room.imageUrl != null && !room.imageUrl.isEmpty()}" class="mb-3">
                                 <label class="form-label">Current Image Preview</label>
-                                <img th:src="${room.imageUrl}" class="img-thumbnail" style="max-height: 200px;">
+                                <img th:src="${room.imageUrl}" class="img-thumbnail">
                             </div>
                         </div>
                     </div>
