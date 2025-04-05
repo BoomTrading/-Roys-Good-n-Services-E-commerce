@@ -21,7 +21,19 @@ public class ServiceController {
     @GetMapping("/all")
     public String listServices(Model model) {
         List<Service> services = serviceRepository.findAll();
+        List<String> categories = serviceRepository.findDistinctCategories();
         model.addAttribute("services", services);
+        model.addAttribute("categories", categories);
+        return "services";
+    }
+
+    @GetMapping("/category/{category}")
+    public String listServicesByCategory(@PathVariable("category") String category, Model model) {
+        List<Service> services = serviceRepository.findByCategory(category);
+        List<String> categories = serviceRepository.findDistinctCategories();
+        model.addAttribute("services", services);
+        model.addAttribute("categories", categories);
+        model.addAttribute("currentCategory", category);
         return "services";
     }
 
@@ -29,6 +41,9 @@ public class ServiceController {
     @GetMapping("/new")
     public String showNewServiceForm(Model model) {
         model.addAttribute("service", new Service());
+        // Add available categories to help with form selection
+        List<String> categories = serviceRepository.findDistinctCategories();
+        model.addAttribute("categories", categories);
         return "newService";
     }
 
@@ -49,7 +64,9 @@ public class ServiceController {
     public String showEditServiceForm(@PathVariable("id") int id, Model model) {
         Service service = serviceRepository.findById(id)
             .orElseThrow(() -> new IllegalArgumentException("Invalid service Id:" + id));
+        List<String> categories = serviceRepository.findDistinctCategories();
         model.addAttribute("service", service);
+        model.addAttribute("categories", categories);
         return "editService";
     }
 
@@ -83,7 +100,17 @@ public class ServiceController {
     @PostMapping("/search")
     public String listServicesByPatternLike(Model model, @RequestParam String pattern) {
         List<Service> services = serviceRepository.findByPatternLike(pattern);
+        List<String> categories = serviceRepository.findDistinctCategories();
         model.addAttribute("services", services);
+        model.addAttribute("categories", categories);
         return "services";
+    }
+
+    @GetMapping("/details/{id}")
+    public String showServiceDetails(@PathVariable("id") int id, Model model) {
+        Service service = serviceRepository.findById(id)
+            .orElseThrow(() -> new IllegalArgumentException("Invalid service Id: " + id));
+        model.addAttribute("service", service);
+        return "serviceDetails";
     }
 }

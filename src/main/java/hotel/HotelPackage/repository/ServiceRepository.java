@@ -13,4 +13,11 @@ public interface ServiceRepository extends JpaRepository<Service, Integer> {
     // Cerca servizi in base a un pattern
     @Query("SELECT s FROM Service s WHERE s.name LIKE %:pattern% OR s.description LIKE %:pattern% OR s.category LIKE %:pattern%")
     List<Service> findByPatternLike(@Param("pattern") String pattern);
+
+    // Add method to find services by category
+    List<Service> findByCategory(String category);
+
+    // Add method to get all distinct categories
+    @Query("SELECT DISTINCT s.category FROM Service s ORDER BY s.category")
+    List<String> findDistinctCategories();
 }

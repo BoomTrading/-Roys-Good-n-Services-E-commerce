@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Error - Cannot Delete Guest - Rytami</title>
+    <title>Cannot Delete Service - Rytami</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=SF+Pro+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
@@ -157,11 +157,11 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item"><a class="nav-link" href="/">Home</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/services/all">Services</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="/services/all">Services</a></li>
                     <li class="nav-item"><a class="nav-link" href="/rooms/all">Accommodations</a></li>
                     <li class="nav-item"><a class="nav-link" href="/products/all">Shop</a></li>
                     <li class="nav-item"><a class="nav-link" href="/bookings/all">Bookings</a></li>
-                    <li class="nav-item"><a class="nav-link active" href="/guests/all">Guests</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/guests/all">Guests</a></li>
                 </ul>
             </div>
         </div>
@@ -173,38 +173,38 @@
                 <div class="error-icon">
                     <i class="fas fa-exclamation-triangle"></i>
                 </div>
-                <h1>Cannot Delete Guest</h1>
+                <h1>Cannot Delete Service</h1>
             </div>
             <div class="error-body">
-                <h2 class="error-title">This guest is linked to items in the cart</h2>
+                <h2 class="error-title">This service is linked to existing bookings</h2>
                 <p class="error-text">
-                    You're attempting to delete a guest who has items in their shopping cart. Removing them now would 
-                    break the connection to those cart records and affect the integrity of your booking or purchase system (Error 46687).
+                    You're attempting to delete a service that customers have already booked. Removing it now would 
+                    break the connection to those booking records and impact your reservation history.
                 </p>
 
                 <div class="relationship-diagram">
                     <div class="entity-box">
-                        <div class="entity-title">Guest</div>
-                        <p>The customer registered in the system</p>
+                        <div class="entity-title">Service</div>
+                        <p>The service being offered to customers</p>
                     </div>
                     <div class="relation-arrow">
                         <i class="fas fa-long-arrow-alt-down me-2"></i>
                         <span>Referenced by</span>
                     </div>
                     <div class="entity-box">
-                        <div class="entity-title">Cart</div>
-                        <p>A record of items (services, products, or rooms) selected by the guest</p>
+                        <div class="entity-title">Booking</div>
+                        <p>A record of a service reservation by a customer</p>
                     </div>
                 </div>
 
                 <h3 class="error-title">What options do I have?</h3>
                 <p class="error-text">
-                    Instead of deleting the guest completely, consider these alternatives:
+                    Instead of deleting the service completely, consider these alternatives:
                 </p>
                 <ul class="error-text">
-                    <li>Clear the guest’s cart by removing all items manually</li>
-                    <li>Complete or cancel any pending bookings or purchases associated with this guest</li>
-                    <li>Mark the guest as inactive (if your system supports such a status) instead of deleting</li>
+                    <li>Mark the service as unavailable by unchecking the "Available" option</li>
+                    <li>Update the service description to indicate it’s no longer offered</li>
+                    <li>Archive the service by renaming it with a prefix like "[Discontinued]"</li>
                 </ul>
 
                 <div class="helpful-tips">
@@ -212,28 +212,22 @@
                         <i class="fas fa-lightbulb me-2"></i>
                         Quick Tip
                     </div>
-                    <p>If you absolutely must delete this guest, you would need to first remove all related cart items from the database. However, this is not recommended as it could disrupt active transactions or historical data.</p>
+                    <p>If you absolutely must delete this service, you would need to first remove all related bookings from the database. However, this is not recommended as it would affect your booking history integrity.</p>
                 </div>
 
                 <div class="d-flex justify-content-between mt-4">
-                    <a th:href="@{/bookings/all}" class="btn btn-primary">
-                        <i class="fas fa-shopping-cart me-2"></i> Go to Bookings
+                    <a th:href="@{/services/all}" class="btn btn-primary">
+                        <i class="fas fa-arrow-left me-2"></i> Back to Services
                     </a>
-                    <a th:href="@{/guests/all}" class="btn btn-outline-secondary">
-                        <i class="fas fa-arrow-left me-2"></i> Back to Guests
+                    <a th:if="${service != null}" th:href="@{/services/edit/{id}(id=${service.id})}" class="btn btn-outline-secondary">
+                        <i class="fas fa-edit me-2"></i> Edit Service Instead
                     </a>
                 </div>
             </div>
         </div>
     </div>
     
-    <!-- Footer -->
-    <footer class="py-4 mt-5">
-        <div class="container">
-            <p class="mb-0">© 2025 Roys Luxury Goods n' Services</p>
-        </div>
-    </footer>
-
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
+
 </html>
