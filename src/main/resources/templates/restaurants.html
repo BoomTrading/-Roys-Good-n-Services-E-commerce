@@ -251,8 +251,7 @@
                                 <a th:href="@{/services/edit/{id}(id=${restaurant.id})}" class="btn btn-sm btn-warning">
                                     <i class="fas fa-edit"></i>
                                 </a>
-                                <a th:href="@{/services/delete/{id}(id=${restaurant.id})}" class="btn btn-sm btn-danger" 
-                                   onclick="return confirm('Are you sure you want to delete this dining option?')">
+                                <a th:href="@{/services/delete/{id}(id=${restaurant.id})}" class="btn btn-sm btn-danger">
                                     <i class="fas fa-trash-alt"></i>
                                 </a>
                                 <a th:href="@{/cart/add(serviceId=${restaurant.id},quantity=1)}" class="btn btn-sm btn-gold" 

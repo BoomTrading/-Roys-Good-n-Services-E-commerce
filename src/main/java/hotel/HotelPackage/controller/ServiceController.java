@@ -64,6 +64,19 @@ public class ServiceController {
         return "helicopter";
     }
 
+    @GetMapping("/privatejet")
+    public String listPrivateJetServices(Model model) {
+        List<Service> privateJets = serviceRepository.findByCategory("Private Jet");
+        model.addAttribute("privateJets", privateJets);
+        return "privatejet";
+    }
+    // New endpoint for Yacht
+    @GetMapping("/yacht")
+    public String listYachtServices(Model model) {
+        List<Service> yachts = serviceRepository.findByCategory("Yacht");
+        model.addAttribute("yachts", yachts);
+        return "yacht";
+    }
     // Show form to create a new service (used for both Spa and Restaurants)
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/new")
@@ -88,6 +101,10 @@ public class ServiceController {
                 return "redirect:/services/restaurants";
             } else if ("Helicopter".equalsIgnoreCase(service.getCategory())) {
                 return "redirect:/services/helicopter";
+            } else if ("Private Jet".equalsIgnoreCase(service.getCategory())) {
+                return "redirect:/services/privatejet";
+            } else if ("Yacht".equalsIgnoreCase(service.getCategory())) {
+                return "redirect:/services/yacht";
             }
             return "redirect:/services/all";
         } catch (Exception e) {
@@ -122,8 +139,12 @@ public class ServiceController {
                 return "redirect:/services/spa";
             } else if ("Restaurants".equalsIgnoreCase(service.getCategory())) {
                 return "redirect:/services/restaurants";
-            }  else if ("Helicopter".equalsIgnoreCase(service.getCategory())) {
+            } else if ("Helicopter".equalsIgnoreCase(service.getCategory())) {
                 return "redirect:/services/helicopter";
+            } else if ("Private Jet".equalsIgnoreCase(service.getCategory())) {
+                return "redirect:/services/privatejet";
+            } else if ("Yacht".equalsIgnoreCase(service.getCategory())) {
+                return "redirect:/services/yacht";
             }
             return "redirect:/services/all";
         } catch (Exception e) {
@@ -148,8 +169,12 @@ public class ServiceController {
                 return "redirect:/services/spa";
             } else if ("Restaurants".equalsIgnoreCase(service.getCategory())) {
                 return "redirect:/services/restaurants";
-            }  else if ("Helicopter".equalsIgnoreCase(service.getCategory())) {
+            } else if ("Helicopter".equalsIgnoreCase(service.getCategory())) {
                 return "redirect:/services/helicopter";
+            } else if ("Private Jet".equalsIgnoreCase(service.getCategory())) {
+                return "redirect:/services/privatejet";
+            } else if ("Yacht".equalsIgnoreCase(service.getCategory())) {
+                return "redirect:/services/yacht";
             }
             return "redirect:/services/all";
         } catch (Exception e) {
