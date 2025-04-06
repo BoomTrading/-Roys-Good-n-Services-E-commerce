@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Contact Concierge - Rytami</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=SF+Pro+Display:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: #f5f5f7;
+            color: #1d1d1f;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 1200px;
+        }
+        h1 {
+            font-size: 48px;
+            font-weight: 600;
+            letter-spacing: -0.02em;
+            margin-bottom: 16px;
+        }
+        h2 {
+            font-size: 32px;
+            font-weight: 600;
+            margin-bottom: 16px;
+        }
+        h3 {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+        p {
+            font-size: 16px;
+            color: #424245;
+            margin-bottom: 16px;
+        }
+        .navbar {
+            background-color: #000000 !important;
+        }
+        .navbar-brand, .nav-link {
+            color: #ffffff !important;
+        }
+        .nav-link:hover {
+            color: #d2d2d7 !important;
+        }
+        /* Hero Section */
+        .concierge-hero {
+            position: relative;
+            height: 60vh;
+            background: url('/images/concierge-hero.jpg') no-repeat center center/cover;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: #ffffff;
+            overflow: hidden;
+        }
+        .concierge-hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.3));
+        }
+        .concierge-hero-content {
+            position: relative;
+            z-index: 1;
+        }
+        .concierge-hero h1 {
+            font-size: 64px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+        }
+        .concierge-hero p {
+            font-size: 20px;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+            margin-bottom: 24px;
+            color: #ffffff;
+        }
+        /* Section Styles */
+        .section {
+            background-color: #ffffff;
+            border-radius: 16px;
+            padding: 40px;
+            margin-bottom: 32px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+        .section-dark {
+            background: linear-gradient(135deg, #1d1d1f 0%, #424245 100%);
+            color: #ffffff;
+        }
+        .section-dark p {
+            color: #d2d2d7;
+        }
+        .contact-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+        .contact-item i {
+            font-size: 24px;
+            color: #0071e3;
+            margin-right: 16px;
+        }
+        .contact-item p {
+            font-size: 16px;
+            color: #424245;
+            margin: 0;
+        }
+        .contact-item-dark i {
+            color: #d4af37;
+        }
+        .contact-item-dark p {
+            color: #d2d2d7;
+        }
+        .btn {
+            border-radius: 980px;
+            padding: 10px 24px;
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+        .btn-gold {
+            background-color: #d4af37;
+            border-color: #d4af37;
+            color: #ffffff;
+        }
+        .btn-gold:hover {
+            background-color: #b8960d;
+            border-color: #b8960d;
+        }
+        .btn-primary {
+            background-color: #0071e3;
+            border-color: #0071e3;
+            color: #ffffff;
+        }
+        .btn-primary:hover {
+            background-color: #005bb5;
+            border-color: #005bb5;
+        }
+        .form-control {
+            border-radius: 8px;
+            border: 1px solid #d2d2d7;
+            font-size: 16px;
+            padding: 12px;
+            transition: border-color 0.3s ease;
+        }
+        .form-control:focus {
+            border-color: #0071e3;
+            box-shadow: 0 0 0 3px rgba(0, 113, 227, 0.1);
+            outline: none;
+        }
+        .form-label {
+            font-size: 16px;
+            font-weight: 500;
+            color: #1d1d1f;
+            margin-bottom: 8px;
+        }
+        .form-group {
+            margin-bottom: 24px;
+        }
+        .contact-form {
+            background-color: #ffffff;
+            border-radius: 16px;
+            padding: 40px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+        footer {
+            background-color: #f5f5f7 !important;
+            color: #6e6e73 !important;
+            font-size: 14px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+            <a class="navbar-brand" href="/">Roys Luxury Goods n' Services ®</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="/">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/services/all">Services</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/rooms/all">Accommodations</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/products/all">Shop</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/guests/all">Guests</a></li>
+                   
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <div class="concierge-hero">
+        <div class="concierge-hero-content">
+            <h1>Contact Our Concierge</h1>
+            <p>We’re here to assist you with personalized service, 24/7. Reach out to us with your inquiries.</p>
+            <a href="#contact-form" class="btn btn-gold">Get in Touch</a>
+        </div>
+    </div>
+
+    <div class="container mt-5">
+        <!-- Contact Form Section -->
+        <div class="section" id="contact-form">
+            <h2>Send Us a Message</h2>
+            <p>Our concierge team is ready to assist with any request, from booking a luxury experience to inquiring about our services. Fill out the form below, and we’ll get back to you promptly.</p>
+            <form class="contact-form" action="#" method="POST">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="firstName" class="form-label">First Name</label>
+                            <input type="text" class="form-control" id="firstName" name="firstName" placeholder="Enter your first name" required>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="lastName" class="form-label">Last Name</label>
+                            <input type="text" class="form-control" id="lastName" name="lastName" placeholder="Enter your last name" required>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="email" class="form-label">Email Address</label>
+                            <input type="email" class="form-control" id="email" name="email" placeholder="Enter your email" required>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="phone" class="form-label">Phone Number</label>
+                            <input type="tel" class="form-control" id="phone" name="phone" placeholder="Enter your phone number">
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="subject" class="form-label">Subject</label>
+                    <select class="form-control" id="subject" name="subject" required>
+                        <option value="" disabled selected>Select a subject</option>
+                        <option value="booking">Booking a Service</option>
+                        <option value="investment">Investment Inquiry</option>
+                        <option value="realestate">Luxury Real Estate</option>
+                        <option value="rarecollections">Rare Collections Inquiry</option>
+                        <option value="general">General Inquiry</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="message" class="form-label">Message</label>
+                    <textarea class="form-control" id="message" name="message" rows="6" placeholder="Tell us how we can assist you" required></textarea>
+                </div>
+                <div class="form-group">
+                    <div class="form-check">
+                        <input type="checkbox" class="form-check-input" id="newsletter" name="newsletter">
+                        <label class="form-check-label" for="newsletter">Subscribe to our newsletter for exclusive updates</label>
+                    </div>
+                </div>
+                <div class="text-center">
+                    <button type="submit" class="btn btn-primary">Send Message</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Alternative Contact Methods -->
+        <div class="section section-dark">
+            <h2>Other Ways to Reach Us</h2>
+            <p>Prefer to contact us directly? Our concierge team is available through multiple channels to ensure you receive the assistance you need.</p>
+            <div class="contact-item contact-item-dark">
+                <i class="fas fa-phone-alt"></i>
+                <p><strong>Phone:</strong> +1-800-555-1234 (Available 24/7)</p>
+            </div>
+            <div class="contact-item contact-item-dark">
+                <i class="fas fa-envelope"></i>
+                <p><strong>Email:</strong> concierge@rytamiluxury.com</p>
+            </div>
+            <div class="contact-item contact-item-dark">
+                <i class="fas fa-map-marker-alt"></i>
+                <p><strong>Visit Us:</strong> Rytami Luxury Headquarters, 123 Luxury Lane, Dubai, UAE</p>
+            </div>
+            <div class="contact-item contact-item-dark">
+                <i class="fab fa-whatsapp"></i>
+                <p><strong>WhatsApp:</strong> +1-800-555-5678 (Chat with us anytime)</p>
+            </div>
+        </div>
+
+        <!-- Concierge Services Overview -->
+        <div class="section">
+            <h2>Our Concierge Services</h2>
+            <p>At Rytami, our concierge team is dedicated to providing white-glove service tailored to your needs. Here’s how we can assist you:</p>
+            <div class="contact-item">
+                <i class="fas fa-concierge-bell"></i>
+                <p><strong>Personalized Bookings:</strong> Let us handle your reservations for spa treatments, private jet charters, yacht rentals, and more.</p>
+            </div>
+            <div class="contact-item">
+                <i class="fas fa-home"></i>
+                <p><strong>Real Estate Assistance:</strong> Need help finding a luxury property? Our team can connect you with the perfect home or investment opportunity.</p>
+            </div>
+            <div class="contact-item">
+                <i class="fas fa-gem"></i>
+                <p><strong>Rare Collections Sourcing:</strong> Looking for a specific rare item? We’ll source and authenticate it for you.</p>
+            </div>
+            <div class="contact-item">
+                <i class="fas fa-users"></i>
+                <p><strong>Event Planning:</strong> From private dinners to exclusive galas, we’ll plan every detail of your event.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="py-4 mt-5">
+        <div class="container">
+            <p class="mb-0">© 2025 Roys Luxury Goods n' Services</p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
