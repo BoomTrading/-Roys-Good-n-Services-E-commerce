@@ -21,6 +21,12 @@ public class Payment {
     @Column(name = "status")
     private String status;
     
+    @Column(name = "payment_method")
+    private String paymentMethod;
+    
+    @Column(name = "transaction_id")
+    private String transactionId;
+    
     @ManyToOne
     @JoinColumn(name = "Bookings_id", nullable = true)
     private Booking booking;
@@ -38,6 +44,10 @@ public class Payment {
     public void setPaymentDate(LocalDateTime paymentDate) { this.paymentDate = paymentDate; }
     public String getStatus() { return status; }
     public void setStatus(String status) { this.status = status; }
+    public String getPaymentMethod() { return paymentMethod; }
+    public void setPaymentMethod(String paymentMethod) { this.paymentMethod = paymentMethod; }
+    public String getTransactionId() { return transactionId; }
+    public void setTransactionId(String transactionId) { this.transactionId = transactionId; }
     public Booking getBooking() { return booking; }
     public void setBooking(Booking booking) { this.booking = booking; }
     public Order getOrder() { return order; }

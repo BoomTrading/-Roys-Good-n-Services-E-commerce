@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Payment Details - Rytami</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=SF+Pro+Display:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: #f5f5f7;
+            color: #1d1d1f;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 1200px;
+        }
+        h1 {
+            font-size: 48px;
+            font-weight: 600;
+            letter-spacing: -0.02em;
+            margin-bottom: 16px;
+        }
+        h2 {
+            font-size: 32px;
+            font-weight: 600;
+            margin-bottom: 16px;
+        }
+        p {
+            font-size: 16px;
+            color: #424245;
+            margin-bottom: 16px;
+        }
+        .navbar {
+            background-color: #000000 !important;
+        }
+        .navbar-brand, .nav-link {
+            color: #ffffff !important;
+        }
+        .nav-link:hover {
+            color: #d2d2d7 !important;
+        }
+        /* Details Styles */
+        .details-section {
+            background-color: #ffffff;
+            border-radius: 16px;
+            padding: 40px;
+            margin-bottom: 32px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+        .detail-row {
+            display: flex;
+            border-bottom: 1px solid #d2d2d7;
+            padding: 16px 0;
+        }
+        .detail-row:last-child {
+            border-bottom: none;
+        }
+        .detail-label {
+            flex: 0 0 200px;
+            font-weight: 600;
+            color: #1d1d1f;
+        }
+        .detail-value {
+            flex: 1;
+            color: #424245;
+        }
+        .badge {
+            font-size: 14px;
+            padding: 6px 12px;
+            border-radius: 12px;
+        }
+        /* Buttons */
+        .btn {
+            border-radius: 980px;
+            padding: 10px 24px;
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+        .btn-gold {
+            background-color: #d4af37;
+            border-color: #d4af37;
+            color: #ffffff;
+        }
+        .btn-gold:hover {
+            background-color: #b8960d;
+            border-color: #b8960d;
+        }
+        .btn-outline-gold {
+            background-color: transparent;
+            border-color: #d4af37;
+            color: #d4af37;
+        }
+        .btn-outline-gold:hover {
+            background-color: #d4af37;
+            color: #ffffff;
+        }
+        .btn-danger-outline {
+            background-color: transparent;
+            border-color: #ff3b30;
+            color: #ff3b30;
+        }
+        .btn-danger-outline:hover {
+            background-color: #ff3b30;
+            color: #ffffff;
+        }
+        footer {
+            background-color: #f5f5f7 !important;
+            color: #6e6e73 !important;
+            font-size: 14px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+            <a class="navbar-brand" href="/">Roys Luxury Goods n' Services ®</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="/">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/services/all">Services</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/rooms/all">Accommodations</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/products/all">Shop</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/guests/all">Guests</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-5">
+        <!-- Payment Details -->
+        <div class="details-section">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2>Payment Details</h2>
+                <div>
+                    <a href="/payments" class="btn btn-outline-gold me-2">
+                        <i class="fas fa-arrow-left me-2"></i> Back to Payments
+                    </a>
+                    <a th:href="@{/payments/edit/{id}(id=${payment.id})}" class="btn btn-gold">
+                        <i class="fas fa-edit me-2"></i> Edit Payment
+                    </a>
+                </div>
+            </div>
+            
+            <div class="detail-row">
+                <div class="detail-label">Payment ID</div>
+                <div class="detail-value" th:text="${payment.id}"></div>
+            </div>
+            
+            <div class="detail-row">
+                <div class="detail-label">Amount</div>
+                <div class="detail-value" th:text="'€' + ${#numbers.formatDecimal(payment.amountPaid, 1, 2)}"></div>
+            </div>
+            
+            <div class="detail-row">
+                <div class="detail-label">Payment Date</div>
+                <div class="detail-value" th:text="${#temporals.format(payment.paymentDate, 'dd MMMM yyyy HH:mm')}"></div>
+            </div>
+            
+            <div class="detail-row">
+                <div class="detail-label">Status</div>
+                <div class="detail-value">
+                    <span class="badge" 
+                          th:classappend="${payment.status == 'Paid' ? 'bg-success' : payment.status == 'Pending' ? 'bg-warning' : 'bg-danger'}"
+                          th:text="${payment.status}"></span>
+                </div>
+            </div>
+            
+            <div class="detail-row" th:if="${payment.booking != null}">
+                <div class="detail-label">Booking Details</div>
+                <div class="detail-value">
+                    <div><strong>Booking ID:</strong> <span th:text="${payment.booking.id}"></span></div>
+                    <div th:if="${payment.booking.guest != null}">
+                        <strong>Guest:</strong> 
+                        <span th:text="${payment.booking.guest.firstName + ' ' + payment.booking.guest.lastName}"></span>
+                    </div>
+                    <div th:if="${payment.booking.room != null}">
+                        <strong>Room:</strong> 
+                        <span th:text="${payment.booking.room.roomNumber + ' - ' + payment.booking.room.type}"></span>
+                    </div>
+                    <div>
+                        <strong>Check-in/out:</strong> 
+                        <span th:text="${#temporals.format(payment.booking.checkIn, 'dd MMM yyyy')} + ' to ' + ${#temporals.format(payment.booking.checkOut, 'dd MMM yyyy')}"></span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="detail-row" th:if="${payment.order != null}">
+                <div class="detail-label">Order Details</div>
+                <div class="detail-value">
+                    <div><strong>Order ID:</strong> <span th:text="${payment.order.id}"></span></div>
+                    <div th:if="${payment.order.guest != null}">
+                        <strong>Guest:</strong> 
+                        <span th:text="${payment.order.guest.firstName + ' ' + payment.order.guest.lastName}"></span>
+                    </div>
+                    <div>
+                        <strong>Order Date:</strong> 
+                        <span th:text="${#temporals.format(payment.order.orderDate, 'dd MMM yyyy HH:mm')}"></span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="mt-4 mb-3">
+                <a th:href="@{/payments/refunded/{id}(id=${payment.id})}" 
+                   class="btn btn-danger-outline"
+                   th:if="${payment.status != 'Refunded'}">
+                    <i class="fas fa-undo me-2"></i> Mark as Refunded
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="py-4 mt-5">
+        <div class="container">
+            <p class="mb-0">© 2025 Roys Luxury Goods n' Services</p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

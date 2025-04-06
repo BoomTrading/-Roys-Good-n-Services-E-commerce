@@ -158,6 +158,14 @@ public class GuestController {
         return autoList;
     }
 
+    @GetMapping("/details/{id}")
+    public String showGuestDetails(@PathVariable("id") int id, Model model) {
+        Guest guest = guestRepository.findById(id)
+            .orElseThrow(() -> new IllegalArgumentException("Invalid guest Id:" + id));
+        model.addAttribute("guest", guest);
+        return "guestDetails";
+    }
+
     private boolean isValidGuestData(Guest guest) {
         return guest != null 
             && guest.getEmail() != null && !guest.getEmail().trim().isEmpty()

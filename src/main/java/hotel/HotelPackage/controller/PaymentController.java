@@ -35,6 +35,15 @@ public class PaymentController {
         model.addAttribute("payment", payment);
         return "paymentDetails"; // Vista Thymeleaf per i dettagli
     }
+    
+    // **Read: Dettagli di un pagamento (endpoint alternativo)**
+    @GetMapping("/details/{id}")
+    public String showPaymentDetailsAlternative(@PathVariable("id") int id, Model model) {
+        Payment payment = paymentRepository.findById(id)
+            .orElseThrow(() -> new IllegalArgumentException("Invalid payment Id:" + id));
+        model.addAttribute("payment", payment);
+        return "paymentDetails"; // Vista Thymeleaf per i dettagli
+    }
 
     // **Create: Mostra form per nuovo pagamento**
     @GetMapping("/new")
@@ -75,6 +84,22 @@ public class PaymentController {
         } catch (Exception e) {
             model.addAttribute("errorMessage", "Error updating payment: " + e.getMessage());
             return "editPayment";
+        }
+    }
+
+    // **Mark payment as refunded**
+    @GetMapping("/refunded/{id}")
+    public String markPaymentAsRefunded(@PathVariable("id") int id, Model model) {
+        try {
+            Payment payment = paymentRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid payment Id:" + id));
+            payment.setStatus("Refunded");
+            paymentRepository.save(payment);
+            model.addAttribute("successMessage", "Payment marked as refunded successfully!");
+            return "redirect:/payments";
+        } catch (Exception e) {
+            model.addAttribute("errorMessage", "Error marking payment as refunded: " + e.getMessage());
+            return "redirect:/payments";
         }
     }
 

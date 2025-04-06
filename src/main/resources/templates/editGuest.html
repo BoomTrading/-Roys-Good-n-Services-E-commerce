@@ -1,16 +1,157 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Edit Guest</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
+    <title>Edit Guest - Rytami</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=SF+Pro+Display:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: #f5f5f7;
+            color: #1d1d1f;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 1200px;
+        }
+        h1 {
+            font-size: 48px;
+            font-weight: 600;
+            letter-spacing: -0.02em;
+            margin-bottom: 16px;
+        }
+        h2 {
+            font-size: 32px;
+            font-weight: 600;
+            margin-bottom: 16px;
+        }
+        h4 {
+            font-size: 20px;
+            font-weight: 600;
+            color: #1d1d1f;
+            margin-bottom: 16px;
+        }
+        p {
+            font-size: 16px;
+            color: #424245;
+            margin-bottom: 16px;
+        }
+        .navbar {
+            background-color: #000000 !important;
+        }
+        .navbar-brand, .nav-link {
+            color: #ffffff !important;
+        }
+        .nav-link:hover {
+            color: #d2d2d7 !important;
+        }
+        /* Hero Section */
+        .editguest-hero {
+            position: relative;
+            height: 60vh;
+            background: url('/images/editguest-hero.jpg') no-repeat center center/cover;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: #ffffff;
+            overflow: hidden;
+        }
+        .editguest-hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.3));
+        }
+        .editguest-hero-content {
+            position: relative;
+            z-index: 1;
+        }
+        .editguest-hero h1 {
+            font-size: 64px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+        }
+        .editguest-hero p {
+            font-size: 20px;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+            margin-bottom: 24px;
+            color: #ffffff;
+        }
+        /* Form Styles */
+        .form-section {
+            background-color: #ffffff;
+            border-radius: 16px;
+            padding: 40px;
+            margin-bottom: 32px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+        .form-label {
+            font-size: 16px;
+            font-weight: 500;
+            color: #1d1d1f;
+            margin-bottom: 8px;
+        }
+        .form-control {
+            border-radius: 8px;
+            border: 1px solid #d2d2d7;
+            font-size: 16px;
+            padding: 12px;
+            transition: border-color 0.3s ease;
+        }
+        .form-control:focus {
+            border-color: #0071e3;
+            box-shadow: 0 0 0 3px rgba(0, 113, 227, 0.1);
+            outline: none;
+        }
+        .form-group {
+            margin-bottom: 24px;
+        }
+        /* Buttons */
+        .btn {
+            border-radius: 980px;
+            padding: 10px 24px;
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+        .btn-primary {
+            background-color: #0071e3;
+            border-color: #0071e3;
+            color: #ffffff;
+        }
+        .btn-primary:hover {
+            background-color: #005bb5;
+            border-color: #005bb5;
+        }
+        .btn-secondary {
+            background-color: #6e6e73;
+            border-color: #6e6e73;
+            color: #ffffff;
+        }
+        .btn-secondary:hover {
+            background-color: #5c5c61;
+            border-color: #5c5c61;
+        }
+        footer {
+            background-color: #f5f5f7 !important;
+            color: #6e6e73 !important;
+            font-size: 14px;
+            text-align: center;
+        }
+    </style>
 </head>
 <body>
-    <!-- Added consistent navbar -->
-    <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #1a2526;">
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
         <div class="container">
-            <a class="navbar-brand" href="/"> Roys Luxury Goods n' Services ® </a>
+            <a class="navbar-brand" href="/">Roys Luxury Goods n' Services ®</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -20,36 +161,103 @@
                     <li class="nav-item"><a class="nav-link" href="/services/all">Services</a></li>
                     <li class="nav-item"><a class="nav-link" href="/rooms/all">Accommodations</a></li>
                     <li class="nav-item"><a class="nav-link" href="/products/all">Shop</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/bookings/all">Bookings</a></li>
                     <li class="nav-item"><a class="nav-link active" href="/guests/all">Guests</a></li>
                 </ul>
             </div>
         </div>
     </nav>
 
+
     <div class="container mt-5">
-        <h1>Edit Guest</h1>
-        <form th:action="@{/guests/upd}" th:object="${guest}" method="post">
-            <input type="hidden" th:field="*{id}">
-            <div class="mb-3">
-                <label>First Name</label>
-                <input type="text" class="form-control" th:field="*{firstName}">
-            </div>
-            <div class="mb-3">
-                <label>Last Name</label>
-                <input type="text" class="form-control" th:field="*{lastName}">
-            </div>
-            <div class="mb-3">
-                <label>Email</label>
-                <input type="email" class="form-control" th:field="*{email}">
-            </div>
-            <div class="mb-3">
-                <label>Password</label>
-                <input type="password" class="form-control" th:field="*{password}">
-            </div>
-            <button type="submit" class="btn btn-success">Update</button>
-            <a href="/guests/all" class="btn btn-secondary">Cancel</a>
-        </form>
+        <!-- Form Section -->
+        <div class="form-section">
+            <h2>Edit Guest Details</h2>
+            <form th:action="@{/guests/upd}" th:object="${guest}" method="post">
+                <input type="hidden" th:field="*{id}">
+                <div class="row">
+                    <!-- Personal Information -->
+                    <div class="col-md-6">
+                        <h4>Personal Information</h4>
+                        <div class="form-group">
+                            <label for="firstName" class="form-label">First Name</label>
+                            <input type="text" class="form-control" id="firstName" th:field="*{firstName}" placeholder="Enter first name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="lastName" class="form-label">Last Name</label>
+                            <input type="text" class="form-control" id="lastName" th:field="*{lastName}" placeholder="Enter last name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="email" class="form-label">Email</label>
+                            <input type="email" class="form-control" id="email" th:field="*{email}" placeholder="Enter email address" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="password" class="form-label">Password</label>
+                            <input type="password" class="form-control" id="password" th:field="*{password}" placeholder="Enter new password (leave blank to keep current)">
+                        </div>
+                        <div class="form-group">
+                            <label for="phone" class="form-label">Phone</label>
+                            <input type="text" class="form-control" id="phone" th:field="*{phone}" placeholder="Enter phone number">
+                        </div>
+                        <div class="form-group">
+                            <label for="birthDay" class="form-label">Birth Date</label>
+                            <input type="date" class="form-control" id="birthDay" th:field="*{birthDay}">
+                        </div>
+                        <div class="form-group">
+                            <label for="identityCard" class="form-label">Identity Card</label>
+                            <input type="text" class="form-control" id="identityCard" th:field="*{identityCard}" placeholder="Enter identity card number">
+                        </div>
+                        <div class="form-group">
+                            <label for="nationality" class="form-label">Nationality</label>
+                            <input type="text" class="form-control" id="nationality" th:field="*{nationality}" placeholder="Enter nationality">
+                        </div>
+                    </div>
+                    <!-- Address Information -->
+                    <div class="col-md-6">
+                        <h4>Address Information</h4>
+                        <div class="form-group">
+                            <label for="country" class="form-label">Country</label>
+                            <input type="text" class="form-control" id="country" th:field="*{country}" placeholder="Enter country">
+                        </div>
+                        <div class="form-group">
+                            <label for="state" class="form-label">State</label>
+                            <input type="text" class="form-control" id="state" th:field="*{state}" placeholder="Enter state">
+                        </div>
+                        <div class="form-group">
+                            <label for="province" class="form-label">Province</label>
+                            <input type="text" class="form-control" id="province" th:field="*{province}" placeholder="Enter province">
+                        </div>
+                        <div class="form-group">
+                            <label for="city" class="form-label">City</label>
+                            <input type="text" class="form-control" id="city" th:field="*{city}" placeholder="Enter city">
+                        </div>
+                        <div class="form-group">
+                            <label for="address" class="form-label">Address</label>
+                            <input type="text" class="form-control" id="address" th:field="*{address}" placeholder="Enter address">
+                        </div>
+                        <div class="form-group">
+                            <label for="role" class="form-label">Role</label>
+                            <select class="form-control" id="role" th:field="*{role}" required>
+                                <option value="USER">User</option>
+                                <option value="ADMIN">Admin</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="d-flex gap-3 mt-4">
+                    <button type="submit" class="btn btn-primary">Update Guest</button>
+                    <a href="/guests/all" class="btn btn-secondary">Cancel</a>
+                </div>
+            </form>
+        </div>
     </div>
+
+    <!-- Footer -->
+    <footer class="py-4 mt-5">
+        <div class="container">
+            <p class="mb-0">© 2025 Roys Luxury Goods n' Services</p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
