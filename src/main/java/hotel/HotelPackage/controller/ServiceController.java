@@ -47,12 +47,21 @@ public class ServiceController {
         return "spa";
     }
 
-    // Dedicated endpoint for Restaurants page (filters services with category 'Restaurants')
+    // Dedicated endpoint for Restaurants page (filters services with category
+    // 'Restaurants')
     @GetMapping("/restaurants")
     public String listRestaurantServices(Model model) {
         List<Service> restaurants = serviceRepository.findByCategory("Restaurants");
         model.addAttribute("restaurants", restaurants);
         return "restaurants";
+    }
+
+    // New endpoint for Helicopter
+    @GetMapping("/helicopter")
+    public String listHelicopterServices(Model model) {
+        List<Service> helicopters = serviceRepository.findByCategory("Helicopter");
+        model.addAttribute("helicopters", helicopters);
+        return "helicopter";
     }
 
     // Show form to create a new service (used for both Spa and Restaurants)
@@ -77,6 +86,8 @@ public class ServiceController {
                 return "redirect:/services/spa";
             } else if ("Restaurants".equalsIgnoreCase(service.getCategory())) {
                 return "redirect:/services/restaurants";
+            } else if ("Helicopter".equalsIgnoreCase(service.getCategory())) {
+                return "redirect:/services/helicopter";
             }
             return "redirect:/services/all";
         } catch (Exception e) {
@@ -111,6 +122,8 @@ public class ServiceController {
                 return "redirect:/services/spa";
             } else if ("Restaurants".equalsIgnoreCase(service.getCategory())) {
                 return "redirect:/services/restaurants";
+            }  else if ("Helicopter".equalsIgnoreCase(service.getCategory())) {
+                return "redirect:/services/helicopter";
             }
             return "redirect:/services/all";
         } catch (Exception e) {
@@ -135,6 +148,8 @@ public class ServiceController {
                 return "redirect:/services/spa";
             } else if ("Restaurants".equalsIgnoreCase(service.getCategory())) {
                 return "redirect:/services/restaurants";
+            }  else if ("Helicopter".equalsIgnoreCase(service.getCategory())) {
+                return "redirect:/services/helicopter";
             }
             return "redirect:/services/all";
         } catch (Exception e) {
