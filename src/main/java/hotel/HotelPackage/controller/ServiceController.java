@@ -77,6 +77,14 @@ public class ServiceController {
         model.addAttribute("yachts", yachts);
         return "yacht";
     }
+     // New endpoint for Golf
+     @GetMapping("/golf")
+     public String listGolfServices(Model model) {
+         List<Service> golfServices = serviceRepository.findByCategory("Golf");
+         model.addAttribute("golfServices", golfServices);
+         return "golf";
+     }
+
     // Show form to create a new service (used for both Spa and Restaurants)
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/new")
@@ -105,6 +113,8 @@ public class ServiceController {
                 return "redirect:/services/privatejet";
             } else if ("Yacht".equalsIgnoreCase(service.getCategory())) {
                 return "redirect:/services/yacht";
+            } else if ("Golf".equalsIgnoreCase(service.getCategory())) {
+                return "redirect:/services/golf";
             }
             return "redirect:/services/all";
         } catch (Exception e) {
@@ -145,6 +155,8 @@ public class ServiceController {
                 return "redirect:/services/privatejet";
             } else if ("Yacht".equalsIgnoreCase(service.getCategory())) {
                 return "redirect:/services/yacht";
+            } else if ("Golf".equalsIgnoreCase(service.getCategory())) {
+                return "redirect:/services/golf";
             }
             return "redirect:/services/all";
         } catch (Exception e) {
@@ -175,6 +187,8 @@ public class ServiceController {
                 return "redirect:/services/privatejet";
             } else if ("Yacht".equalsIgnoreCase(service.getCategory())) {
                 return "redirect:/services/yacht";
+            } else if ("Golf".equalsIgnoreCase(service.getCategory())) {
+                return "redirect:/services/golf";
             }
             return "redirect:/services/all";
         } catch (Exception e) {
