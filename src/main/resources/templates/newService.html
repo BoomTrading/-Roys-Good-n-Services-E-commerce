@@ -161,6 +161,11 @@
                                     <input type="number" step="0.01" min="0" class="form-control" th:field="*{price}" required>
                                 </div>
                             </div>
+                            <div class="mb-3">
+                                <label class="form-label">Image URL</label>
+                                <input type="url" class="form-control" th:field="*{imageUrl}" placeholder="https://example.com/service-image.jpg" id="imageUrlInput">
+                                <div class="form-text">Enter a direct link to an image that represents this service</div>
+                            </div>
                         </div>
                         <div class="col-md-6">
                             <div class="mb-3">
@@ -174,6 +179,14 @@
                                     <option value="true">Available</option>
                                     <option value="false">Unavailable</option>
                                 </select>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Image Preview</label>
+                                <div class="text-center">
+                                    <img id="imagePreview" 
+                                        src="https://via.placeholder.com/300x200?text=No+Image+Available" 
+                                        class="img-thumbnail" alt="Service Image Preview">
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -212,6 +225,16 @@
                 newCategoryInput.required = true;
                 this.name = '';
                 this.required = false;
+            }
+        });
+
+        // Image URL input handling
+        document.getElementById('imageUrlInput').addEventListener('input', function() {
+            const imagePreview = document.getElementById('imagePreview');
+            if (this.value) {
+                imagePreview.src = this.value;
+            } else {
+                imagePreview.src = 'https://via.placeholder.com/300x200?text=No+Image+Available';
             }
         });
     </script>

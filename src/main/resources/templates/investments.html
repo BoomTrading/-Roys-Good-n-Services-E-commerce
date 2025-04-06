@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Investments - Rytami</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=SF+Pro+Display:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: #f5f5f7;
+            color: #1d1d1f;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 1200px;
+        }
+        h1 {
+            font-size: 48px;
+            font-weight: 600;
+            letter-spacing: -0.02em;
+            margin-bottom: 16px;
+        }
+        h2 {
+            font-size: 32px;
+            font-weight: 600;
+            margin-bottom: 16px;
+        }
+        h3 {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+        p {
+            font-size: 16px;
+            color: #424245;
+            margin-bottom: 16px;
+        }
+        .navbar {
+            background-color: #000000 !important;
+        }
+        .navbar-brand, .nav-link {
+            color: #ffffff !important;
+        }
+        .nav-link:hover {
+            color: #d2d2d7 !important;
+        }
+        /* Hero Section */
+        .investments-hero {
+            position: relative;
+            height: 80vh;
+            background: url('/images/investments-hero.jpg') no-repeat center center/cover;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: #ffffff;
+            overflow: hidden;
+        }
+        .investments-hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.3));
+        }
+        .investments-hero-content {
+            position: relative;
+            z-index: 1;
+        }
+        .investments-hero h1 {
+            font-size: 64px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+        }
+        .investments-hero p {
+            font-size: 20px;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+            margin-bottom: 24px;
+            color: #ffffff;
+        }
+        /* Section Styles */
+        .section {
+            background-color: #ffffff;
+            border-radius: 16px;
+            padding: 40px;
+            margin-bottom: 32px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+        .section-dark {
+            background: linear-gradient(135deg, #1d1d1f 0%, #424245 100%);
+            color: #ffffff;
+        }
+        .section-dark p {
+            color: #d2d2d7;
+        }
+        .feature-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+        .feature-item i {
+            font-size: 24px;
+            color: #0071e3;
+            margin-right: 16px;
+        }
+        .feature-item p {
+            font-size: 16px;
+            color: #424245;
+            margin: 0;
+        }
+        .feature-item-dark i {
+            color: #d4af37;
+        }
+        .feature-item-dark p {
+            color: #d2d2d7;
+        }
+        .btn {
+            border-radius: 980px;
+            padding: 10px 24px;
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+        .btn-gold {
+            background-color: #d4af37;
+            border-color: #d4af37;
+            color: #ffffff;
+        }
+        .btn-gold:hover {
+            background-color: #b8960d;
+            border-color: #b8960d;
+        }
+        .btn-primary {
+            background-color: #0071e3;
+            border-color: #0071e3;
+            color: #ffffff;
+        }
+        .btn-primary:hover {
+            background-color: #005bb5;
+            border-color: #005bb5;
+        }
+        .coming-soon {
+            background-color: #e8f0fe;
+            border-radius: 12px;
+            padding: 16px;
+            text-align: center;
+            margin-bottom: 32px;
+        }
+        .coming-soon p {
+            color: #1d1d1f;
+            font-size: 16px;
+            margin: 0;
+        }
+        .investment-card {
+            background-color: #ffffff;
+            border-radius: 16px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            padding: 20px;
+            transition: all 0.3s ease;
+        }
+        .investment-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+        }
+        .investment-image {
+            height: 150px;
+            width: 100%;
+            object-fit: cover;
+            border-radius: 12px;
+            margin-bottom: 16px;
+        }
+        .networking-event {
+            display: flex;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+        .networking-event i {
+            font-size: 24px;
+            color: #d4af37;
+            margin-right: 16px;
+        }
+        .networking-event p {
+            font-size: 16px;
+            color: #d2d2d7;
+            margin: 0;
+        }
+        footer {
+            background-color: #f5f5f7 !important;
+            color: #6e6e73 !important;
+            font-size: 14px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+            <a class="navbar-brand" href="/">Roys Luxury Goods n' Services ®</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="/">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/services/all">Services</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/rooms/all">Accommodations</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/products/all">Shop</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/guests/all">Guests</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <div class="investments-hero">
+        <div class="investments-hero-content">
+            <h1>Unlock the Future of Wealth Creation</h1>
+            <p>Explore exclusive investment opportunities, build your corporation, and connect with global business leaders.</p>
+            <a href="#investments" class="btn btn-gold">Discover Opportunities</a>
+        </div>
+    </div>
+
+    <div class="container mt-5">
+        <!-- Introduction to Investments -->
+        <div class="section">
+            <h2>Welcome to Rytami Investments</h2>
+            <p>At Rytami, we believe that wealth creation is an art form, one that requires vision, strategy, and the right connections. Our Investments division is designed to empower high-net-worth individuals, entrepreneurs, and visionaries to grow their portfolios through exclusive opportunities that are as luxurious as they are lucrative.</p>
+            <p>Whether you’re looking to diversify your investments, establish a new corporation, or network with like-minded business leaders, Rytami Investments offers a curated platform to help you achieve your financial goals. From real estate ventures to startup funding, we provide access to opportunities that are typically reserved for the elite.</p>
+        </div>
+
+        <!-- Why Invest with Rytami -->
+        <div class="section">
+            <h2>Why Invest with Rytami?</h2>
+            <div class="feature-item">
+                <i class="fas fa-chart-line"></i>
+                <p>Access to high-yield investment opportunities curated by our expert financial advisors.</p>
+            </div>
+            <div class="feature-item">
+                <i class="fas fa-globe"></i>
+                <p>Global reach with investment options spanning real estate, technology, luxury goods, and more.</p>
+            </div>
+            <div class="feature-item">
+                <i class="fas fa-shield-alt"></i>
+                <p>Secure and transparent processes to ensure your investments are protected.</p>
+            </div>
+            <div class="feature-item">
+                <i class="fas fa-users"></i>
+                <p>Exclusive networking events to connect with potential partners and associates.</p>
+            </div>
+        </div>
+
+        <!-- Investment Opportunities -->
+        <div class="section" id="investments">
+            <h2>Explore Investment Opportunities</h2>
+            <p>Our investment portfolio is designed to cater to the discerning investor. Below are some of the opportunities we currently offer, with more exciting options coming soon.</p>
+            <div class="row row-cols-1 row-cols-md-3 g-4">
+                <div class="col">
+                    <div class="investment-card">
+                        <img src="https://via.placeholder.com/500x300?text=Real+Estate" class="investment-image" alt="Real Estate Investment">
+                        <h3>Luxury Real Estate</h3>
+                        <p>Invest in prime properties across the globe, from beachfront villas in the Maldives to penthouses in New York City. Our real estate portfolio offers high returns and long-term value appreciation.</p>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="investment-card">
+                        <img src="https://via.placeholder.com/500x300?text=Tech+Startups" class="investment-image" alt="Tech Startups">
+                        <h3>Tech Startups</h3>
+                        <p>Back the next big thing in technology. We partner with innovative startups in AI, fintech, and green tech, offering you the chance to invest early and reap significant rewards.</p>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="investment-card">
+                        <img src="https://via.placeholder.com/500x300?text=Luxury+Goods" class="investment-image" alt="Luxury Goods">
+                        <h3>Luxury Goods</h3>
+                        <p>Invest in the growing market of luxury goods, including rare watches, fine art, and vintage cars. Our experts ensure you’re investing in assets with proven value growth.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="coming-soon mt-4">
+                <p><i class="fas fa-info-circle me-2"></i>More investment opportunities, including private equity and renewable energy projects, are coming soon and currently unavailable.</p>
+            </div>
+        </div>
+
+        <!-- Create a Corporation -->
+        <div class="section section-dark">
+            <h2>Establish Your Corporation</h2>
+            <p>Starting a corporation is a powerful way to structure your investments, protect your assets, and scale your business ventures. At Rytami Investments, we provide comprehensive support to help you establish and grow your corporation.</p>
+            <h3>Our Corporation Services Include:</h3>
+            <div class="feature-item feature-item-dark">
+                <i class="fas fa-building"></i>
+                <p>Legal and financial guidance to set up your corporation in top jurisdictions like Delaware, Singapore, or the Cayman Islands.</p>
+            </div>
+            <div class="feature-item feature-item-dark">
+                <i class="fas fa-file-alt"></i>
+                <p>Assistance with corporate governance, including drafting bylaws, shareholder agreements, and compliance documents.</p>
+            </div>
+            <div class="feature-item feature-item-dark">
+                <i class="fas fa-handshake"></i>
+                <p>Access to our network of legal and tax advisors to optimize your corporate structure for growth and tax efficiency.</p>
+            </div>
+            <div class="feature-item feature-item-dark">
+                <i class="fas fa-chart-bar"></i>
+                <p>Strategic planning support to help your corporation attract investors and secure funding.</p>
+            </div>
+            <p>Whether you’re launching a new venture or restructuring an existing business, our team is here to guide you every step of the way. Let us help you build a corporation that stands the test of time.</p>
+            <a href="#contact" class="btn btn-gold mt-3">Get Started</a>
+        </div>
+
+        <!-- Networking and Associates -->
+        <div class="section">
+            <h2>Find Associates and Network</h2>
+            <p>Success in the world of investments often comes down to who you know. Rytami Investments offers exclusive networking opportunities to connect you with potential associates, partners, and industry leaders.</p>
+            <h3>Upcoming Networking Events</h3>
+            <div class="networking-event">
+                <i class="fas fa-users"></i>
+                <p><strong>Rytami Investment Summit 2025</strong> - May 10-12, 2025, Dubai: Join global investors, entrepreneurs, and thought leaders for three days of insights, networking, and deal-making.</p>
+            </div>
+            <div class="networking-event">
+                <i class="fas fa-users"></i>
+                <p><strong>Luxury Investment Gala</strong> - July 15, 2025, Monaco: An exclusive evening of fine dining, entertainment, and networking with high-net-worth individuals.</p>
+            </div>
+            <div class="networking-event">
+                <i class="fas fa-users"></i>
+                <p><strong>Tech Investment Roundtable</strong> - September 20, 2025, Silicon Valley: Connect with tech founders and venture capitalists to explore investment opportunities in innovation.</p>
+            </div>
+            <p>Our events are designed to foster meaningful connections that can lead to partnerships, co-investments, and new business ventures. Stay tuned for more events and networking opportunities coming soon.</p>
+            <div class="coming-soon">
+                <p><i class="fas fa-info-circle me-2"></i>Online networking platform and virtual investment forums are in development and will be available soon.</p>
+            </div>
+        </div>
+
+        <!-- Connect Businesses -->
+        <div class="section section-dark">
+            <h2>Connect and Grow Your Business</h2>
+            <p>At Rytami Investments, we understand that growth often requires collaboration. Our platform helps you connect your business with others to unlock new opportunities, from joint ventures to strategic partnerships.</p>
+            <h3>How We Facilitate Business Connections:</h3>
+            <div class="feature-item feature-item-dark">
+                <i class="fas fa-link"></i>
+                <p>Matchmaking services to connect you with businesses that complement your goals and vision.</p>
+            </div>
+            <div class="feature-item feature-item-dark">
+                <i class="fas fa-briefcase"></i>
+                <p>Access to our exclusive business directory, featuring vetted companies across industries like luxury, tech, and hospitality.</p>
+            </div>
+            <div class="feature-item feature-item-dark">
+                <i class="fas fa-handshake"></i>
+                <p>Facilitated introductions to potential partners, suppliers, and clients to help your business expand.</p>
+            </div>
+            <div class="feature-item feature-item-dark">
+                <i class="fas fa-chart-pie"></i>
+                <p>Strategic advisory services to help you structure partnerships for mutual growth and profitability.</p>
+            </div>
+            <p>Whether you’re a startup looking for a strategic partner or an established business seeking to expand into new markets, Rytami Investments provides the tools and connections you need to succeed.</p>
+            <a href="#contact" class="btn btn-gold mt-3">Connect Now</a>
+        </div>
+
+        <!-- Investment Insights -->
+        <div class="section">
+            <h2>Investment Insights and Trends</h2>
+            <p>Staying ahead in the investment world requires knowledge and foresight. Our team of experts provides regular insights and analysis to help you make informed decisions.</p>
+            <h3>Current Trends to Watch</h3>
+            <p><strong>Sustainable Investing:</strong> More investors are prioritizing ESG (Environmental, Social, Governance) factors. Green tech and renewable energy projects are seeing unprecedented growth, offering both financial returns and positive impact.</p>
+            <p><strong>Luxury Market Boom:</strong> The luxury goods market continues to thrive, with high demand for rare collectibles, fine art, and bespoke experiences. This sector offers stable returns for savvy investors.</p>
+            <p><strong>Tech Innovation:</strong> Artificial intelligence, blockchain, and biotech are driving the next wave of innovation. Early investments in these sectors can yield exponential returns as these technologies mature.</p>
+            <p><strong>Global Real Estate:</strong> Markets in emerging destinations like Dubai, Bali, and the Caribbean are attracting significant investment, driven by tourism and expatriate demand.</p>
+            <p>Our insights are designed to keep you informed and ahead of the curve. Stay tuned for our upcoming investment reports and webinars, which will provide deeper analysis and actionable strategies.</p>
+            <div class="coming-soon">
+                <p><i class="fas fa-info-circle me-2"></i>Investment reports, webinars, and personalized portfolio analysis tools are coming soon and currently unavailable.</p>
+            </div>
+        </div>
+
+        <!-- Call to Action -->
+        <div class="section text-center" id="contact">
+            <h2>Ready to Start Your Investment Journey?</h2>
+            <p>Join Rytami Investments today and unlock a world of opportunities. Whether you’re looking to invest, build a corporation, or expand your network, we’re here to help you succeed.</p>
+            <a href="#" class="btn btn-primary">Contact Our Team</a>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="py-4 mt-5">
+        <div class="container">
+            <p class="mb-0">© 2025 Roys Luxury Goods n' Services</p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

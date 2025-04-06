@@ -26,6 +26,9 @@ public class Service {
     @Column(name = "is_available")
     private boolean isAvailable;
     
+    @Column(name = "image_url")
+    private String imageUrl;
+    
     // Getter e Setter
     public int getId() { return id; }
     public void setId(int id) { this.id = id; }
@@ -39,4 +42,6 @@ public class Service {
     public void setCategory(String category) { this.category = category; }
     public boolean isAvailable() { return isAvailable; }
     public void setAvailable(boolean isAvailable) { this.isAvailable = isAvailable; }
+    public String getImageUrl() { return imageUrl; }
+    public void setImageUrl(String imageUrl) { this.imageUrl = imageUrl; }
 }

@@ -18,6 +18,12 @@ public class ProductController {
     @Autowired
     private ProductRepository productRepository;
 
+    // Add a direct ID handler to redirect to the details page
+    @GetMapping("/{id}")
+    public String redirectToProductDetails(@PathVariable("id") int id) {
+        return "redirect:/products/details/" + id;
+    }
+
     @GetMapping("/all")
     public String listProducts(Model model) {
         List<Product> products = productRepository.findAll();
@@ -26,6 +32,15 @@ public class ProductController {
         model.addAttribute("categories", categories);
         return "products";
     }
+
+    // New endpoint for Art category
+    @GetMapping("/art")
+    public String listArtProducts(Model model) {
+        List<Product> artProducts = productRepository.findByCategory("Art");
+        model.addAttribute("artProducts", artProducts);
+        return "art";
+    }
+
 
     @GetMapping("/category/{category}")
     public String listProductsByCategory(@PathVariable("category") String category, Model model) {
@@ -58,9 +73,13 @@ public class ProductController {
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/ins")
     public String saveProduct(@ModelAttribute("product") Product product, Model model) {
+        
         try {
             productRepository.save(product);
             model.addAttribute("successMessage", "Product saved successfully!");
+            if ("Art".equalsIgnoreCase(product.getCategory())) {
+                return "redirect:/products/art";
+            }
             return "redirect:/products/all";
         } catch (Exception e) {
             model.addAttribute("errorMessage", "Error saving product: " + e.getMessage());
@@ -85,6 +104,9 @@ public class ProductController {
         try {
             productRepository.save(product);
             model.addAttribute("successMessage", "Product updated successfully!");
+            if ("Art".equalsIgnoreCase(product.getCategory())) {
+                return "redirect:/products/art";
+            }
             return "redirect:/products/all";
         } catch (Exception e) {
             model.addAttribute("errorMessage", "Error updating product: " + e.getMessage());

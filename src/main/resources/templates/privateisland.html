@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Yacht Services - Rytami</title>
+    <title>Private Island Services - Rytami</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=SF+Pro+Display:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
@@ -35,30 +35,30 @@
         .nav-link:hover {
             color: #d2d2d7 !important;
         }
-        .yacht-hero {
-            background: linear-gradient(135deg, #e1f5fe 0%, #b3e5fc 100%);
+        .privateisland-hero {
+            background: linear-gradient(135deg, #e0f7fa 0%, #80deea 100%);
             border-radius: 16px;
             padding: 40px;
             text-align: center;
             margin-bottom: 32px;
         }
-        .yacht-hero p {
+        .privateisland-hero p {
             font-size: 18px;
             color: #424245;
             margin-bottom: 24px;
         }
-        .yacht-card {
+        .privateisland-card {
             background-color: #ffffff;
             border-radius: 16px;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
             transition: all 0.3s ease;
             height: 100%;
         }
-        .yacht-card:hover {
+        .privateisland-card:hover {
             transform: translateY(-5px);
             box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
         }
-        .yacht-image {
+        .privateisland-image {
             height: 200px;
             width: 100%;
             object-fit: cover;
@@ -102,6 +102,40 @@
             background-color: #b8960d;
             border-color: #b8960d;
         }
+        .alert-info {
+            border-radius: 12px;
+            background-color: #e8f0fe;
+            color: #1d1d1f;
+            font-size: 16px;
+        }
+        .privateisland-features {
+            background-color: #ffffff;
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 32px;
+        }
+        .feature-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+        .feature-item i {
+            font-size: 24px;
+            color: #0071e3;
+            margin-right: 16px;
+        }
+        .feature-item p {
+            font-size: 16px;
+            color: #424245;
+            margin: 0;
+        }
+        footer {
+            background-color: #f5f5f7 !important;
+            color: #6e6e73 !important;
+            font-size: 14px;
+            text-align: center;
+        }
+        /* New Styles for Toggle Actions */
         .actions-container {
             position: relative;
         }
@@ -181,70 +215,6 @@
             color: #ffffff;
             transform: translateY(-2px);
         }
-        .btn-sm {
-            padding: 6px 12px;
-            font-size: 14px;
-        }
-        .btn-info {
-            background-color: #0071e3;
-            border-color: #0071e3;
-            color: #ffffff;
-        }
-        .btn-info:hover {
-            background-color: #005bb5;
-            border-color: #005bb5;
-        }
-        .btn-warning {
-            background-color: #d4af37;
-            border-color: #d4af37;
-            color: #ffffff;
-        }
-        .btn-warning:hover {
-            background-color: #b8960d;
-            border-color: #b8960d;
-        }
-        .btn-danger {
-            background-color: #ff3b30;
-            border-color: #ff3b30;
-            color: #ffffff;
-        }
-        .btn-danger:hover {
-            background-color: #e63930;
-            border-color: #e63930;
-        }
-        .alert-info {
-            border-radius: 12px;
-            background-color: #e8f0fe;
-            color: #1d1d1f;
-            font-size: 16px;
-        }
-        .yacht-features {
-            background-color: #ffffff;
-            border-radius: 16px;
-            padding: 24px;
-            margin-bottom: 32px;
-        }
-        .feature-item {
-            display: flex;
-            align-items: center;
-            margin-bottom: 16px;
-        }
-        .feature-item i {
-            font-size: 24px;
-            color: #0071e3;
-            margin-right: 16px;
-        }
-        .feature-item p {
-            font-size: 16px;
-            color: #424245;
-            margin: 0;
-        }
-        footer {
-            background-color: #f5f5f7 !important;
-            color: #6e6e73 !important;
-            font-size: 14px;
-            text-align: center;
-        }
     </style>
 </head>
 <body>
@@ -263,11 +233,6 @@
                     <li class="nav-item"><a class="nav-link" href="/products/all">Shop</a></li>
                     <li class="nav-item"><a class="nav-link" href="/bookings/all">Bookings</a></li>
                     <li class="nav-item"><a class="nav-link" href="/guests/all">Guests</a></li>
-                    <!-- <li class="nav-item"><a class="nav-link" href="/services/spa">Spa</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/services/restaurants">Restaurants</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/services/helicopter">Helicopter</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/services/privatejet">Private Jet</a></li>
-                    <li class="nav-item"><a class="nav-link active" href="/services/yacht">Yacht</a></li> -->
                 </ul>
             </div>
         </div>
@@ -275,55 +240,53 @@
 
     <div class="container mt-5">
         <!-- Hero Section -->
-        <div class="yacht-hero">
-            <h1>Sail in Luxury with Yacht Services</h1>
-            <p>Experience the ultimate in luxury and adventure with our exclusive yacht services.</p>
-            <a href="#services" class="btn btn-gold">Explore Yacht Services</a>
+        <div class="privateisland-hero">
+            <h1>Escape to Your Private Island Paradise</h1>
+            <p>Experience unparalleled luxury and seclusion with our exclusive private island services.</p>
+            <a href="#services" class="btn btn-gold">Explore Private Island Services</a>
         </div>
 
-        <!-- Yacht Features -->
-        <div class="yacht-features">
-            <h2>Why Choose Our Yacht Services?</h2>
-            <div class="feature-item">
-                <i class="fas fa-ship"></i>
-                <p>Private yacht charters for unforgettable voyages</p>
-            </div>
+        <!-- Private Island Features -->
+        <div class="privateisland-features">
+            <h2>Why Choose Our Private Island Services?</h2>
             <div class="feature-item">
                 <i class="fas fa-umbrella-beach"></i>
-                <p>Access to exclusive coastal destinations</p>
+                <p>Exclusive access to pristine, private islands</p>
             </div>
             <div class="feature-item">
                 <i class="fas fa-concierge-bell"></i>
-                <p>Full-service crew for a seamless experience</p>
+                <p>Personalized concierge services for your every need</p>
+            </div>
+            <div class="feature-item">
+                <i class="fas fa-swimmer"></i>
+                <p>Private beaches, water activities, and luxury accommodations</p>
             </div>
         </div>
 
-        <!-- Yacht Services -->
+        <!-- Private Island Services -->
         <div id="services">
             <div class="d-flex justify-content-between align-items-center mb-4">
-                <h2>Yacht Services</h2>
+                <h2>Private Island Services</h2>
                 <a href="/services/new" class="btn btn-gold">
                     <i class="fas fa-plus"></i> Add New Service
                 </a>
             </div>
 
             <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
-                <div class="col" th:each="yacht : ${yachts}">
-                    <div class="card yacht-card h-100">
-                        <img class="yacht-image" 
-                             th:src="${yacht.imageUrl != null && !yacht.imageUrl.isEmpty() ? yacht.imageUrl : 'https://via.placeholder.com/500x300?text=Yacht+Service'}" 
-                             alt="Yacht Service Image">
+                <div class="col" th:each="privateIsland : ${privateIslands}">
+                    <div class="card privateisland-card h-100">
+                        <img class="privateisland-image" 
+                             th:src="${privateIsland.imageUrl != null && !privateIsland.imageUrl.isEmpty() ? privateIsland.imageUrl : '/images/privateisland-default.jpg'}" 
+                             alt="Private Island Service Image">
                         <div class="card-body">
                             <div class="d-flex justify-content-between align-items-center mb-2">
-                                <h5 class="card-title mb-0" th:text="${yacht.name}"></h5>
+                                <h5 class="card-title mb-0" th:text="${privateIsland.name}"></h5>
                                 <span class="badge" 
-                                      th:classappend="${yacht.available ? 'bg-success' : 'bg-danger'}"
-                                      th:text="${yacht.available ? 'Available' : 'Unavailable'}"></span>
+                                      th:classappend="${privateIsland.available ? 'bg-success' : 'bg-danger'}"
+                                      th:text="${privateIsland.available ? 'Available' : 'Unavailable'}"></span>
                             </div>
-                            <p class="card-text" th:text="${#strings.abbreviate(yacht.description, 100)}"></p>
-                            <h5 class="text-primary">€<span th:text="${#numbers.formatDecimal(yacht.price, 1, 2)}"></span></h5>
-                        </div>
-                        <div class="card-footer pt-0 pb-3">
+                            <p class="card-text" th:text="${#strings.abbreviate(privateIsland.description, 100)}"></p>
+                            <h5 class="text-primary">€<span th:text="${#numbers.formatDecimal(privateIsland.price, 1, 2)}"></span></h5>
                             <div class="actions-container">
                                 <!-- Toggle Button -->
                                 <div class="toggle-actions" onclick="toggleActions(this)">
@@ -332,14 +295,15 @@
                                 <!-- Action buttons (initially hidden) -->
                                 <div class="product-actions">
                                     <div class="d-grid gap-2 mt-2">
-                                        <a th:href="@{/services/details/{id}(id=${yacht.id})}" class="btn product-btn btn-details">
+                                        <a th:href="@{/services/details/{id}(id=${privateIsland.id})}" class="btn product-btn btn-details">
                                             <i class="fas fa-info-circle me-2"></i> View Details
                                         </a>
                                         <div class="d-flex gap-2 mt-2">
-                                            <a th:href="@{/services/edit/{id}(id=${yacht.id})}" class="btn product-btn btn-edit w-50">
+                                            <a th:href="@{/services/edit/{id}(id=${privateIsland.id})}" class="btn product-btn btn-edit w-50">
                                                 <i class="fas fa-edit me-2"></i> Edit
                                             </a>
-                                            <a th:href="@{/services/delete/{id}(id=${yacht.id})}" class="btn product-btn btn-delete w-50">
+                                            <a th:href="@{/services/delete/{id}(id=${privateIsland.id})}" class="btn product-btn btn-delete w-50"
+                                               onclick="return confirm('Are you sure you want to delete this private island service?')">
                                                 <i class="fas fa-trash-alt me-2"></i> Delete
                                             </a>
                                         </div>
@@ -351,8 +315,8 @@
                 </div>
             </div>
             
-            <div th:if="${yachts.isEmpty()}" class="alert alert-info mt-4">
-                <i class="fas fa-info-circle"></i> No yacht services available at the moment.
+            <div th:if="${privateIslands.isEmpty()}" class="alert alert-info mt-4">
+                <i class="fas fa-info-circle"></i> No private island services available at the moment.
             </div>
         </div>
     </div>

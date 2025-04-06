@@ -233,7 +233,7 @@
                 <div class="col" th:each="restaurant : ${restaurants}">
                     <div class="card restaurant-card h-100">
                         <img class="restaurant-image" 
-                             th:src="${restaurant.category == 'Restaurants' ? '/images/restaurant-dining.jpg' : '/images/restaurant-default.jpg'}" 
+                             th:src="${restaurant.imageUrl != null && !restaurant.imageUrl.isEmpty() ? restaurant.imageUrl : 'https://via.placeholder.com/500x300?text=Restaurant'}" 
                              alt="Restaurant Image">
                         <div class="card-body">
                             <div class="d-flex justify-content-between align-items-center mb-2">
