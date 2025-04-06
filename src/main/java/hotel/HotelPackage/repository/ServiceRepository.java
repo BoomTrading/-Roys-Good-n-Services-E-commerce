@@ -10,14 +10,17 @@ import java.util.List;
 
 public interface ServiceRepository extends JpaRepository<Service, Integer> {
 
-    // Cerca servizi in base a un pattern
-    @Query("SELECT s FROM Service s WHERE s.name LIKE %:pattern% OR s.description LIKE %:pattern% OR s.category LIKE %:pattern%")
+    // Search services by pattern (case-insensitive)
+    @Query("SELECT s FROM Service s WHERE UPPER(s.name) LIKE UPPER(CONCAT('%', :pattern, '%')) " +
+           "OR UPPER(s.description) LIKE UPPER(CONCAT('%', :pattern, '%')) " +
+           "OR UPPER(s.category) LIKE UPPER(CONCAT('%', :pattern, '%'))")
     List<Service> findByPatternLike(@Param("pattern") String pattern);
 
-    // Add method to find services by category
-    List<Service> findByCategory(String category);
+    // Find services by category (case-insensitive)
+    @Query("SELECT s FROM Service s WHERE UPPER(s.category) = UPPER(:category)")
+    List<Service> findByCategory(@Param("category") String category);
 
-    // Add method to get all distinct categories
+    // Get all distinct categories
     @Query("SELECT DISTINCT s.category FROM Service s ORDER BY s.category")
     List<String> findDistinctCategories();
 }
