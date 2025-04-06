@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Luxury Real Estate - Rytami</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=SF+Pro+Display:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: #f5f5f7;
+            color: #1d1d1f;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 1200px;
+        }
+        h1 {
+            font-size: 48px;
+            font-weight: 600;
+            letter-spacing: -0.02em;
+            margin-bottom: 16px;
+        }
+        h2 {
+            font-size: 32px;
+            font-weight: 600;
+            margin-bottom: 16px;
+        }
+        h3 {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+        p {
+            font-size: 16px;
+            color: #424245;
+            margin-bottom: 16px;
+        }
+        .navbar {
+            background-color: #000000 !important;
+        }
+        .navbar-brand, .nav-link {
+            color: #ffffff !important;
+        }
+        .nav-link:hover {
+            color: #d2d2d7 !important;
+        }
+        /* Hero Section */
+        .realestate-hero {
+            position: relative;
+            height: 80vh;
+            background: url('/images/realestate-hero.jpg') no-repeat center center/cover;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: #ffffff;
+            overflow: hidden;
+        }
+        .realestate-hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.3));
+        }
+        .realestate-hero-content {
+            position: relative;
+            z-index: 1;
+        }
+        .realestate-hero h1 {
+            font-size: 64px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+        }
+        .realestate-hero p {
+            font-size: 20px;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+            margin-bottom: 24px;
+            color: #ffffff;
+        }
+        /* Section Styles */
+        .section {
+            background-color: #ffffff;
+            border-radius: 16px;
+            padding: 40px;
+            margin-bottom: 32px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+        .section-dark {
+            background: linear-gradient(135deg, #1d1d1f 0%, #424245 100%);
+            color: #ffffff;
+        }
+        .section-dark p {
+            color: #d2d2d7;
+        }
+        .feature-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+        .feature-item i {
+            font-size: 24px;
+            color: #0071e3;
+            margin-right: 16px;
+        }
+        .feature-item p {
+            font-size: 16px;
+            color: #424245;
+            margin: 0;
+        }
+        .feature-item-dark i {
+            color: #d4af37;
+        }
+        .feature-item-dark p {
+            color: #d2d2d7;
+        }
+        .btn {
+            border-radius: 980px;
+            padding: 10px 24px;
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+        .btn-gold {
+            background-color: #d4af37;
+            border-color: #d4af37;
+            color: #ffffff;
+        }
+        .btn-gold:hover {
+            background-color: #b8960d;
+            border-color: #b8960d;
+        }
+        .btn-primary {
+            background-color: #0071e3;
+            border-color: #0071e3;
+            color: #ffffff;
+        }
+        .btn-primary:hover {
+            background-color: #005bb5;
+            border-color: #005bb5;
+        }
+        .coming-soon {
+            background-color: #e8f0fe;
+            border-radius: 12px;
+            padding: 16px;
+            text-align: center;
+            margin-bottom: 32px;
+        }
+        .coming-soon p {
+            color: #1d1d1f;
+            font-size: 16px;
+            margin: 0;
+        }
+        .property-card {
+            background-color: #ffffff;
+            border-radius: 16px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            padding: 20px;
+            transition: all 0.3s ease;
+        }
+        .property-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+        }
+        .property-image {
+            height: 200px;
+            width: 100%;
+            object-fit: cover;
+            border-radius: 12px;
+            margin-bottom: 16px;
+        }
+        .market-trend {
+            display: flex;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+        .market-trend i {
+            font-size: 24px;
+            color: #d4af37;
+            margin-right: 16px;
+        }
+        .market-trend p {
+            font-size: 16px;
+            color: #d2d2d7;
+            margin: 0;
+        }
+        footer {
+            background-color: #f5f5f7 !important;
+            color: #6e6e73 !important;
+            font-size: 14px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+            <a class="navbar-brand" href="/">Roys Luxury Goods n' Services ®</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="/">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/services/all">Services</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/rooms/all">Accommodations</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/products/all">Shop</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/guests/all">Guests</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <div class="realestate-hero">
+        <div class="realestate-hero-content">
+            <h1>Discover Luxury Real Estate</h1>
+            <p>Own a piece of paradise with our exclusive portfolio of luxury properties worldwide.</p>
+            <a href="#properties" class="btn btn-gold">Explore Properties</a>
+        </div>
+    </div>
+
+    <div class="container mt-5">
+        <!-- Introduction to Luxury Real Estate -->
+        <div class="section">
+            <h2>Welcome to Rytami Luxury Real Estate</h2>
+            <p>At Rytami, luxury real estate is more than just a transaction—it’s a lifestyle. Our curated portfolio features the world’s most exquisite properties, from beachfront villas in the Maldives to sprawling estates in the French Riviera. We cater to discerning buyers and investors who seek not just a home, but a statement of elegance, exclusivity, and prestige.</p>
+            <p>Whether you’re looking to purchase a dream vacation home, invest in a high-yield property, or sell a luxury estate, Rytami Luxury Real Estate offers unparalleled expertise and access to the global market. Our team of real estate professionals is dedicated to helping you find the perfect property that aligns with your vision and financial goals.</p>
+        </div>
+
+        <!-- Why Choose Rytami for Real Estate -->
+        <div class="section">
+            <h2>Why Choose Rytami for Luxury Real Estate?</h2>
+            <div class="feature-item">
+                <i class="fas fa-home"></i>
+                <p>Access to an exclusive portfolio of luxury properties in prime locations worldwide.</p>
+            </div>
+            <div class="feature-item">
+                <i class="fas fa-globe"></i>
+                <p>Global network of real estate experts, ensuring you find the perfect property no matter where you are.</p>
+            </div>
+            <div class="feature-item">
+                <i class="fas fa-concierge-bell"></i>
+                <p>Personalized concierge services to handle every aspect of your real estate journey, from search to closing.</p>
+            </div>
+            <div class="feature-item">
+                <i class="fas fa-chart-line"></i>
+                <p>Investment-focused insights to help you maximize returns on your real estate portfolio.</p>
+            </div>
+        </div>
+
+        <!-- Featured Properties -->
+        <div class="section" id="properties">
+            <h2>Explore Featured Properties</h2>
+            <p>Our portfolio includes some of the most sought-after luxury properties in the world. Below is a selection of our featured listings, with more exclusive properties available upon request.</p>
+            <div class="row row-cols-1 row-cols-md-3 g-4">
+                <div class="col">
+                    <div class="property-card">
+                        <img src="https://maldives.intercontinental.com/wp-content/uploads/sites/20/2023/12/Photo-1-7-min.jpg" class="property-image" alt="Maldives Villa">
+                        <h3>Beachfront Villa, Maldives</h3>
+                        <p>A stunning 5-bedroom villa with private beach access, infinity pool, and panoramic ocean views. Perfect for a luxurious getaway or rental investment.</p>
+                        <p><strong>Price:</strong> €12,500,000</p>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="property-card">
+                        <img src="https://images.squarespace-cdn.com/content/v1/58487dc4b8a79b6d02499b60/1644452282042-QU14JVVHBP3UPVAV2PYY/Francis+York+Iconic+French+Riviera+Villa+Overlooking+the+Bay+of+Saint+Tropez+2.jpg" class="property-image" alt="French Riviera Estate">
+                        <h3>Estate in the French Riviera</h3>
+                        <p>A historic 7-bedroom estate with vineyards, a private helipad, and Mediterranean views. Ideal for those seeking timeless elegance.</p>
+                        <p><strong>Price:</strong> €18,750,000</p>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="property-card">
+                        <img src="https://robbreport.com/wp-content/uploads/2022/04/Toll_30East85thPH30_4.jpg?w=1000" class="property-image" alt="NYC Penthouse">
+                        <h3>Penthouse in New York City</h3>
+                        <p>A modern 4-bedroom penthouse in Manhattan with floor-to-ceiling windows, a private terrace, and 360-degree city views.</p>
+                        <p><strong>Price:</strong> €25,000,000</p>
+                    </div>
+                </div>
+            </div>
+            <div class="coming-soon mt-4">
+                <p><i class="fas fa-info-circle me-2"></i>More property listings, including off-market opportunities and virtual tours, are coming soon and currently unavailable.</p>
+            </div>
+        </div>
+
+        <!-- Investment Potential -->
+        <div class="section section-dark">
+            <h2>Unlock the Investment Potential of Luxury Real Estate</h2>
+            <p>Luxury real estate is one of the most stable and lucrative investment options available today. At Rytami, we help you identify properties that not only offer a luxurious lifestyle but also deliver significant financial returns.</p>
+            <h3>Why Invest in Luxury Real Estate?</h3>
+            <div class="feature-item feature-item-dark">
+                <i class="fas fa-arrow-up"></i>
+                <p><strong>High Appreciation:</strong> Luxury properties in prime locations often appreciate faster than traditional real estate, offering long-term value growth.</p>
+            </div>
+            <div class="feature-item feature-item-dark">
+                <i class="fas fa-money-bill-wave"></i>
+                <p><strong>Rental Income:</strong> Many luxury properties can be rented out to high-net-worth individuals, providing a steady stream of passive income.</p>
+            </div>
+            <div class="feature-item feature-item-dark">
+                <i class="fas fa-shield-alt"></i>
+                <p><strong>Stability:</strong> The luxury real estate market is less volatile than other investment classes, offering a safe haven for your capital.</p>
+            </div>
+            <div class="feature-item feature-item-dark">
+                <i class="fas fa-globe"></i>
+                <p><strong>Global Demand:</strong> High demand from international buyers ensures liquidity and competitive resale value.</p>
+            </div>
+            <p>Our team provides detailed market analysis, property valuations, and investment strategies to help you make informed decisions. Let us guide you toward properties that align with your financial goals.</p>
+            <a href="#contact" class="btn btn-gold mt-3">Learn More</a>
+        </div>
+
+        <!-- Real Estate Services -->
+        <div class="section">
+            <h2>Comprehensive Real Estate Services</h2>
+            <p>At Rytami Luxury Real Estate, we offer a full suite of services to make your real estate journey seamless and rewarding. From buying to selling, we’re with you every step of the way.</p>
+            <h3>Our Services Include:</h3>
+            <div class="feature-item">
+                <i class="fas fa-search"></i>
+                <p><strong>Property Sourcing:</strong> We find properties that match your exact specifications, including off-market listings that are not publicly available.</p>
+            </div>
+            <div class="feature-item">
+                <i class="fas fa-handshake"></i>
+                <p><strong>Negotiation and Closing:</strong> Our experts negotiate the best terms on your behalf and handle all aspects of the closing process.</p>
+            </div>
+            <div class="feature-item">
+                <i class="fas fa-building"></i>
+                <p><strong>Property Management:</strong> From maintenance to tenant management, we ensure your property remains in pristine condition and generates maximum returns.</p>
+            </div>
+            <div class="feature-item">
+                <i class="fas fa-chart-bar"></i>
+                <p><strong>Market Insights:</strong> Access to exclusive reports and data to help you understand market trends and make informed decisions.</p>
+            </div>
+            <p>Our goal is to provide a white-glove experience that takes the stress out of real estate transactions, allowing you to focus on enjoying your investment.</p>
+            <div class="coming-soon">
+                <p><i class="fas fa-info-circle me-2"></i>Additional services, such as property staging, interior design consultation, and rental management platforms, are coming soon and currently unavailable.</p>
+            </div>
+        </div>
+
+        <!-- Global Market Trends -->
+        <div class="section section-dark">
+            <h2>Global Luxury Real Estate Market Trends</h2>
+            <p>The luxury real estate market is evolving rapidly, driven by global demand, economic shifts, and changing buyer preferences. Here are some key trends to watch:</p>
+            <div class="market-trend">
+                <i class="fas fa-globe"></i>
+                <p><strong>Emerging Destinations:</strong> Markets like Dubai, Bali, and the Caribbean are seeing a surge in demand, fueled by tourism and expatriate interest.</p>
+            </div>
+            <div class="market-trend">
+                <i class="fas fa-leaf"></i>
+                <p><strong>Sustainable Properties:</strong> Eco-friendly luxury homes with solar panels, green roofs, and energy-efficient designs are increasingly popular among buyers.</p>
+            </div>
+            <div class="market-trend">
+                <i class="fas fa-city"></i>
+                <p><strong>Urban Luxury:</strong> High-end urban properties in cities like New York, London, and Tokyo remain in demand, driven by their proximity to cultural and business hubs.</p>
+            </div>
+            <div class="market-trend">
+                <i class="fas fa-water"></i>
+                <p><strong>Waterfront Properties:</strong> Beachfront and lakefront properties continue to command premium prices, offering unparalleled views and privacy.</p>
+            </div>
+            <p>Our team stays ahead of these trends to ensure you’re investing in properties that offer both immediate value and long-term growth potential. Stay tuned for our upcoming market reports and virtual seminars for deeper insights.</p>
+            <div class="coming-soon">
+                <p><i class="fas fa-info-circle me-2"></i>Market reports, virtual seminars, and personalized investment consultations are coming soon and currently unavailable.</p>
+            </div>
+        </div>
+
+        <!-- Call to Action -->
+        <div class="section text-center" id="contact">
+            <h2>Ready to Find Your Dream Property?</h2>
+            <p>Whether you’re buying, selling, or investing, Rytami Luxury Real Estate is here to help you navigate the world of luxury properties with ease and confidence.</p>
+            <a href="#" class="btn btn-primary">Contact Our Team</a>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="py-4 mt-5">
+        <div class="container">
+            <p class="mb-0">© 2025 Roys Luxury Goods n' Services</p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

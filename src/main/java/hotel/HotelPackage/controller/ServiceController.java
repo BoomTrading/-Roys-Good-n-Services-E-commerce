@@ -92,6 +92,7 @@ public class ServiceController {
         return "privateisland";
     }
 
+
     // Show form to create a new service (used for both Spa and Restaurants)
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/new")
@@ -124,7 +125,7 @@ public class ServiceController {
                 return "redirect:/services/golf";
             }  else if ("Private Island".equalsIgnoreCase(service.getCategory())) {
                 return "redirect:/services/privateisland";
-            }
+            } 
             return "redirect:/services/all";
         } catch (Exception e) {
             model.addAttribute("errorMessage", "Error saving service: " + e.getMessage());

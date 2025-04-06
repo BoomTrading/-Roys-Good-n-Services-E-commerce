@@ -33,7 +33,7 @@ public class ProductController {
         return "products";
     }
 
-    // New endpoint for Art category
+    // Endpoint for Art category
     @GetMapping("/art")
     public String listArtProducts(Model model) {
         List<Product> artProducts = productRepository.findByCategory("Art");
@@ -41,6 +41,13 @@ public class ProductController {
         return "art";
     }
 
+    // New endpoint for Rare Collections category
+    @GetMapping("/rarecollections")
+    public String listRareCollections(Model model) {
+        List<Product> rareCollections = productRepository.findByCategory("Rare Collections");
+        model.addAttribute("rareCollections", rareCollections);
+        return "rarecollections";
+    }
 
     @GetMapping("/category/{category}")
     public String listProductsByCategory(@PathVariable("category") String category, Model model) {
@@ -73,12 +80,13 @@ public class ProductController {
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/ins")
     public String saveProduct(@ModelAttribute("product") Product product, Model model) {
-        
         try {
             productRepository.save(product);
             model.addAttribute("successMessage", "Product saved successfully!");
             if ("Art".equalsIgnoreCase(product.getCategory())) {
                 return "redirect:/products/art";
+            } else if ("Rare Collections".equalsIgnoreCase(product.getCategory())) {
+                return "redirect:/products/rarecollections";
             }
             return "redirect:/products/all";
         } catch (Exception e) {
@@ -89,6 +97,7 @@ public class ProductController {
         }
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/edit/{id}")
     public String showEditProductForm(@PathVariable("id") int id, Model model) {
         Product product = productRepository.findById(id)
@@ -99,6 +108,7 @@ public class ProductController {
         return "editProduct";
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/upd")
     public String updateProduct(@ModelAttribute("product") Product product, Model model) {
         try {
@@ -106,6 +116,8 @@ public class ProductController {
             model.addAttribute("successMessage", "Product updated successfully!");
             if ("Art".equalsIgnoreCase(product.getCategory())) {
                 return "redirect:/products/art";
+            } else if ("Rare Collections".equalsIgnoreCase(product.getCategory())) {
+                return "redirect:/products/rarecollections";
             }
             return "redirect:/products/all";
         } catch (Exception e) {
@@ -120,13 +132,17 @@ public class ProductController {
     @GetMapping("/delete/{id}")
     public String deleteProduct(@PathVariable("id") int id, Model model) {
         try {
-            if (productRepository.existsById(id)) {
-                productRepository.deleteById(id);
-                model.addAttribute("successMessage", "Product deleted successfully!");
+            Product product = productRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid product Id:" + id));
+            productRepository.deleteById(id);
+            model.addAttribute("successMessage", "Product deleted successfully!");
+            if ("Art".equalsIgnoreCase(product.getCategory())) {
+                return "redirect:/products/art";
+            } else if ("Rare Collections".equalsIgnoreCase(product.getCategory())) {
+                return "redirect:/products/rarecollections";
             }
             return "redirect:/products/all";
         } catch (Exception e) {
-            // If deletion fails, add the product to the model and redirect to error page
             try {
                 Product product = productRepository.findById(id).orElse(null);
                 model.addAttribute("product", product);
