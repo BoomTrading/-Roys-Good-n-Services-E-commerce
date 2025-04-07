@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Bookings - Rytami</title>
+    <title>Guest Orders - Rytami</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -19,20 +19,9 @@
         .container {
             max-width: 1200px;
         }
-        h1 {
-            font-size: 48px;
-            font-weight: 600;
-            letter-spacing: -0.02em;
-            margin-bottom: 16px;
-        }
         h2 {
             font-size: 32px;
             font-weight: 600;
-            margin-bottom: 16px;
-        }
-        p {
-            font-size: 16px;
-            color: #424245;
             margin-bottom: 16px;
         }
         .navbar {
@@ -43,41 +32,6 @@
         }
         .nav-link:hover {
             color: #d2d2d7 !important;
-        }
-        /* Hero Section */
-        .bookings-hero {
-            position: relative;
-            height: 60vh;
-            background: url('/images/bookings-hero.jpg') no-repeat center center/cover;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            color: #ffffff;
-            overflow: hidden;
-        }
-        .bookings-hero::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(135deg, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.3));
-        }
-        .bookings-hero-content {
-            position: relative;
-            z-index: 1;
-        }
-        .bookings-hero h1 {
-            font-size: 64px;
-            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
-        }
-        .bookings-hero p {
-            font-size: 20px;
-            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
-            margin-bottom: 24px;
-            color: #ffffff;
         }
         /* Table Styles */
         .table-section {
@@ -109,6 +63,30 @@
         .table tr:last-child td {
             border-bottom: none;
         }
+        /* Status Badge */
+        .status-badge {
+            padding: 5px 10px;
+            border-radius: 10px;
+            font-size: 12px;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+        .status-pending {
+            background-color: #ff9500;
+            color: white;
+        }
+        .status-completed {
+            background-color: #34c759;
+            color: white;
+        }
+        .status-cancelled {
+            background-color: #ff3b30;
+            color: white;
+        }
+        .status-processing {
+            background-color: #007bff;
+            color: white;
+        }
         /* Toggleable Actions */
         .actions-container {
             position: relative;
@@ -118,94 +96,64 @@
             color: #0071e3;
             width: 30px;
             height: 30px;
-            border-radius: 50%;
             display: flex;
-            justify-content: center;
             align-items: center;
+            justify-content: center;
+            border-radius: 50%;
             cursor: pointer;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
             border: 1px solid #d2d2d7;
-            transition: all 0.3s ease;
+            transition: all 0.2s ease;
         }
         .toggle-actions:hover {
-            transform: scale(1.1);
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            background-color: #f5f5f7;
         }
         .toggle-actions.active {
-            transform: rotate(45deg);
             background-color: #0071e3;
             color: #ffffff;
+            border-color: #0071e3;
         }
         .product-actions {
-            max-height: 0;
-            overflow: hidden;
-            transition: max-height 0.4s ease, opacity 0.4s ease;
-            opacity: 0;
+            position: absolute;
+            right: 0;
+            top: 100%;
+            background-color: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+            padding: 16px;
+            width: 200px;
+            z-index: 100;
+            display: none;
         }
         .product-actions.show {
-            max-height: 150px;
-            opacity: 1;
+            display: block;
         }
         .product-btn {
-            border-radius: 980px;
-            padding: 8px 16px;
-            transition: all 0.3s ease;
-            font-size: 0.85rem;
-            font-weight: 500;
-            letter-spacing: 0.5px;
+            border: none;
+            background-color: transparent;
+            font-size: 14px;
+            text-align: left;
+            transition: all 0.2s ease;
         }
         .btn-details {
-            background-color: transparent;
             color: #0071e3;
-            border: 1px solid #0071e3;
         }
         .btn-details:hover {
-            background-color: #0071e3;
-            color: #ffffff;
+            color: #005bb5;
             transform: translateY(-2px);
         }
         .btn-edit {
-            background-color: transparent;
-            color: #d4af37;
-            border: 1px solid #d4af37;
-            margin-right: 5px;
+            color: #ff9500;
         }
         .btn-edit:hover {
-            background-color: #d4af37;
-            color: #ffffff;
+            color: #ff8000;
             transform: translateY(-2px);
         }
         .btn-delete {
-            background-color: transparent;
             color: #ff3b30;
-            border: 1px solid #ff3b30;
         }
         .btn-delete:hover {
-            background-color: #ff3b30;
-            color: #ffffff;
+            color: #ff0000;
             transform: translateY(-2px);
-        }
-        /* Buttons */
-        .btn {
-            border-radius: 980px;
-            padding: 10px 24px;
-            font-weight: 600;
-            transition: all 0.2s ease;
-        }
-        .btn-gold {
-            background-color: #d4af37;
-            border-color: #d4af37;
-            color: #ffffff;
-        }
-        .btn-gold:hover {
-            background-color: #b8960d;
-            border-color: #b8960d;
-        }
-        .alert-info {
-            border-radius: 12px;
-            background-color: #e8f0fe;
-            color: #1d1d1f;
-            font-size: 16px;
         }
         footer {
             background-color: #f5f5f7 !important;
@@ -229,47 +177,46 @@
                     <li class="nav-item"><a class="nav-link" href="/services/all">Services</a></li>
                     <li class="nav-item"><a class="nav-link" href="/rooms/all">Accommodations</a></li>
                     <li class="nav-item"><a class="nav-link" href="/products/all">Shop</a></li>
-                    <li class="nav-item"><a class="nav-link active" href="/bookings/all">Bookings</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/bookings/all">Bookings</a></li>
                     <li class="nav-item"><a class="nav-link" href="/guests/all">Guests</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="/orders/all">Order Management</a></li>
                 </ul>
             </div>
         </div>
     </nav>
 
-
     <div class="container mt-5">
-        <!-- Bookings Table -->
+        <!-- Orders Table -->
         <div class="table-section">
             <div class="d-flex justify-content-between align-items-center mb-4">
-                <h2>Booking List</h2>
-                <a href="/bookings/new" class="btn btn-gold">
-                    <i class="fas fa-plus"></i> Add New Booking
+                <h2>Orders for <span th:text="${guestName}"></span></h2>
+                <a th:href="@{/guests/details/{id}(id=${guestId})}" class="btn btn-primary">
+                    <i class="fas fa-user me-2"></i> View Guest Profile
                 </a>
             </div>
-            <div th:if="${bookings.isEmpty()}" class="alert alert-info">
-                <i class="fas fa-info-circle"></i> No bookings available at the moment.
+            <div th:if="${orders.isEmpty()}" class="alert alert-info">
+                <i class="fas fa-info-circle"></i> This guest has no orders yet.
             </div>
-            <div th:unless="${bookings.isEmpty()}">
+            <div th:unless="${orders.isEmpty()}">
                 <table class="table">
                     <thead>
                         <tr>
                             <th>ID</th>
-                            <th>Guest</th>
-                            <th>Room</th>
-                            <th>Check-In</th>
-                            <th>Check-Out</th>
-                            <th>Total Price</th>
+                            <th>Order Date</th>
+                            <th>Total Amount</th>
+                            <th>Status</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr th:each="booking : ${bookings}">
-                            <td th:text="${booking.id}"></td>
-                            <td th:text="${booking.guest.firstName + ' ' + booking.guest.lastName}"></td>
-                            <td th:text="${booking.room.roomNumber}"></td>
-                            <td th:text="${#temporals.format(booking.checkIn, 'dd MMM yyyy')}"></td>
-                            <td th:text="${#temporals.format(booking.checkOut, 'dd MMM yyyy')}"></td>
-                            <td th:text="'€' + ${#numbers.formatDecimal(booking.totalAmount, 1, 2)}"></td>
+                        <tr th:each="order : ${orders}">
+                            <td th:text="${order.id}"></td>
+                            <td th:text="${#temporals.format(order.orderDate, 'dd MMM yyyy HH:mm')}"></td>
+                            <td th:text="'€' + ${#numbers.formatDecimal(order.totalAmount, 1, 2)}"></td>
+                            <td>
+                                <span th:class="${'status-badge status-' + #strings.toLowerCase(order.status)}" 
+                                      th:text="${order.status}"></span>
+                            </td>
                             <td>
                                 <div class="actions-container">
                                     <!-- Toggle Button -->
@@ -279,17 +226,12 @@
                                     <!-- Action buttons (initially hidden) -->
                                     <div class="product-actions">
                                         <div class="d-grid gap-2 mt-2">
-                                            <a th:href="@{/bookings/details/{id}(id=${booking.id})}" class="btn product-btn btn-details">
+                                            <a th:href="@{/orders/{id}(id=${order.id})}" class="btn product-btn btn-details">
                                                 <i class="fas fa-info-circle me-2"></i> View Details
                                             </a>
-                                            <div class="d-flex gap-2 mt-2">
-                                                <a th:href="@{/bookings/edit/{id}(id=${booking.id})}" class="btn product-btn btn-edit w-50">
-                                                    <i class="fas fa-edit me-2"></i> Edit
-                                                </a>
-                                                <a th:href="@{/bookings/delete/{id}(id=${booking.id})}" class="btn product-btn btn-delete w-50">
-                                                    <i class="fas fa-trash-alt me-2"></i> Delete
-                                                </a>
-                                            </div>
+                                            <a th:href="@{/payments/new?orderId={id}(id=${order.id})}" class="btn product-btn btn-edit">
+                                                <i class="fas fa-credit-card me-2"></i> Add Payment
+                                            </a>
                                         </div>
                                     </div>
                                 </div>
@@ -297,6 +239,11 @@
                         </tr>
                     </tbody>
                 </table>
+            </div>
+            <div class="mt-4">
+                <a href="/orders/all" class="btn btn-secondary">
+                    <i class="fas fa-arrow-left me-2"></i> Back to All Orders
+                </a>
             </div>
         </div>
     </div>
@@ -315,7 +262,11 @@
             const actionsContainer = button.nextElementSibling;
             actionsContainer.classList.toggle('show');
             const icon = button.querySelector('i');
-            icon.className = button.classList.contains('active') ? 'fas fa-times' : 'fas fa-ellipsis-h';
+            if (actionsContainer.classList.contains('show')) {
+                icon.className = 'fas fa-times';
+            } else {
+                icon.className = 'fas fa-ellipsis-h';
+            }
         }
     </script>
 </body>

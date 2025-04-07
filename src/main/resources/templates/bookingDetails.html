@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Booking Details - Rytami</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=SF+Pro+Display:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: #f5f5f7;
+            color: #1d1d1f;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 1200px;
+        }
+        h1 {
+            font-size: 48px;
+            font-weight: 600;
+            letter-spacing: -0.02em;
+            margin-bottom: 16px;
+        }
+        h2 {
+            font-size: 32px;
+            font-weight: 600;
+            margin-bottom: 16px;
+        }
+        p {
+            font-size: 16px;
+            color: #424245;
+            margin-bottom: 16px;
+        }
+        .navbar {
+            background-color: #000000 !important;
+        }
+        .navbar-brand, .nav-link {
+            color: #ffffff !important;
+        }
+        .nav-link:hover {
+            color: #d2d2d7 !important;
+        }
+        /* Details Styles */
+        .details-section {
+            background-color: #ffffff;
+            border-radius: 16px;
+            padding: 40px;
+            margin-bottom: 32px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+        .detail-row {
+            display: flex;
+            border-bottom: 1px solid #d2d2d7;
+            padding: 16px 0;
+        }
+        .detail-row:last-child {
+            border-bottom: none;
+        }
+        .detail-label {
+            flex: 0 0 200px;
+            font-weight: 600;
+            color: #1d1d1f;
+        }
+        .detail-value {
+            flex: 1;
+            color: #424245;
+        }
+        .section-heading {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 24px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #d2d2d7;
+            color: #1d1d1f;
+        }
+        .badge {
+            font-size: 14px;
+            padding: 6px 12px;
+            border-radius: 12px;
+        }
+        .guest-info {
+            background-color: #f5f5f7;
+            border-radius: 12px;
+            padding: 24px;
+            margin-top: 24px;
+        }
+        .room-info {
+            background-color: #f5f5f7;
+            border-radius: 12px;
+            padding: 24px;
+            margin-top: 16px;
+        }
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+        }
+        .info-item {
+            margin-bottom: 8px;
+        }
+        .info-label {
+            font-weight: 500;
+            font-size: 14px;
+            color: #6e6e73;
+            margin-bottom: 4px;
+        }
+        .info-value {
+            font-size: 16px;
+            color: #1d1d1f;
+        }
+        .status-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 980px;
+            font-size: 14px;
+            font-weight: 500;
+            margin-top: 8px;
+        }
+        .status-confirmed {
+            background-color: #e3f6e5;
+            color: #1d893c;
+        }
+        .status-pending {
+            background-color: #fff4d8;
+            color: #aa7c00;
+        }
+        .stay-duration {
+            background-color: #e8f0fe;
+            border-radius: 12px;
+            padding: 16px;
+            text-align: center;
+            margin-top: 24px;
+        }
+        .duration-value {
+            font-size: 32px;
+            font-weight: 600;
+            color: #0071e3;
+        }
+        .duration-label {
+            font-size: 14px;
+            color: #6e6e73;
+        }
+        .price-section {
+            margin-top: 32px;
+        }
+        .price-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #d2d2d7;
+        }
+        .price-row:last-child {
+            border-bottom: none;
+            padding-top: 16px;
+        }
+        .price-label {
+            color: #424245;
+        }
+        .price-value {
+            font-weight: 500;
+        }
+        .total-price {
+            font-size: 24px;
+            font-weight: 600;
+            color: #1d1d1f;
+        }
+        /* Buttons */
+        .btn {
+            border-radius: 980px;
+            padding: 10px 24px;
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+        .btn-primary {
+            background-color: #0071e3;
+            border-color: #0071e3;
+            color: #ffffff;
+        }
+        .btn-primary:hover {
+            background-color: #005bb5;
+            border-color: #005bb5;
+        }
+        .btn-secondary {
+            background-color: #6e6e73;
+            border-color: #6e6e73;
+            color: #ffffff;
+        }
+        .btn-secondary:hover {
+            background-color: #5c5c61;
+            border-color: #5c5c61;
+        }
+        .btn-gold {
+            background-color: #d4af37;
+            border-color: #d4af37;
+            color: #ffffff;
+        }
+        .btn-gold:hover {
+            background-color: #b8960d;
+            border-color: #b8960d;
+        }
+        .btn-outline-danger {
+            background-color: transparent;
+            border-color: #ff3b30;
+            color: #ff3b30;
+        }
+        .btn-outline-danger:hover {
+            background-color: #ff3b30;
+            color: #ffffff;
+        }
+        footer {
+            background-color: #f5f5f7 !important;
+            color: #6e6e73 !important;
+            font-size: 14px;
+            text-align: center;
+        }
+        .payment-status {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 980px;
+            font-weight: 600;
+            font-size: 14px;
+        }
+        .payment-paid {
+            background-color: #e3f6e5;
+            color: #1d893c;
+        }
+        .payment-unpaid {
+            background-color: #ffebe9;
+            color: #ff3b30;
+        }
+        .payment-partial {
+            background-color: #fff4d8;
+            color: #aa7c00;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+            <a class="navbar-brand" href="/">Roys Luxury Goods n' Services ®</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="/">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/services/all">Services</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/rooms/all">Accommodations</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/products/all">Shop</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="/bookings/all">Bookings</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/guests/all">Guests</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-5">
+        <!-- Booking Details -->
+        <div class="details-section">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2>Booking Details</h2>
+                <div>
+                    <a href="/bookings/all" class="btn btn-secondary me-2">
+                        <i class="fas fa-arrow-left me-2"></i> Back to Bookings
+                    </a>
+                    <a th:href="@{/bookings/edit/{id}(id=${booking.id})}" class="btn btn-gold">
+                        <i class="fas fa-edit me-2"></i> Edit Booking
+                    </a>
+                </div>
+            </div>
+            
+            <div class="detail-row">
+                <div class="detail-label">Booking ID</div>
+                <div class="detail-value" th:text="${booking.id}"></div>
+            </div>
+            
+            <div class="detail-row">
+                <div class="detail-label">Status</div>
+                <div class="detail-value">
+                    <span class="status-badge status-confirmed">Confirmed</span>
+                </div>
+            </div>
+            
+            <div class="detail-row">
+                <div class="detail-label">Check-in</div>
+                <div class="detail-value" th:text="${#temporals.format(booking.checkIn, 'EEEE, MMMM d, yyyy')}"></div>
+            </div>
+            
+            <div class="detail-row">
+                <div class="detail-label">Check-out</div>
+                <div class="detail-value" th:text="${#temporals.format(booking.checkOut, 'EEEE, MMMM d, yyyy')}"></div>
+            </div>
+            
+            <div class="detail-row">
+                <div class="detail-label">Total Amount</div>
+                <div class="detail-value">
+                    <span class="total-price">€<span th:text="${#numbers.formatDecimal(booking.totalAmount, 1, 2)}"></span></span>
+                </div>
+            </div>
+            
+            <!-- Guest Information Section -->
+            <div class="guest-info">
+                <div class="section-heading">Guest Information</div>
+                <div class="info-grid">
+                    <div class="info-item">
+                        <div class="info-label">Full Name</div>
+                        <div class="info-value" th:text="${booking.guest.firstName + ' ' + booking.guest.lastName}"></div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Email</div>
+                        <div class="info-value" th:text="${booking.guest.email}"></div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Phone</div>
+                        <div class="info-value" th:text="${booking.guest.phone != null ? booking.guest.phone : 'Not provided'}"></div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Member Since</div>
+                        <div class="info-value" th:if="${booking.guest.registrationDate != null}" th:text="${#temporals.format(booking.guest.registrationDate, 'MMMM d, yyyy')}"></div>
+                    </div>
+                </div>
+                <div class="mt-3">
+                    <a th:href="@{/guests/details/{id}(id=${booking.guest.id})}" class="btn btn-outline-secondary btn-sm">
+                        <i class="fas fa-user me-2"></i> View Guest Profile
+                    </a>
+                </div>
+            </div>
+            
+            <!-- Room Information Section -->
+            <div class="room-info">
+                <div class="section-heading">Room Information</div>
+                <div class="info-grid">
+                    <div class="info-item">
+                        <div class="info-label">Room Number</div>
+                        <div class="info-value" th:text="${booking.room.roomNumber}"></div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Room Type</div>
+                        <div class="info-value" th:text="${booking.room.type}"></div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Rate per Night</div>
+                        <div class="info-value">€<span th:text="${#numbers.formatDecimal(booking.room.price, 1, 2)}"></span></div>
+                    </div>
+                </div>
+                <div class="mt-3">
+                    <a th:href="@{/rooms/{id}(id=${booking.room.id})}" class="btn btn-outline-secondary btn-sm">
+                        <i class="fas fa-door-open me-2"></i> View Room Details
+                    </a>
+                </div>
+            </div>
+            
+            <!-- Stay Duration Section -->
+            <div class="stay-duration">
+                <div class="duration-label">Stay Duration</div>
+                <div class="duration-value" th:with="nights=${T(java.time.temporal.ChronoUnit).DAYS.between(booking.checkIn, booking.checkOut)}">
+                    <span th:text="${nights}"></span> <span th:text="${nights == 1 ? 'Night' : 'Nights'}"></span>
+                </div>
+            </div>
+            
+            <!-- Price Breakdown Section -->
+            <div class="price-section">
+                <div class="section-heading">Price Breakdown</div>
+                <div class="price-row" th:with="nights=${T(java.time.temporal.ChronoUnit).DAYS.between(booking.checkIn, booking.checkOut)}">
+                    <div class="price-label" th:text="${booking.room.type + ' Room (' + nights + ' ' + (nights == 1 ? 'night' : 'nights') + ' × €' + #numbers.formatDecimal(booking.room.price, 1, 2) + ')'}"></div>
+                    <div class="price-value">€<span th:text="${#numbers.formatDecimal(booking.room.price * nights, 1, 2)}"></span></div>
+                </div>
+                <div class="price-row">
+                    <div class="price-label">Taxes & Fees (Estimated)</div>
+                    <div class="price-value">€<span th:with="tax=${booking.totalAmount * 0.1}" th:text="${#numbers.formatDecimal(tax, 1, 2)}"></span></div>
+                </div>
+                <div class="price-row">
+                    <div class="price-label fw-bold">Total Amount</div>
+                    <div class="price-value total-price">€<span th:text="${#numbers.formatDecimal(booking.totalAmount, 1, 2)}"></span></div>
+                </div>
+            </div>
+            
+            <!-- Payment Status Section -->
+            <div class="mt-4">
+                <div class="section-heading">Payment Information</div>
+                <div class="d-flex align-items-center mb-3">
+                    <div class="payment-status payment-paid" th:if="${paymentStatus != null && paymentStatus == 'Paid'}">
+                        <i class="fas fa-check-circle me-2"></i> Fully Paid
+                    </div>
+                    <div class="payment-status payment-partial" th:if="${paymentStatus != null && paymentStatus == 'Partial'}">
+                        <i class="fas fa-hourglass-half me-2"></i> Partially Paid
+                    </div>
+                    <div class="payment-status payment-unpaid" th:if="${paymentStatus == null || paymentStatus == 'Unpaid'}">
+                        <i class="fas fa-exclamation-circle me-2"></i> Not Paid
+                    </div>
+                </div>
+                
+                <!-- If payments exist, show them -->
+                <div th:if="${payments != null && !payments.isEmpty()}">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Payment ID</th>
+                                <th>Date</th>
+                                <th>Amount</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="payment : ${payments}">
+                                <td th:text="${payment.id}"></td>
+                                <td th:text="${#temporals.format(payment.paymentDate, 'dd MMM yyyy')}"></td>
+                                <td>€<span th:text="${#numbers.formatDecimal(payment.amountPaid, 1, 2)}"></span></td>
+                                <td>
+                                    <span class="badge" 
+                                          th:classappend="${payment.status == 'Paid' ? 'bg-success' : payment.status == 'Pending' ? 'bg-warning' : 'bg-danger'}"
+                                          th:text="${payment.status}"></span>
+                                </td>
+                                <td>
+                                    <a th:href="@{/payments/details/{id}(id=${payment.id})}" class="btn btn-sm btn-outline-secondary">
+                                        <i class="fas fa-info-circle"></i> Details
+                                    </a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <!-- Add payment button -->
+                <div class="mt-3">
+                    <a th:href="@{/payments/new(bookingId=${booking.id})}" class="btn btn-primary">
+                        <i class="fas fa-plus-circle me-2"></i> Add Payment
+                    </a>
+                </div>
+            </div>
+            
+            <!-- Action Buttons -->
+            <div class="d-flex justify-content-between mt-5">
+                <div>
+                    <a th:href="@{/bookings/all}" class="btn btn-secondary">
+                        <i class="fas fa-arrow-left me-2"></i> Back to Bookings
+                    </a>
+                </div>
+                <div>
+                    <a th:href="@{/bookings/edit/{id}(id=${booking.id})}" class="btn btn-gold me-2">
+                        <i class="fas fa-edit me-2"></i> Edit Booking
+                    </a>
+                    <a th:href="@{/bookings/delete/{id}(id=${booking.id})}" class="btn btn-outline-danger" 
+                       onclick="return confirm('Are you sure you want to delete this booking? This action cannot be undone.')">
+                        <i class="fas fa-trash me-2"></i> Delete Booking
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="py-4 mt-5">
+        <div class="container">
+            <p class="mb-0">© 2025 Roys Luxury Goods n' Services</p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Error - Cannot Delete Booking - Rytami</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=SF+Pro+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: #f5f5f7;
+            color: #1d1d1f;
+            line-height: 1.5;
+        }
+        .navbar {
+            background-color: #000000 !important;
+        }
+        .navbar-brand, .nav-link {
+            color: #ffffff !important;
+        }
+        .nav-link:hover {
+            color: #d2d2d7 !important;
+        }
+        .container {
+            max-width: 1200px;
+        }
+        .error-card {
+            background-color: #ffffff;
+            border-radius: 20px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+            margin-top: 2rem;
+            margin-bottom: 2rem;
+        }
+        .error-header {
+            background-color: #ff3b30;
+            padding: 24px 32px;
+            position: relative;
+        }
+        .error-icon {
+            background-color: white;
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 16px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .error-icon i {
+            font-size: 36px;
+            color: #ff3b30;
+        }
+        h1 {
+            font-size: 32px;
+            font-weight: 600;
+            color: #ffffff;
+            margin: 0;
+        }
+        .error-body {
+            padding: 32px;
+        }
+        .error-title {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 24px;
+            color: #1d1d1f;
+        }
+        .error-text {
+            font-size: 17px;
+            color: #424245;
+            margin-bottom: 24px;
+            line-height: 1.6;
+        }
+        .relationship-diagram {
+            background-color: #f5f5f7;
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 24px;
+        }
+        .entity-box {
+            background-color: #ffffff;
+            border-radius: 8px;
+            padding: 12px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            margin-bottom: 16px;
+        }
+        .entity-title {
+            font-weight: 600;
+            font-size: 18px;
+            margin-bottom: 8px;
+        }
+        .relation-arrow {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 16px 0;
+        }
+        .btn {
+            border-radius: 980px;
+            padding: 12px 24px;
+            font-size: 17px;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+        .btn-primary {
+            background-color: #0071e3;
+            border-color: #0071e3;
+        }
+        .btn-primary:hover {
+            background-color: #0062c3;
+            border-color: #0062c3;
+            transform: translateY(-2px);
+        }
+        .btn-outline-secondary {
+            color: #424245;
+            border-color: #d2d2d7;
+        }
+        .btn-outline-secondary:hover {
+            background-color: #d2d2d7;
+            color: #1d1d1f;
+            transform: translateY(-2px);
+        }
+        .helpful-tips {
+            background-color: #f5f5f7;
+            border-radius: 12px;
+            padding: 24px;
+            margin-top: 32px;
+        }
+        .tip-title {
+            font-weight: 600;
+            font-size: 18px;
+            margin-bottom: 12px;
+        }
+        .tip-item {
+            margin-bottom: 8px;
+            font-size: 15px;
+        }
+        footer {
+            background-color: #f5f5f7 !important;
+            color: #6e6e73 !important;
+            font-size: 14px;
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+            <a class="navbar-brand" href="/">Roys Luxury Goods n' Services ®</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="/">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/services/all">Services</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/rooms/all">Accommodations</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/products/all">Shop</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="/bookings/all">Bookings</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/guests/all">Guests</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="error-card">
+            <div class="error-header">
+                <div class="error-icon">
+                    <i class="fas fa-exclamation-triangle"></i>
+                </div>
+                <h1>Cannot Delete Booking</h1>
+            </div>
+            <div class="error-body">
+                <h2 class="error-title">This booking has associated payments</h2>
+                <p class="error-text">
+                    You're attempting to delete a booking that has one or more payments linked to it. Removing this booking would 
+                    break the connection to payment records and affect the integrity of your financial system.
+                </p>
+
+                <div class="relationship-diagram">
+                    <div class="entity-box">
+                        <div class="entity-title">Booking</div>
+                        <p>The reservation record in the system</p>
+                    </div>
+                    <div class="relation-arrow">
+                        <i class="fas fa-long-arrow-alt-down me-2"></i>
+                        <span>Referenced by</span>
+                    </div>
+                    <div class="entity-box">
+                        <div class="entity-title">Payment</div>
+                        <p>Financial transactions associated with this booking</p>
+                    </div>
+                </div>
+
+                <h3 class="error-title">What options do I have?</h3>
+                <p class="error-text">
+                    To properly handle this situation, consider these alternatives:
+                </p>
+                <ul class="error-text">
+                    <li>First delete all payment records associated with this booking</li>
+                    <li>Consider marking the booking as cancelled instead of deleting it completely</li>
+                    <li>Archive the booking data for record-keeping purposes</li>
+                </ul>
+
+                <div class="helpful-tips">
+                    <div class="tip-title">
+                        <i class="fas fa-lightbulb me-2"></i>
+                        Quick Tip
+                    </div>
+                    <p>For financial and auditing purposes, it's often better to keep records of bookings and payments rather than deleting them. Consider implementing a status field to mark bookings as "cancelled" or "inactive" instead.</p>
+                </div>
+
+                <div class="d-flex justify-content-between mt-4">
+                    <a th:href="@{/payments}" class="btn btn-primary">
+                        <i class="fas fa-credit-card me-2"></i> View Payments
+                    </a>
+                    <a th:href="@{/bookings/all}" class="btn btn-outline-secondary">
+                        <i class="fas fa-arrow-left me-2"></i> Back to Bookings
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Footer -->
+    <footer class="py-4 mt-5">
+        <div class="container">
+            <p class="mb-0">© 2025 Roys Luxury Goods n' Services</p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

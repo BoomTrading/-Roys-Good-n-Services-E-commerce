@@ -1,52 +1,105 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Edit Booking</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
+    <title>Edit Booking - Rytami</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=SF+Pro+Display:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
-        .product-btn {
-            border-radius: 50px;
-            padding: 8px 16px;
-            transition: all 0.3s ease;
-            border: none;
-            font-size: 0.85rem;
+        body {
+            font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: #f5f5f7;
+            color: #1d1d1f;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 1200px;
+        }
+        h2 {
+            font-size: 32px;
+            font-weight: 600;
+            margin-bottom: 16px;
+        }
+        .navbar {
+            background-color: #000000 !important;
+        }
+        .navbar-brand, .nav-link {
+            color: #ffffff !important;
+        }
+        .nav-link:hover {
+            color: #d2d2d7 !important;
+        }
+        /* Form Styles */
+        .form-section {
+            background-color: #ffffff;
+            border-radius: 16px;
+            padding: 40px;
+            margin-bottom: 32px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+        .form-label {
+            font-size: 16px;
             font-weight: 500;
-            letter-spacing: 0.5px;
+            color: #1d1d1f;
+            margin-bottom: 8px;
         }
-
-        .btn-edit {
-            background-color: transparent;
-            color: #d4af37;
-            border: 1px solid #d4af37;
-            margin-right: 5px;
+        .form-control {
+            border-radius: 8px;
+            border: 1px solid #d2d2d7;
+            font-size: 16px;
+            padding: 12px;
+            transition: border-color 0.3s ease;
         }
-
-        .btn-edit:hover {
-            background-color: #d4af37;
-            color: white;
-            transform: translateY(-2px);
+        .form-control:focus {
+            border-color: #0071e3;
+            box-shadow: 0 0 0 3px rgba(0, 113, 227, 0.1);
+            outline: none;
         }
-
-        .btn-delete {
-            background-color: transparent;
-            color: #dc3545;
-            border: 1px solid #dc3545;
+        .form-group {
+            margin-bottom: 24px;
         }
-
-        .btn-delete:hover {
-            background-color: #dc3545;
-            color: white;
-            transform: translateY(-2px);
+        /* Buttons */
+        .btn {
+            border-radius: 980px;
+            padding: 10px 24px;
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+        .btn-primary {
+            background-color: #0071e3;
+            border-color: #0071e3;
+            color: #ffffff;
+        }
+        .btn-primary:hover {
+            background-color: #005bb5;
+            border-color: #005bb5;
+        }
+        .btn-secondary {
+            background-color: #6e6e73;
+            border-color: #6e6e73;
+            color: #ffffff;
+        }
+        .btn-secondary:hover {
+            background-color: #5c5c61;
+            border-color: #5c5c61;
+        }
+        footer {
+            background-color: #f5f5f7 !important;
+            color: #6e6e73 !important;
+            font-size: 14px;
+            text-align: center;
         }
     </style>
 </head>
 <body>
-    <!-- Added consistent navbar -->
-    <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #1a2526;">
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
         <div class="container">
-            <a class="navbar-brand" href="/"> Roys Luxury Goods n' Services ® </a>
+            <a class="navbar-brand" href="/">Roys Luxury Goods n' Services ®</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -64,42 +117,56 @@
     </nav>
 
     <div class="container mt-5">
-        <h1>Edit Booking</h1>
-        <form th:action="@{/bookings/upd}" th:object="${booking}" method="post">
-            <input type="hidden" th:field="*{id}">
-            <div class="mb-3">
-                <label>Guest</label>
-                <select class="form-control" th:field="*{guest}">
-                    <option th:each="guest : ${guests}" th:value="${guest.id}" th:text="${guest.firstName + ' ' + guest.lastName}" th:selected="${guest.id == booking.guest.id}"></option>
-                </select>
-            </div>
-            <div class="mb-3">
-                <label>Room</label>
-                <select class="form-control" th:field="*{room}">
-                    <option th:each="room : ${rooms}" th:value="${room.id}" th:text="${room.roomNumber}" th:selected="${room.id == booking.room.id}"></option>
-                </select>
-            </div>
-            <div class="mb-3">
-                <label>Check-In</label>
-                <input type="date" class="form-control" th:field="*{checkIn}">
-            </div>
-            <div class="mb-3">
-                <label>Check-Out</label>
-                <input type="date" class="form-control" th:field="*{checkOut}">
-            </div>
-            <div class="mb-3">
-                <label>Total Price</label>
-                <input type="number" step="0.01" class="form-control" th:field="*{totalPrice}">
-            </div>
-            <div class="d-flex mt-3">
-                <button type="submit" class="btn product-btn btn-edit me-2">
-                    <i class="fas fa-save me-2"></i> Update
-                </button>
-                <a href="/bookings/all" class="btn product-btn btn-delete">
-                    <i class="fas fa-times me-2"></i> Cancel
-                </a>
-            </div>
-        </form>
+        <!-- Form Section -->
+        <div class="form-section">
+            <h2>Edit Booking Details</h2>
+            <form th:action="@{/bookings/upd}" th:object="${booking}" method="post">
+                <input type="hidden" th:field="*{id}">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="guest" class="form-label">Guest</label>
+                            <select class="form-control" id="guest" th:field="*{guest}" required>
+                                <option th:each="guest : ${guests}" th:value="${guest.id}" th:text="${guest.firstName + ' ' + guest.lastName}" th:selected="${guest.id == booking.guest.id}"></option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="room" class="form-label">Room</label>
+                            <select class="form-control" id="room" th:field="*{room}" required>
+                                <option th:each="room : ${rooms}" th:value="${room.id}" th:text="${room.roomNumber}" th:selected="${room.id == booking.room.id}"></option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="checkIn" class="form-label">Check-In</label>
+                            <input type="date" class="form-control" id="checkIn" th:field="*{checkIn}" required>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="checkOut" class="form-label">Check-Out</label>
+                            <input type="date" class="form-control" id="checkOut" th:field="*{checkOut}" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="totalPrice" class="form-label">Total Price (€)</label>
+                            <input type="number" step="0.01" class="form-control" id="totalPrice" th:field="*{totalAmount}" placeholder="Enter total price" required>
+                        </div>
+                    </div>
+                </div>
+                <div class="d-flex gap-3 mt-4">
+                    <button type="submit" class="btn btn-primary">Update Booking</button>
+                    <a href="/bookings/all" class="btn btn-secondary">Cancel</a>
+                </div>
+            </form>
+        </div>
     </div>
+
+    <!-- Footer -->
+    <footer class="py-4 mt-5">
+        <div class="container">
+            <p class="mb-0">© 2025 Roys Luxury Goods n' Services</p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

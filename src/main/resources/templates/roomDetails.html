@@ -165,7 +165,9 @@
             <a th:href="@{/rooms/all}" class="btn btn-secondary">Back to Rooms</a>
             <div>
                 <a th:href="@{/rooms/edit/{id}(id=${room.id})}" class="btn btn-warning">Edit Room</a>
-                <a th:if="${room.available}" href="#" class="btn btn-primary">Book Now</a>
+                <a th:if="${room.available}" th:href="@{/bookings/new?roomId={id}(id=${room.id})}" class="btn btn-primary">
+                    <i class="fas fa-calendar-check me-2"></i> Book Now
+                </a>
             </div>
         </div>
     </div>

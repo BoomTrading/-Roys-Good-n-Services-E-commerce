@@ -23,10 +23,12 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import hotel.HotelPackage.model.Booking;
 import hotel.HotelPackage.model.Guest;
+import hotel.HotelPackage.model.Payment;
 import hotel.HotelPackage.model.Room;
 import hotel.HotelPackage.repository.BookingRepository;
 import hotel.HotelPackage.repository.GuestRepository;
 import hotel.HotelPackage.repository.RoomRepository;
+import hotel.HotelPackage.repository.PaymentRepository;
 
 @Controller
 public class BookingController {
@@ -39,6 +41,9 @@ public class BookingController {
 
     @Autowired
     private RoomRepository roomRepository;
+    
+    @Autowired
+    private PaymentRepository paymentRepository;
 
     @GetMapping("/")
     public String viewHomePage(@RequestParam(name = "sdate", required = false, defaultValue = "") String sdate, Model model) {
@@ -63,8 +68,27 @@ public class BookingController {
     }
 
     @GetMapping("/bookings/new")
-    public String showNewForm(Model model) {
-        model.addAttribute("booking", new Booking());
+    public String showNewForm(@RequestParam(required = false) Integer roomId, Model model) {
+        Booking booking = new Booking();
+        
+        // If roomId is provided, pre-select the room
+        if (roomId != null) {
+            Room room = roomRepository.findById(roomId)
+                .orElse(null);
+            if (room != null) {
+                booking.setRoom(room);
+                // Set default dates - check-in today, check-out tomorrow
+                booking.setCheckIn(LocalDate.now());
+                booking.setCheckOut(LocalDate.now().plusDays(1));
+                // Calculate default price for one night
+                booking.setTotalAmount(room.getPrice());
+            }
+        }
+        
+        // Add all guests and available rooms to the model
+        model.addAttribute("booking", booking);
+        model.addAttribute("guests", guestRepository.findAll());
+        model.addAttribute("rooms", roomRepository.findAll());
         return "newBooking";
     }
 
@@ -122,11 +146,20 @@ public class BookingController {
 
     @GetMapping("/bookings/delete/{id}")
     public String delete(@PathVariable("id") int id, Model model) {
-        if (bookingRepository.existsById(id)) {
-            bookingRepository.deleteById(id);
-            model.addAttribute("successMessage", "Booking deleted successfully!");
+        try {
+            if (bookingRepository.existsById(id)) {
+                bookingRepository.deleteById(id);
+                model.addAttribute("successMessage", "Booking deleted successfully!");
+            }
+            return "redirect:/";
+        } catch (org.springframework.dao.DataIntegrityViolationException e) {
+            // Check for foreign key constraint violation with payments
+            if (e.getMessage() != null && e.getMessage().contains("fk_Payments_Bookings1")) {
+                return "error/bookingDeleteError";
+            }
+            // If it's some other constraint violation, re-throw the exception
+            throw e;
         }
-        return "redirect:/";
     }
 
     @GetMapping("/bookings/guest/{guestId}")
@@ -185,6 +218,54 @@ public class BookingController {
                 booking.getCheckOut(),
                 excludeBookingId)) {
             throw new IllegalArgumentException("Room is already booked for the selected dates");
+        }
+    }
+    
+    @GetMapping("/bookings/all")
+    public String getAllBookings(Model model) {
+        List<Booking> bookings = bookingRepository.findAll();
+        model.addAttribute("bookings", bookings);
+        return "bookings";
+    }
+    
+    @GetMapping("/bookings/details/{id}")
+    public String getBookingDetails(@PathVariable("id") int id, Model model) {
+        // Find the booking or throw exception if not found
+        Booking booking = bookingRepository.findById(id)
+            .orElseThrow(() -> new IllegalArgumentException("Invalid booking Id: " + id));
+        
+        // Get related payments for this booking
+        List<Payment> payments = paymentRepository.findByBooking(booking);
+        
+        // Calculate payment status
+        String paymentStatus = calculatePaymentStatus(booking, payments);
+        
+        // Add all attributes to the model
+        model.addAttribute("booking", booking);
+        model.addAttribute("payments", payments);
+        model.addAttribute("paymentStatus", paymentStatus);
+        
+        return "bookingDetails";
+    }
+    
+    private String calculatePaymentStatus(Booking booking, List<Payment> payments) {
+        if (payments == null || payments.isEmpty()) {
+            return "Unpaid";
+        }
+        
+        // Calculate total amount paid
+        BigDecimal totalPaid = payments.stream()
+            .filter(p -> "Paid".equals(p.getStatus()))
+            .map(Payment::getAmountPaid)
+            .reduce(BigDecimal.ZERO, BigDecimal::add);
+        
+        // Compare with booking total amount
+        if (totalPaid.compareTo(booking.getTotalAmount()) >= 0) {
+            return "Paid";
+        } else if (totalPaid.compareTo(BigDecimal.ZERO) > 0) {
+            return "Partial";
+        } else {
+            return "Unpaid";
         }
     }
 }
