@@ -36,7 +36,7 @@
             border: none;
         }
         .card-header {
-            background-color: #0071e3;
+            background-color: #ff9500;
             color: white;
             padding: 24px 32px;
             border-bottom: none;
@@ -118,10 +118,41 @@
             margin-bottom: 16px;
             color: #1d1d1f;
         }
+        .readonly-field {
+            background-color: #f5f5f7;
+            color: #6e6e73;
+        }
         footer {
             background-color: #f5f5f7 !important;
             color: #6e6e73 !important;
             font-size: 14px;
+            text-align: center;
+        }
+        .tab-content {
+            background-color: #ffffff;
+            border-radius: 0 0 16px 16px;
+            padding: 24px;
+            border: 1px solid #dee2e6;
+            border-top: none;
+        }
+        .nav-tabs .nav-link {
+            border-radius: 16px 16px 0 0;
+            padding: 12px 24px;
+            font-weight: 500;
+            color: #6e6e73;
+        }
+        .nav-tabs .nav-link.active {
+            color: #0071e3;
+            border-color: #dee2e6 #dee2e6 #fff;
+        }
+        .price-preview {
+            font-size: 24px;
+            font-weight: 600;
+            color: #0071e3;
+            padding: 12px 16px;
+            background-color: #f5f5f7;
+            border-radius: 12px;
+            margin-top: 16px;
             text-align: center;
         }
     </style>
@@ -141,7 +172,6 @@
                     <li class="nav-item"><a class="nav-link" href="/rooms/all">Accommodations</a></li>
                     <li class="nav-item"><a class="nav-link" href="/products/all">Shop</a></li>
                     <li class="nav-item"><a class="nav-link" href="/bookings/all">Bookings</a></li>
-                    <li class="nav-item"><a class="nav-link active" href="/payments">Payments</a></li>
                     <li class="nav-item"><a class="nav-link" href="/guests/all">Guests</a></li>
                 </ul>
             </div>
@@ -151,32 +181,22 @@
     <div class="container">
         <div class="card">
             <div class="card-header">
-                <h1>Add New Payment</h1>
+                <h1>New Payment</h1>
             </div>
             <div class="card-body">
                 <div th:if="${errorMessage}" class="alert alert-danger" role="alert">
                     <i class="fas fa-exclamation-triangle me-2"></i> <span th:text="${errorMessage}"></span>
                 </div>
                 
-                <form th:action="@{/payments/ins}" th:object="${payment}" method="post">
+                <form th:action="@{/payments/ins}" th:object="${payment}" method="post" id="paymentForm">
                     <div class="form-section">
                         <h2 class="form-section-title">Payment Details</h2>
                         
                         <div class="row mb-3">
                             <div class="col-md-6">
-                                <label for="amountPaid" class="form-label">Amount</label>
-                                <div class="input-group">
-                                    <span class="input-group-text">€</span>
-                                    <input type="number" step="0.01" class="form-control" id="amountPaid" th:field="*{amountPaid}" required>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
                                 <label for="paymentDate" class="form-label">Payment Date</label>
                                 <input type="datetime-local" class="form-control" id="paymentDate" th:field="*{paymentDate}" required>
                             </div>
-                        </div>
-                        
-                        <div class="row mb-3">
                             <div class="col-md-6">
                                 <label for="status" class="form-label">Status</label>
                                 <select class="form-select" id="status" th:field="*{status}" required>
@@ -186,6 +206,9 @@
                                     <option value="Failed">Failed</option>
                                 </select>
                             </div>
+                        </div>
+                        
+                        <div class="row mb-3">
                             <div class="col-md-6">
                                 <label for="paymentMethod" class="form-label">Payment Method</label>
                                 <select class="form-select" id="paymentMethod" th:field="*{paymentMethod}" required>
@@ -196,28 +219,128 @@
                                     <option value="Wire Transfer">Wire Transfer</option>
                                 </select>
                             </div>
-                        </div>
-                        
-                        <div class="mb-3">
-                            <label for="transactionId" class="form-label">Transaction ID (optional)</label>
-                            <input type="text" class="form-control" id="transactionId" th:field="*{transactionId}">
+                            <div class="col-md-6">
+                                <label for="transactionId" class="form-label">Transaction ID (optional)</label>
+                                <input type="text" class="form-control" id="transactionId" th:field="*{transactionId}">
+                            </div>
                         </div>
                     </div>
                     
                     <div class="form-section">
-                        <h2 class="form-section-title">Booking Information</h2>
+                        <h2 class="form-section-title">Payment Source</h2>
                         
-                        <div class="mb-3">
-                            <label for="bookingId" class="form-label">Booking</label>
-                            <select class="form-select" id="bookingId" name="bookingId" required>
-                                <option value="">Select a booking</option>
-                                <option th:each="booking : ${bookings}" 
-                                        th:value="${booking.id}" 
-                                        th:text="${'Booking #' + booking.id + ' - ' + booking.guest.firstName + ' ' + booking.guest.lastName + ' - Room ' + booking.room.roomNumber}">
-                                </option>
-                            </select>
+                        <ul class="nav nav-tabs" id="paymentSourceTab" role="tablist">
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link active" id="product-tab" data-bs-toggle="tab" data-bs-target="#product-tab-pane" type="button" role="tab" aria-controls="product-tab-pane" aria-selected="true">Product</button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="service-tab" data-bs-toggle="tab" data-bs-target="#service-tab-pane" type="button" role="tab" aria-controls="service-tab-pane" aria-selected="false">Service</button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="room-tab" data-bs-toggle="tab" data-bs-target="#room-tab-pane" type="button" role="tab" aria-controls="room-tab-pane" aria-selected="false">Room</button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="booking-tab" data-bs-toggle="tab" data-bs-target="#booking-tab-pane" type="button" role="tab" aria-controls="booking-tab-pane" aria-selected="false">Booking</button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="order-tab" data-bs-toggle="tab" data-bs-target="#order-tab-pane" type="button" role="tab" aria-controls="order-tab-pane" aria-selected="false">Order</button>
+                            </li>
+                        </ul>
+                        <div class="tab-content" id="paymentSourceTabContent">
+                            <!-- Product Tab -->
+                            <div class="tab-pane fade show active" id="product-tab-pane" role="tabpanel" aria-labelledby="product-tab" tabindex="0">
+                                <div class="mb-3">
+                                    <label for="productId" class="form-label">Product</label>
+                                    <select class="form-select" id="productId" name="productId">
+                                        <option value="">Select a product</option>
+                                        <option th:each="product : ${products}" 
+                                                th:value="${product.id}" 
+                                                th:text="${product.name + ' - €' + product.price}"
+                                                th:data-price="${product.price}">
+                                        </option>
+                                    </select>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="productQuantity" class="form-label">Quantity</label>
+                                    <input type="number" class="form-control" id="productQuantity" name="quantity" value="1" min="1">
+                                </div>
+                            </div>
+                            
+                            <!-- Service Tab -->
+                            <div class="tab-pane fade" id="service-tab-pane" role="tabpanel" aria-labelledby="service-tab" tabindex="0">
+                                <div class="mb-3">
+                                    <label for="serviceId" class="form-label">Service</label>
+                                    <select class="form-select" id="serviceId" name="serviceId">
+                                        <option value="">Select a service</option>
+                                        <option th:each="service : ${services}" 
+                                                th:value="${service.id}" 
+                                                th:text="${service.name + ' - €' + service.price}"
+                                                th:data-price="${service.price}">
+                                        </option>
+                                    </select>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="serviceQuantity" class="form-label">Quantity</label>
+                                    <input type="number" class="form-control" id="serviceQuantity" name="quantity" value="1" min="1">
+                                </div>
+                            </div>
+                            
+                            <!-- Room Tab -->
+                            <div class="tab-pane fade" id="room-tab-pane" role="tabpanel" aria-labelledby="room-tab" tabindex="0">
+                                <div class="mb-3">
+                                    <label for="roomId" class="form-label">Room</label>
+                                    <select class="form-select" id="roomId" name="roomId">
+                                        <option value="">Select a room</option>
+                                        <option th:each="room : ${rooms}" 
+                                                th:value="${room.id}" 
+                                                th:text="${'Room ' + room.roomNumber + ' (' + room.type + ') - €' + room.price + '/night'}"
+                                                th:data-price="${room.price}">
+                                        </option>
+                                    </select>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="roomNights" class="form-label">Number of Nights</label>
+                                    <input type="number" class="form-control" id="roomNights" name="quantity" value="1" min="1">
+                                </div>
+                            </div>
+                            
+                            <!-- Booking Tab -->
+                            <div class="tab-pane fade" id="booking-tab-pane" role="tabpanel" aria-labelledby="booking-tab" tabindex="0">
+                                <div class="mb-3">
+                                    <label for="bookingId" class="form-label">Booking</label>
+                                    <select class="form-select" id="bookingId" name="bookingId">
+                                        <option value="">Select a booking</option>
+                                        <option th:each="booking : ${bookings}" 
+                                                th:value="${booking.id}" 
+                                                th:text="${'Booking #' + booking.id + ' - ' + booking.guest.firstName + ' ' + booking.guest.lastName + ' - Room ' + booking.room.roomNumber}">
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <!-- Order Tab -->
+                            <div class="tab-pane fade" id="order-tab-pane" role="tabpanel" aria-labelledby="order-tab" tabindex="0">
+                                <div class="mb-3">
+                                    <label for="orderId" class="form-label">Order</label>
+                                    <select class="form-select" id="orderId" name="orderId">
+                                        <option value="">Select an order</option>
+                                        <option th:each="order : ${orders}" 
+                                                th:value="${order.id}" 
+                                                th:text="${'Order #' + order.id + ' - ' + order.guest.firstName + ' ' + order.guest.lastName + ' - €' + order.totalAmount}"
+                                                th:data-price="${order.totalAmount}">
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
                         </div>
                         
+                        <div class="price-preview mt-3" id="pricePreview">
+                            Total: €0.00
+                        </div>
+                    </div>
+                    
+                    <div class="form-section">
+                        <h2 class="form-section-title">Additional Information</h2>
                         <div class="mb-3">
                             <label for="notes" class="form-label">Notes (optional)</label>
                             <textarea class="form-control" id="notes" th:field="*{notes}" rows="3"></textarea>
@@ -229,7 +352,7 @@
                             <i class="fas fa-times me-2"></i> Cancel
                         </a>
                         <button type="submit" class="btn btn-primary">
-                            <i class="fas fa-save me-2"></i> Save Payment
+                            <i class="fas fa-save me-2"></i> Create Payment
                         </button>
                     </div>
                 </form>
@@ -249,14 +372,101 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         $(document).ready(function() {
-            // Set default payment date to now
-            const now = new Date();
-            const dateTimeStr = now.getFullYear() + '-' + 
-                String(now.getMonth() + 1).padStart(2, '0') + '-' + 
-                String(now.getDate()).padStart(2, '0') + 'T' + 
-                String(now.getHours()).padStart(2, '0') + ':' + 
-                String(now.getMinutes()).padStart(2, '0');
-            $('#paymentDate').val(dateTimeStr);
+            // Price calculation function
+            function updatePricePreview() {
+                let totalPrice = 0;
+                let activeTab = $('.nav-tabs .active').attr('id');
+                
+                switch(activeTab) {
+                    case 'product-tab':
+                        let productPrice = parseFloat($('#productId option:selected').data('price') || 0);
+                        let productQuantity = parseInt($('#productQuantity').val() || 1);
+                        totalPrice = productPrice * productQuantity;
+                        break;
+                    case 'service-tab':
+                        let servicePrice = parseFloat($('#serviceId option:selected').data('price') || 0);
+                        let serviceQuantity = parseInt($('#serviceQuantity').val() || 1);
+                        totalPrice = servicePrice * serviceQuantity;
+                        break;
+                    case 'room-tab':
+                        let roomPrice = parseFloat($('#roomId option:selected').data('price') || 0);
+                        let nights = parseInt($('#roomNights').val() || 1);
+                        totalPrice = roomPrice * nights;
+                        break;
+                    case 'order-tab':
+                        totalPrice = parseFloat($('#orderId option:selected').data('price') || 0);
+                        break;
+                    // Booking calculation is more complex and handled by the server
+                }
+                $('#pricePreview').text('Total: €' + totalPrice.toFixed(2));
+            }
+            
+            // Attach event listeners to all relevant inputs
+            $('#productId, #productQuantity, #serviceId, #serviceQuantity, #roomId, #roomNights, #orderId, #bookingId').change(updatePricePreview);
+            
+            // Also update when tabs are changed
+            $('button[data-bs-toggle="tab"]').on('shown.bs.tab', function (e) {
+                updatePricePreview();
+            });
+            
+            // Ensure the form submits correctly with only the active tab's values
+            $('#paymentForm').submit(function() {
+                let activeTab = $('.nav-tabs .active').attr('id');
+                
+                // Clear all inactive tab inputs to avoid confusion
+                if (activeTab !== 'product-tab') {
+                    $('#productId').attr('disabled', true);
+                    $('#productQuantity').attr('disabled', true);
+                }
+                if (activeTab !== 'service-tab') {
+                    $('#serviceId').attr('disabled', true);
+                    $('#serviceQuantity').attr('disabled', true);
+                }
+                if (activeTab !== 'room-tab') {
+                    $('#roomId').attr('disabled', true);
+                    $('#roomNights').attr('disabled', true);
+                }
+                if (activeTab !== 'booking-tab') {
+                    $('#bookingId').attr('disabled', true);
+                }
+                if (activeTab !== 'order-tab') {
+                    $('#orderId').attr('disabled', true);
+                }
+                
+                // Validate the selected option in the active tab
+                switch(activeTab) {
+                    case 'product-tab':
+                        if (!$('#productId').val()) {
+                            alert('Please select a product');
+                            return false;
+                        }
+                        break;
+                    case 'service-tab':
+                        if (!$('#serviceId').val()) {
+                            alert('Please select a service');
+                            return false;
+                        }
+                        break;
+                    case 'room-tab':
+                        if (!$('#roomId').val()) {
+                            alert('Please select a room');
+                            return false;
+                        }
+                        break;
+                    case 'booking-tab':
+                        if (!$('#bookingId').val()) {
+                            alert('Please select a booking');
+                            return false;
+                        }
+                        break;
+                    case 'order-tab':
+                        if (!$('#orderId').val()) {
+                            alert('Please select an order');
+                            return false;
+                        }
+                        break;
+                }
+            });
         });
     </script>
 </body>

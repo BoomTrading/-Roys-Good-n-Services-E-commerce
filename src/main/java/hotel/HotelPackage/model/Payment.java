@@ -5,7 +5,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "Payments")
+@Table(name = "payments")
 public class Payment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -35,6 +35,24 @@ public class Payment {
     @JoinColumn(name = "Orders_id", nullable = true)
     private Order order;
     
+    @ManyToOne
+    @JoinColumn(name = "Product_id", nullable = true)
+    private Product product;
+    
+    @ManyToOne
+    @JoinColumn(name = "Service_id", nullable = true)
+    private Service service;
+    
+    @ManyToOne
+    @JoinColumn(name = "Room_id", nullable = true)
+    private Room room;
+    
+    @Column(name = "quantity")
+    private Integer quantity;
+    
+    @Column(name = "notes")
+    private String notes;
+    
     // Getter e Setter
     public int getId() { return id; }
     public void setId(int id) { this.id = id; }
@@ -52,4 +70,14 @@ public class Payment {
     public void setBooking(Booking booking) { this.booking = booking; }
     public Order getOrder() { return order; }
     public void setOrder(Order order) { this.order = order; }
+    public Product getProduct() { return product; }
+    public void setProduct(Product product) { this.product = product; }
+    public Service getService() { return service; }
+    public void setService(Service service) { this.service = service; }
+    public Room getRoom() { return room; }
+    public void setRoom(Room room) { this.room = room; }
+    public Integer getQuantity() { return quantity; }
+    public void setQuantity(Integer quantity) { this.quantity = quantity; }
+    public String getNotes() { return notes; }
+    public void setNotes(String notes) { this.notes = notes; }
 }
