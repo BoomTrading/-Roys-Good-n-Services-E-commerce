@@ -469,5 +469,41 @@
             });
         });
     </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Form validation to prevent Bookings_id null error
+            document.getElementById('paymentForm').addEventListener('submit', function(e) {
+                // Get active tab
+                const activeTab = document.querySelector('.tab-pane.active');
+                const tabId = activeTab.id;
+                
+                let isValid = false;
+                
+                if (tabId === 'booking-tab-pane') {
+                    const bookingId = document.getElementById('bookingId').value;
+                    isValid = bookingId && bookingId.trim() !== '';
+                    if (!isValid) {
+                        alert('Please select a booking');
+                    }
+                } else if (tabId === 'room-tab-pane') {
+                    const roomId = document.getElementById('roomId').value;
+                    isValid = roomId && roomId.trim() !== '';
+                    if (!isValid) {
+                        alert('Please select a room');
+                    }
+                } else if (tabId === 'order-tab-pane') {
+                    const orderId = document.getElementById('orderId').value;
+                    isValid = orderId && orderId.trim() !== '';
+                    if (!isValid) {
+                        alert('Please select an order');
+                    }
+                }
+                
+                if (!isValid) {
+                    e.preventDefault();
+                }
+            });
+        });
+    </script>
 </body>
 </html>

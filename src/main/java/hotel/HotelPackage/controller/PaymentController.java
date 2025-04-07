@@ -98,24 +98,35 @@ public class PaymentController {
             }
             payment.setQuantity(quantity);
             
+            // Explicitly set all reference fields to null initially
+            payment.setProduct(null);
+            payment.setService(null);
+            payment.setRoom(null);
+            payment.setBooking(null);
+            payment.setOrder(null);
+            
             // Calculate the amount based on the selected entity
             BigDecimal amount = null;
+            boolean hasValidReference = false;
             
             if (productId != null) {
                 Product product = productRepository.findById(productId)
                     .orElseThrow(() -> new IllegalArgumentException("Invalid product Id: " + productId));
                 payment.setProduct(product);
                 amount = product.getPrice().multiply(BigDecimal.valueOf(quantity));
+                hasValidReference = true;
             } else if (serviceId != null) {
                 Service service = serviceRepository.findById(serviceId)
                     .orElseThrow(() -> new IllegalArgumentException("Invalid service Id: " + serviceId));
                 payment.setService(service);
                 amount = service.getPrice().multiply(BigDecimal.valueOf(quantity));
+                hasValidReference = true;
             } else if (roomId != null) {
                 Room room = roomRepository.findById(roomId)
                     .orElseThrow(() -> new IllegalArgumentException("Invalid room Id: " + roomId));
                 payment.setRoom(room);
                 amount = room.getPrice().multiply(BigDecimal.valueOf(quantity));
+                hasValidReference = true;
             } else if (bookingId != null) {
                 Booking booking = bookingRepository.findById(bookingId)
                     .orElseThrow(() -> new IllegalArgumentException("Invalid booking Id: " + bookingId));
@@ -128,17 +139,26 @@ public class PaymentController {
                 );
                 days = Math.max(1, days); // Ensure minimum 1 day
                 amount = booking.getRoom().getPrice().multiply(BigDecimal.valueOf(days));
+                hasValidReference = true;
             } else if (orderId != null) {
                 Order order = orderRepository.findById(orderId)
                     .orElseThrow(() -> new IllegalArgumentException("Invalid order Id: " + orderId));
                 payment.setOrder(order);
                 amount = order.getTotalAmount();
-            } else {
+                hasValidReference = true;
+            }
+            
+            if (!hasValidReference) {
                 throw new IllegalArgumentException("At least one of product, service, room, booking, or order must be selected.");
             }
             
             // Set the calculated amount
             payment.setAmountPaid(amount);
+            
+            // Ensure status is set
+            if (payment.getStatus() == null || payment.getStatus().isEmpty()) {
+                payment.setStatus("Paid");
+            }
             
             // Save the payment
             paymentRepository.save(payment);
