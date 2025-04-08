@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Book Your Stay - Rytami</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=SF+Pro+Display:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: #f5f5f7;
+            color: #1d1d1f;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 1200px;
+        }
+        h2 {
+            font-size: 32px;
+            font-weight: 600;
+            margin-bottom: 16px;
+        }
+        h3 {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            color: #1d1d1f;
+        }
+        .navbar {
+            background-color: #000000 !important;
+        }
+        .navbar-brand, .nav-link {
+            color: #ffffff !important;
+        }
+        .nav-link:hover {
+            color: #d2d2d7 !important;
+        }
+        /* Form Styles */
+        .form-section {
+            background-color: #ffffff;
+            border-radius: 16px;
+            padding: 40px;
+            margin-bottom: 32px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+        .form-label {
+            font-size: 16px;
+            font-weight: 500;
+            color: #1d1d1f;
+            margin-bottom: 8px;
+        }
+        .form-control {
+            border-radius: 8px;
+            border: 1px solid #d2d2d7;
+            font-size: 16px;
+            padding: 12px;
+            transition: border-color 0.3s ease;
+        }
+        .form-control:focus {
+            border-color: #0071e3;
+            box-shadow: 0 0 0 3px rgba(0, 113, 227, 0.1);
+            outline: none;
+        }
+        .form-group {
+            margin-bottom: 24px;
+        }
+        /* Steps Indicator */
+        .steps-indicator {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 32px;
+        }
+        .step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            z-index: 1;
+        }
+        .step-number {
+            width: 40px;
+            height: 40px;
+            background-color: #d2d2d7;
+            color: #fff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+        .step.active .step-number {
+            background-color: #0071e3;
+        }
+        .step-label {
+            font-size: 14px;
+            font-weight: 500;
+            color: #6e6e73;
+        }
+        .step.active .step-label {
+            color: #0071e3;
+            font-weight: 600;
+        }
+        .step-connector {
+            flex: 1;
+            height: 2px;
+            background-color: #d2d2d7;
+            margin: 0 8px;
+            position: relative;
+            top: -20px;
+            z-index: 0;
+        }
+        /* Price Summary */
+        .price-summary {
+            background-color: #f5f5f7;
+            border-radius: 12px;
+            padding: 24px;
+            margin-top: 24px;
+        }
+        .price-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #d2d2d7;
+        }
+        .price-row:last-child {
+            border-bottom: none;
+            padding-top: 16px;
+        }
+        .price-label {
+            color: #424245;
+        }
+        .price-value {
+            font-weight: 500;
+        }
+        .total-price {
+            font-size: 24px;
+            font-weight: 600;
+            color: #1d1d1f;
+        }
+        /* Room Selection */
+        .room-card {
+            border: 1px solid #d2d2d7;
+            border-radius: 12px;
+            transition: border-color 0.3s ease, transform 0.3s ease;
+            cursor: pointer;
+            overflow: hidden;
+            height: 100%;
+        }
+        .room-card:hover {
+            border-color: #0071e3;
+            transform: translateY(-5px);
+        }
+        .room-card.selected {
+            border-color: #0071e3;
+            box-shadow: 0 0 0 2px #0071e3;
+        }
+        .room-card-img {
+            height: 160px;
+            object-fit: cover;
+        }
+        .room-card-body {
+            padding: 16px;
+        }
+        .room-title {
+            font-weight: 600;
+            font-size: 18px;
+            margin-bottom: 4px;
+        }
+        .room-type {
+            color: #6e6e73;
+            font-size: 14px;
+            margin-bottom: 8px;
+        }
+        .room-price {
+            font-weight: 600;
+            color: #0071e3;
+            font-size: 18px;
+        }
+        /* Buttons */
+        .btn {
+            border-radius: 980px;
+            padding: 10px 24px;
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+        .btn-primary {
+            background-color: #0071e3;
+            border-color: #0071e3;
+            color: #ffffff;
+        }
+        .btn-primary:hover {
+            background-color: #005bb5;
+            border-color: #005bb5;
+        }
+        .btn-secondary {
+            background-color: #6e6e73;
+            border-color: #6e6e73;
+            color: #ffffff;
+        }
+        .btn-secondary:hover {
+            background-color: #5c5c61;
+            border-color: #5c5c61;
+        }
+        footer {
+            background-color: #f5f5f7 !important;
+            color: #6e6e73 !important;
+            font-size: 14px;
+            text-align: center;
+        }
+        /* Alert */
+        .alert {
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 24px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+            <a class="navbar-brand" href="/">Roys Luxury Goods n' Services ®</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="/">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/services/all">Services</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/rooms/all">Accommodations</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/products/all">Shop</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="/bookings/all">Bookings</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/guests/all">Guests</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-5">
+        <!-- Steps Indicator -->
+        <div class="steps-indicator">
+            <div class="step active">
+                <div class="step-number">1</div>
+                <div class="step-label">Book Room</div>
+            </div>
+            <div class="step-connector"></div>
+            <div class="step">
+                <div class="step-number">2</div>
+                <div class="step-label">Payment</div>
+            </div>
+            <div class="step-connector"></div>
+            <div class="step">
+                <div class="step-number">3</div>
+                <div class="step-label">Confirmation</div>
+            </div>
+        </div>
+
+        <!-- Form Section -->
+        <div class="form-section">
+            <h2>Book Your Stay</h2>
+            
+            <!-- Error Message Alert -->
+            <div th:if="${errorMessage != null}" class="alert alert-danger" role="alert">
+                <i class="fas fa-exclamation-circle me-2"></i>
+                <span th:text="${errorMessage}"></span>
+            </div>
+            
+            <form th:action="@{/bookings/user-ins}" method="post">
+                <div class="row">
+                    <!-- Guest Information -->
+                    <div class="col-md-6">
+                        <h3>Your Information</h3>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="firstName" class="form-label">First Name</label>
+                                    <input type="text" class="form-control" id="firstName" name="firstName" th:field="${guest.firstName}" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="lastName" class="form-label">Last Name</label>
+                                    <input type="text" class="form-control" id="lastName" name="lastName" th:field="${guest.lastName}" required>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="email" class="form-label">Email</label>
+                            <input type="email" class="form-control" id="email" name="email" th:field="${guest.email}" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="phone" class="form-label">Phone</label>
+                            <input type="tel" class="form-control" id="phone" name="phone" th:field="${guest.phone}" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="country" class="form-label">Country</label>
+                            <input type="text" class="form-control" id="country" name="country" th:field="${guest.country}">
+                        </div>
+                        <div class="form-group">
+                            <label for="address" class="form-label">Address</label>
+                            <input type="text" class="form-control" id="address" name="address" th:field="${guest.address}">
+                        </div>
+                    </div>
+                    
+                    <!-- Booking Information -->
+                    <div class="col-md-6">
+                        <h3>Booking Details</h3>
+                        <!-- Room Selection -->
+                        <div class="form-group">
+                            <label for="roomId" class="form-label">Select Room</label>
+                            <select class="form-control" id="roomId" name="roomId" required onchange="updateRoomDetails()">
+                                <option value="" disabled selected>Select a room</option>
+                                <option th:each="room : ${rooms}" 
+                                        th:value="${room.id}" 
+                                        th:text="${'Room ' + room.roomNumber + ' - ' + room.type + ' (€' + room.price + '/night)'}"
+                                        th:data-price="${room.price}"
+                                        th:selected="${room.id == (selectedRoomId != null ? selectedRoomId : (booking.room != null ? booking.room.id : ''))}">
+                                </option>
+                            </select>
+                        </div>
+                        
+                        <!-- Date Selection -->
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="checkIn" class="form-label">Check-In Date</label>
+                                    <input type="date" class="form-control" id="checkIn" name="checkIn" th:field="${booking.checkIn}" required onchange="calculateTotal()">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="checkOut" class="form-label">Check-Out Date</label>
+                                    <input type="date" class="form-control" id="checkOut" name="checkOut" th:field="${booking.checkOut}" required onchange="calculateTotal()">
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Price Summary -->
+                        <div class="price-summary">
+                            <h3 class="mb-3">Price Summary</h3>
+                            <div class="price-row">
+                                <div class="price-label">Room Rate</div>
+                                <div class="price-value">€<span id="roomRate">0.00</span>/night</div>
+                            </div>
+                            <div class="price-row">
+                                <div class="price-label">Number of Nights</div>
+                                <div class="price-value"><span id="nightsCount">0</span> nights</div>
+                            </div>
+                            <div class="price-row">
+                                <div class="price-label">Room Subtotal</div>
+                                <div class="price-value">€<span id="roomSubtotal">0.00</span></div>
+                            </div>
+                            <div class="price-row">
+                                <div class="price-label">Taxes & Fees (10%)</div>
+                                <div class="price-value">€<span id="taxesFees">0.00</span></div>
+                            </div>
+                            <div class="price-row">
+                                <div class="price-label fw-bold">Total Amount</div>
+                                <div class="price-value total-price">€<span id="totalAmount">0.00</span></div>
+                            </div>
+                            <!-- Hidden input to store total amount -->
+                            <input type="hidden" id="totalAmountInput" name="totalAmount" th:field="${booking.totalAmount}">
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Submit Button -->
+                <div class="d-flex justify-content-between mt-4">
+                    <a href="/rooms/all" class="btn btn-secondary">
+                        <i class="fas fa-arrow-left me-2"></i> Back to Rooms
+                    </a>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-check-circle me-2"></i> Book Now and Proceed to Payment
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="py-4 mt-5">
+        <div class="container">
+            <p class="mb-0">© 2025 Roys Luxury Goods n' Services</p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Set minimum date for check-in and check-out
+        const today = new Date().toISOString().split('T')[0];
+        document.getElementById('checkIn').min = today;
+        document.getElementById('checkOut').min = today;
+        
+        // Handle date changes
+        document.getElementById('checkIn').addEventListener('change', function() {
+            // Set minimum check-out date to be the check-in date
+            const checkInDate = this.value;
+            document.getElementById('checkOut').min = checkInDate;
+            
+            // If check-out is before check-in, update check-out
+            const checkOutDate = document.getElementById('checkOut').value;
+            if (checkOutDate < checkInDate) {
+                // Set check-out to day after check-in
+                const nextDay = new Date(checkInDate);
+                nextDay.setDate(nextDay.getDate() + 1);
+                const nextDayString = nextDay.toISOString().split('T')[0];
+                document.getElementById('checkOut').value = nextDayString;
+            }
+            
+            calculateTotal();
+        });
+        
+        function updateRoomDetails() {
+            calculateTotal();
+        }
+        
+        function calculateTotal() {
+            const roomSelect = document.getElementById('roomId');
+            if (roomSelect.value === "") return;
+            
+            const selectedOption = roomSelect.options[roomSelect.selectedIndex];
+            const roomRate = parseFloat(selectedOption.getAttribute('data-price'));
+            
+            // Display room rate
+            document.getElementById('roomRate').textContent = roomRate.toFixed(2);
+            
+            // Calculate nights
+            const checkInDate = new Date(document.getElementById('checkIn').value);
+            const checkOutDate = new Date(document.getElementById('checkOut').value);
+            
+            if (isNaN(checkInDate) || isNaN(checkOutDate)) return;
+            
+            // Calculate difference in days
+            const timeDiff = checkOutDate - checkInDate;
+            const nights = Math.ceil(timeDiff / (1000 * 60 * 60 * 24));
+            
+            if (nights <= 0) {
+                document.getElementById('nightsCount').textContent = "0";
+                document.getElementById('roomSubtotal').textContent = "0.00";
+                document.getElementById('taxesFees').textContent = "0.00";
+                document.getElementById('totalAmount').textContent = "0.00";
+                document.getElementById('totalAmountInput').value = "0.00";
+                return;
+            }
+            
+            // Update nights count
+            document.getElementById('nightsCount').textContent = nights;
+            
+            // Calculate room subtotal
+            const roomSubtotal = roomRate * nights;
+            document.getElementById('roomSubtotal').textContent = roomSubtotal.toFixed(2);
+            
+            // Calculate taxes and fees (10% of subtotal)
+            const taxesFees = roomSubtotal * 0.1;
+            document.getElementById('taxesFees').textContent = taxesFees.toFixed(2);
+            
+            // Calculate total amount
+            const totalAmount = roomSubtotal + taxesFees;
+            document.getElementById('totalAmount').textContent = totalAmount.toFixed(2);
+            document.getElementById('totalAmountInput').value = totalAmount.toFixed(2);
+        }
+        
+        // Initialize on page load
+        window.onload = function() {
+            updateRoomDetails();
+        };
+    </script>
+</body>
+</html>

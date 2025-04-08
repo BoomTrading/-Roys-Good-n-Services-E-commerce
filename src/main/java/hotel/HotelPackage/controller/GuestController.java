@@ -73,8 +73,13 @@ public class GuestController {
             return "redirect:/guests/all";
         } catch (DataIntegrityViolationException e) {
             logger.error("Failed to save guest: {}", e.getMessage());
-            model.addAttribute("errorMessage", "A guest with this email already exists");
-            return "newGuest";
+            if (e.getMessage() != null && e.getMessage().contains("unique_email")) {
+                model.addAttribute("email", guest.getEmail());
+                return "error/duplicateEmailError";
+            } else {
+                model.addAttribute("errorMessage", "A guest with this email already exists");
+                return "newGuest";
+            }
         }
     }
 
@@ -115,8 +120,13 @@ public class GuestController {
             return "redirect:/guests/all";
         } catch (DataIntegrityViolationException e) {
             logger.error("Failed to update guest: {}", e.getMessage());
-            model.addAttribute("errorMessage", "Update failed - duplicate email or invalid data");
-            return "editGuest";
+            if (e.getMessage() != null && e.getMessage().contains("unique_email")) {
+                model.addAttribute("email", guest.getEmail());
+                return "error/duplicateEmailError";
+            } else {
+                model.addAttribute("errorMessage", "Update failed - duplicate email or invalid data");
+                return "editGuest";
+            }
         }
     }
 

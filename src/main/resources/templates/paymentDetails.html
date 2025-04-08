@@ -145,7 +145,7 @@
                     <a href="/payments" class="btn btn-outline-gold me-2">
                         <i class="fas fa-arrow-left me-2"></i> Back to Payments
                     </a>
-                    <a th:href="@{/payments/edit/{id}(id=${payment.id})}" class="btn btn-gold">
+                    <a th:href="@{/payments/edit/{id}(id=${payment.id})}" class="btn btn-gold"  th:if="${isAdmin}" >
                         <i class="fas fa-edit me-2"></i> Edit Payment
                     </a>
                 </div>
@@ -210,11 +210,11 @@
             </div>
             
             <div class="mt-4 mb-3">
-                <a th:href="@{/payments/refunded/{id}(id=${payment.id})}" 
-                   class="btn btn-danger-outline"
-                   th:if="${payment.status != 'Refunded'}">
-                    <i class="fas fa-undo me-2"></i> Mark as Refunded
-                </a>
+                <a th:href="@{/payments/delete/{id}(id=${payment.id})}" 
+                class="btn btn-danger-outline"
+                th:if="${isAdmin and payment.status != 'Deleted'}">
+                 <i class="fas fa-trash-alt me-2"></i> Delete
+             </a>                       
             </div>
         </div>
     </div>

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <title>Payments - Rytami</title>
     <meta charset="UTF-8">
@@ -16,34 +17,43 @@
             margin: 0;
             padding: 0;
         }
+
         .container {
             max-width: 1200px;
         }
+
         h1 {
             font-size: 48px;
             font-weight: 600;
             letter-spacing: -0.02em;
             margin-bottom: 16px;
         }
+
         h2 {
             font-size: 32px;
             font-weight: 600;
             margin-bottom: 16px;
         }
+
         p {
             font-size: 16px;
             color: #424245;
             margin-bottom: 16px;
         }
+
         .navbar {
             background-color: #000000 !important;
         }
-        .navbar-brand, .nav-link {
+
+        .navbar-brand,
+        .nav-link {
             color: #ffffff !important;
         }
+
         .nav-link:hover {
             color: #d2d2d7 !important;
         }
+
         /* Hero Section */
         .payments-hero {
             position: relative;
@@ -56,6 +66,7 @@
             color: #ffffff;
             overflow: hidden;
         }
+
         .payments-hero::before {
             content: '';
             position: absolute;
@@ -65,20 +76,24 @@
             height: 100%;
             background: linear-gradient(135deg, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.3));
         }
+
         .payments-hero-content {
             position: relative;
             z-index: 1;
         }
+
         .payments-hero h1 {
             font-size: 64px;
             text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
         }
+
         .payments-hero p {
             font-size: 20px;
             text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
             margin-bottom: 24px;
             color: #ffffff;
         }
+
         /* Table Styles */
         .table-section {
             background-color: #ffffff;
@@ -87,37 +102,46 @@
             margin-bottom: 32px;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
         }
+
         .table {
             border-collapse: separate;
             border-spacing: 0;
             width: 100%;
         }
-        .table th, .table td {
+
+        .table th,
+        .table td {
             padding: 16px;
             vertical-align: middle;
             font-size: 16px;
         }
+
         .table th {
             background-color: #f5f5f7;
             color: #1d1d1f;
             font-weight: 600;
             border-bottom: 1px solid #d2d2d7;
         }
+
         .table td {
             border-bottom: 1px solid #d2d2d7;
         }
+
         .table tr:last-child td {
             border-bottom: none;
         }
+
         .badge {
             font-size: 14px;
             padding: 6px 12px;
             border-radius: 12px;
         }
+
         /* Toggleable Actions */
         .actions-container {
             position: relative;
         }
+
         .toggle-actions {
             background-color: #ffffff;
             color: #0071e3;
@@ -132,25 +156,30 @@
             border: 1px solid #d2d2d7;
             transition: all 0.3s ease;
         }
+
         .toggle-actions:hover {
             transform: scale(1.1);
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
         }
+
         .toggle-actions.active {
             transform: rotate(45deg);
             background-color: #0071e3;
             color: #ffffff;
         }
+
         .product-actions {
             max-height: 0;
             overflow: hidden;
             transition: max-height 0.4s ease, opacity 0.4s ease;
             opacity: 0;
         }
+
         .product-actions.show {
             max-height: 150px;
             opacity: 1;
         }
+
         .product-btn {
             border-radius: 980px;
             padding: 8px 16px;
@@ -159,26 +188,31 @@
             font-weight: 500;
             letter-spacing: 0.5px;
         }
+
         .btn-details {
             background-color: transparent;
             color: #0071e3;
             border: 1px solid #0071e3;
         }
+
         .btn-details:hover {
             background-color: #0071e3;
             color: #ffffff;
             transform: translateY(-2px);
         }
+
         .btn-refunded {
             background-color: transparent;
             color: #ff3b30;
             border: 1px solid #ff3b30;
         }
+
         .btn-refunded:hover {
             background-color: #ff3b30;
             color: #ffffff;
             transform: translateY(-2px);
         }
+
         /* Buttons */
         .btn {
             border-radius: 980px;
@@ -186,21 +220,25 @@
             font-weight: 600;
             transition: all 0.2s ease;
         }
+
         .btn-gold {
             background-color: #d4af37;
             border-color: #d4af37;
             color: #ffffff;
         }
+
         .btn-gold:hover {
             background-color: #b8960d;
             border-color: #b8960d;
         }
+
         .alert-info {
             border-radius: 12px;
             background-color: #e8f0fe;
             color: #1d1d1f;
             font-size: 16px;
         }
+
         footer {
             background-color: #f5f5f7 !important;
             color: #6e6e73 !important;
@@ -209,6 +247,7 @@
         }
     </style>
 </head>
+
 <body>
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-dark">
@@ -224,7 +263,7 @@
                     <li class="nav-item"><a class="nav-link" href="/rooms/all">Accommodations</a></li>
                     <li class="nav-item"><a class="nav-link" href="/products/all">Shop</a></li>
                     <li class="nav-item"><a class="nav-link" href="/guests/all">Guests</a></li>
-                    
+
                 </ul>
             </div>
         </div>
@@ -235,13 +274,14 @@
         <!-- Payments Table -->
         <div class="table-section">
             <div class="d-flex justify-content-between align-items-center mb-4">
-                <h2>Payment History</h2>
-                <a href="/payments/new" class="btn btn-gold">
+                <h2 th:text="${isAdmin ? 'All Payments' : 'My Payment History'}"></h2>
+                <a href="/payments/new" class="btn btn-gold" th:if="${isAdmin}">
                     <i class="fas fa-plus"></i> Add New Payment
                 </a>
             </div>
             <div th:if="${payments.isEmpty()}" class="alert alert-info">
-                <i class="fas fa-info-circle"></i> No payments available at the moment.
+                <i class="fas fa-info-circle"></i> 
+                <span th:text="${isAdmin ? 'No payments available in the system.' : 'You have no payment history yet.'}"></span>
             </div>
             <div th:unless="${payments.isEmpty()}">
                 <table class="table">
@@ -252,6 +292,7 @@
                             <th>Payment Date</th>
                             <th>Status</th>
                             <th>Booking ID</th>
+                            <th th:if="${isAdmin}">Guest</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
@@ -261,25 +302,27 @@
                             <td th:text="'€' + ${#numbers.formatDecimal(payment.amountPaid, 1, 2)}"></td>
                             <td th:text="${#temporals.format(payment.paymentDate, 'dd MMM yyyy HH:mm')}"></td>
                             <td>
-                                <span class="badge" 
-                                      th:classappend="${payment.status == 'Paid' ? 'bg-success' : payment.status == 'Pending' ? 'bg-warning' : 'bg-danger'}"
-                                      th:text="${payment.status}"></span>
+                                <span class="badge"
+                                    th:classappend="${payment.status == 'Paid' ? 'bg-success' : payment.status == 'Pending' ? 'bg-warning' : 'bg-danger'}"
+                                    th:text="${payment.status}"></span>
                             </td>
                             <td th:text="${payment.booking.id}"></td>
+                            <td th:if="${isAdmin}" th:text="${payment.booking.guest.firstName + ' ' + payment.booking.guest.lastName}"></td>
                             <td>
                                 <div class="actions-container">
-                                    <!-- Toggle Button -->
                                     <div class="toggle-actions" onclick="toggleActions(this)">
                                         <i class="fas fa-ellipsis-h"></i>
                                     </div>
-                                    <!-- Action buttons (initially hidden) -->
                                     <div class="product-actions">
                                         <div class="d-grid gap-2 mt-2">
-                                            <a th:href="@{/payments/details/{id}(id=${payment.id})}" class="btn product-btn btn-details">
+                                            <a th:href="@{/payments/details/{id}(id=${payment.id})}"
+                                                class="btn product-btn btn-details">
                                                 <i class="fas fa-info-circle me-2"></i> View Details
                                             </a>
-                                            <a th:href="@{/payments/refunded/{id}(id=${payment.id})}" class="btn product-btn btn-refunded">
-                                                <i class="fas fa-undo me-2"></i> Mark as Refunded
+                                            <a th:href="@{/payments/delete/{id}(id=${payment.id})}"
+                                                class="btn btn-danger-outline"
+                                                th:if="${isAdmin and payment.status != 'Deleted'}">
+                                                <i class="fas fa-trash-alt me-2"></i> Delete
                                             </a>
                                         </div>
                                     </div>
@@ -310,4 +353,5 @@
         }
     </script>
 </body>
+
 </html>

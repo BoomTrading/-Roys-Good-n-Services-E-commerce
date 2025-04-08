@@ -150,6 +150,7 @@
                     <thead>
                         <tr>
                             <th>Product/Service</th>
+                            <th>Type</th>
                             <th>Quantity</th>
                             <th>Price (€)</th>
                             <th>Actions</th>
@@ -157,9 +158,10 @@
                     </thead>
                     <tbody>
                         <tr th:each="cartItem : ${cartItems}">
-                            <td th:text="${cartItem.product != null ? cartItem.product.name : (cartItem.service != null ? cartItem.service.name : 'Unknown Item')}"></td>
+                            <td th:text="${cartItem.product != null ? cartItem.product.name : (cartItem.service != null ? cartItem.service.name : (cartItem.room != null ? 'Room ' + cartItem.room.roomNumber + ' (' + cartItem.room.type + ')' : 'Unknown Item'))}"></td>
+                            <td th:text="${cartItem.product != null ? 'Product' : (cartItem.service != null ? 'Service' : (cartItem.room != null ? 'Room' : 'Unknown'))}"></td>
                             <td th:text="${cartItem.quantity}"></td>
-                            <td th:text="${cartItem.product != null ? '€' + #numbers.formatDecimal(cartItem.product.price, 1, 2) : (cartItem.service != null ? '€' + #numbers.formatDecimal(cartItem.service.price, 1, 2) : '€0.00')}"></td>
+                            <td th:text="${cartItem.product != null ? '€' + #numbers.formatDecimal(cartItem.product.price, 1, 2) : (cartItem.service != null ? '€' + #numbers.formatDecimal(cartItem.service.price, 1, 2) : (cartItem.room != null ? '€' + #numbers.formatDecimal(cartItem.room.price, 1, 2) : '€0.00'))}"></td>
                             <td>
                                 <a th:href="@{/cart/remove/{id}(id=${cartItem.id})}" class="btn btn-delete">
                                     <i class="fas fa-trash-alt me-2"></i> Remove

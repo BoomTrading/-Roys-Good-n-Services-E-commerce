@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -85,11 +86,21 @@ public class BookingController {
             }
         }
         
-        // Add all guests and available rooms to the model
-        model.addAttribute("booking", booking);
-        model.addAttribute("guests", guestRepository.findAll());
-        model.addAttribute("rooms", roomRepository.findAll());
-        return "newBooking";
+        // Different forms for admin and regular users
+        if (Boolean.TRUE.equals(model.getAttribute("isAdmin"))) {
+            // Admin path - select from existing guests
+            model.addAttribute("booking", booking);
+            model.addAttribute("guests", guestRepository.findAll());
+            model.addAttribute("rooms", roomRepository.findAll());
+            return "newBooking";
+        } else {
+            // User path - create guest info along with booking
+            Guest newGuest = new Guest();
+            model.addAttribute("guest", newGuest);
+            model.addAttribute("booking", booking);
+            model.addAttribute("rooms", roomRepository.findAll());
+            return "userBooking";
+        }
     }
 
     @PostMapping("/bookings/ins")
@@ -103,6 +114,55 @@ public class BookingController {
             model.addAttribute("errorMessage", e.getMessage());
             model.addAttribute("booking", booking);
             return "newBooking";
+        }
+    }
+
+    @PostMapping("/bookings/user-ins")
+    public String saveUserBooking(
+            @ModelAttribute("guest") Guest guest,
+            @ModelAttribute("booking") Booking booking,
+            @RequestParam("roomId") int roomId,
+            Model model) {
+        try {
+            // First save the guest
+            // Registration date will be handled by the database or Guest class constructor
+            try {
+                Guest savedGuest = guestRepository.save(guest);
+                
+                // Then add the saved guest to the booking
+                Room room = roomRepository.findById(roomId)
+                    .orElseThrow(() -> new IllegalArgumentException("Invalid room Id:" + roomId));
+                
+                booking.setGuest(savedGuest);
+                booking.setRoom(room);
+                
+                // Validate and save the booking
+                validateBookingDates(booking, 0);
+                Booking savedBooking = bookingRepository.save(booking);
+                
+                // Redirect to payment option or cart view
+                return "redirect:/bookings/details/" + savedBooking.getId() + "?newBooking=true";
+            } catch (DataIntegrityViolationException e) {
+                // Handle unique email constraint violation specifically
+                if (e.getMessage() != null && e.getMessage().contains("unique_email")) {
+                    model.addAttribute("email", guest.getEmail());
+                    return "error/duplicateEmailError";
+                } else {
+                    model.addAttribute("errorMessage", "Error saving your information. Please check your details and try again.");
+                    model.addAttribute("guest", guest);
+                    model.addAttribute("booking", booking);
+                    model.addAttribute("rooms", roomRepository.findAll());
+                    model.addAttribute("selectedRoomId", roomId);
+                    return "userBooking";
+                }
+            }
+        } catch (IllegalArgumentException e) {
+            model.addAttribute("errorMessage", e.getMessage());
+            model.addAttribute("guest", guest);
+            model.addAttribute("booking", booking);
+            model.addAttribute("rooms", roomRepository.findAll());
+            model.addAttribute("selectedRoomId", roomId);
+            return "userBooking";
         }
     }
 
@@ -229,7 +289,9 @@ public class BookingController {
     }
     
     @GetMapping("/bookings/details/{id}")
-    public String getBookingDetails(@PathVariable("id") int id, Model model) {
+    public String getBookingDetails(@PathVariable("id") int id, 
+                                   @RequestParam(required = false) boolean newBooking,
+                                   Model model) {
         // Find the booking or throw exception if not found
         Booking booking = bookingRepository.findById(id)
             .orElseThrow(() -> new IllegalArgumentException("Invalid booking Id: " + id));
@@ -244,6 +306,7 @@ public class BookingController {
         model.addAttribute("booking", booking);
         model.addAttribute("payments", payments);
         model.addAttribute("paymentStatus", paymentStatus);
+        model.addAttribute("newBooking", newBooking);
         
         return "bookingDetails";
     }

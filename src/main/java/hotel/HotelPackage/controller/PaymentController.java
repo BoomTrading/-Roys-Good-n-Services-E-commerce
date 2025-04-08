@@ -2,6 +2,7 @@ package hotel.HotelPackage.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -12,6 +13,7 @@ import hotel.HotelPackage.repository.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Date;
 
 @Controller
 @RequestMapping("/payments")
@@ -36,12 +38,27 @@ public class PaymentController {
     @Autowired
     private OrderRepository orderRepository;
 
+    @Autowired
+    private GuestRepository guestRepository;
+
     // **Read: Lista di tutti i pagamenti**
     @GetMapping
-    public String listPayments(Model model) {
-        List<Payment> payments = paymentRepository.findAll();
+    public String showPayments(Model model, Authentication authentication) {
+        String username = authentication.getName();
+        List<Payment> payments;
+        
+        if (username.startsWith("admin_")) {
+            payments = paymentRepository.findAll(); // Admin sees all payments
+            model.addAttribute("isAdmin", true);
+        } else {
+            Guest guest = guestRepository.findByEmail(username)
+                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+            payments = paymentRepository.findByBookingGuest(guest); // User sees only their payments
+            model.addAttribute("isAdmin", false);
+        }
+        
         model.addAttribute("payments", payments);
-        return "payments"; // Vista Thymeleaf per la lista
+        return "payments";
     }
 
     // **Read: Dettagli di un pagamento**
@@ -303,5 +320,13 @@ public class PaymentController {
             model.addAttribute("errorMessage", "Error deleting payment: " + e.getMessage());
             return "redirect:/payments";
         }
+    }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    public String handleIllegalArgumentException(IllegalArgumentException ex, Model model) {
+        model.addAttribute("error", "IllegalArgumentException");
+        model.addAttribute("message", ex.getMessage());
+        model.addAttribute("timestamp", new Date());
+        return "error/500";
     }
 }

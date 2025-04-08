@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Email Already Registered - Rytami</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=SF+Pro+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: #f5f5f7;
+            color: #1d1d1f;
+            line-height: 1.5;
+        }
+        .navbar {
+            background-color: #000000 !important;
+        }
+        .navbar-brand, .nav-link {
+            color: #ffffff !important;
+        }
+        .nav-link:hover {
+            color: #d2d2d7 !important;
+        }
+        .container {
+            max-width: 1200px;
+        }
+        .error-card {
+            background-color: #ffffff;
+            border-radius: 20px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+            margin-top: 2rem;
+            margin-bottom: 2rem;
+        }
+        .error-header {
+            background-color: #ff9500;
+            padding: 24px 32px;
+            position: relative;
+        }
+        .error-icon {
+            background-color: white;
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 16px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .error-icon i {
+            font-size: 36px;
+            color: #ff9500;
+        }
+        h1 {
+            font-size: 32px;
+            font-weight: 600;
+            color: #ffffff;
+            margin: 0;
+        }
+        .error-body {
+            padding: 32px;
+        }
+        .error-title {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 24px;
+            color: #1d1d1f;
+        }
+        .error-text {
+            font-size: 17px;
+            color: #424245;
+            margin-bottom: 24px;
+            line-height: 1.6;
+        }
+        .account-options {
+            background-color: #f5f5f7;
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 24px;
+        }
+        .option-box {
+            background-color: #ffffff;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            margin-bottom: 16px;
+            transition: all 0.2s ease;
+        }
+        .option-box:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        .option-title {
+            font-weight: 600;
+            font-size: 18px;
+            margin-bottom: 8px;
+            color: #1d1d1f;
+        }
+        .option-description {
+            color: #424245;
+            font-size: 15px;
+        }
+        .btn {
+            border-radius: 980px;
+            padding: 12px 24px;
+            font-size: 17px;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+        .btn-primary {
+            background-color: #0071e3;
+            border-color: #0071e3;
+        }
+        .btn-primary:hover {
+            background-color: #0062c3;
+            border-color: #0062c3;
+            transform: translateY(-2px);
+        }
+        .btn-outline-secondary {
+            color: #424245;
+            border-color: #d2d2d7;
+        }
+        .btn-outline-secondary:hover {
+            background-color: #d2d2d7;
+            color: #1d1d1f;
+            transform: translateY(-2px);
+        }
+        .helpful-tips {
+            background-color: #f5f5f7;
+            border-radius: 12px;
+            padding: 24px;
+            margin-top: 32px;
+        }
+        .tip-title {
+            font-weight: 600;
+            font-size: 18px;
+            margin-bottom: 12px;
+        }
+        footer {
+            background-color: #f5f5f7 !important;
+            color: #6e6e73 !important;
+            font-size: 14px;
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+            <a class="navbar-brand" href="/">Roys Luxury Goods n' Services ®</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="/">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/services/all">Services</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/rooms/all">Accommodations</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/products/all">Shop</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="/bookings/all">Bookings</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/guests/all">Guests</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="error-card">
+            <div class="error-header">
+                <div class="error-icon">
+                    <i class="fas fa-user-check"></i>
+                </div>
+                <h1>Email Already Registered</h1>
+            </div>
+            <div class="error-body">
+                <h2 class="error-title">The email address you entered is already in our system</h2>
+                <p class="error-text">
+                    It looks like the email address you provided (<span th:text="${email}">example@email.com</span>) is already registered in our database. 
+                    This means you may already have an account with us.
+                </p>
+
+                <div class="account-options">
+                    <h3 class="mb-4">What would you like to do?</h3>
+                    
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <div class="option-box">
+                                <div class="option-title">
+                                    <i class="fas fa-sign-in-alt me-2 text-primary"></i> Log in to your existing account
+                                </div>
+                                <p class="option-description">
+                                    If you already have an account with us, you can log in to access your account and make a booking.
+                                </p>
+                                <a href="/login" class="btn btn-primary mt-2">
+                                    <i class="fas fa-sign-in-alt me-2"></i> Login
+                                </a>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6 mb-3">
+                            <div class="option-box">
+                                <div class="option-title">
+                                    <i class="fas fa-envelope me-2 text-secondary"></i> Try with a different email
+                                </div>
+                                <p class="option-description">
+                                    If you'd like to create a new account, please use a different email address that hasn't been registered yet.
+                                </p>
+                                <a href="javascript:history.back()" class="btn btn-outline-secondary mt-2">
+                                    <i class="fas fa-arrow-left me-2"></i> Back to Registration
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="helpful-tips">
+                    <div class="tip-title">
+                        <i class="fas fa-lightbulb me-2"></i>
+                        Helpful Information
+                    </div>
+                    <p>If you've forgotten your password, you can use our password recovery option on the login page. If you're having trouble accessing your account, please contact our customer support at support@roysluxury.com.</p>
+                </div>
+
+                <div class="text-center mt-4">
+                    <a href="/" class="btn btn-primary">
+                        <i class="fas fa-home me-2"></i> Return to Homepage
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Footer -->
+    <footer class="py-4 mt-5">
+        <div class="container">
+            <p class="mb-0">© 2025 Roys Luxury Goods n' Services</p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

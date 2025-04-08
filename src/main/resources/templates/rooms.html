@@ -272,7 +272,7 @@
                     <span>Penthouse</span>
                 </a>
             </div>
-            <a href="/rooms/new" class="btn btn-gold add-room-btn">
+            <a href="/rooms/new" class="btn btn-gold add-room-btn" th:if="${isAdmin}">
                 <i class="fas fa-plus"></i> Add New Accommodations
             </a>
         </div>
@@ -308,7 +308,7 @@
                                     <a th:href="@{/rooms/{id}(id=${room.id})}" class="btn product-btn btn-details">
                                         <i class="fas fa-info-circle me-2"></i> View Details
                                     </a>
-                                    <div class="d-flex gap-2 mt-2">
+                                    <div class="d-flex gap-2 mt-2" th:if="${isAdmin}">
                                         <a th:href="@{/rooms/edit/{id}(id=${room.id})}"
                                             class="btn product-btn btn-edit w-50">
                                             <i class="fas fa-edit me-2"></i> Edit

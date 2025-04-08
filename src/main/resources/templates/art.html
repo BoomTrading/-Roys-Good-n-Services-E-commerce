@@ -267,10 +267,10 @@
                                     </a>
                                     <div class="d-flex gap-2 mt-2">
                                         <a th:href="@{/products/edit/{id}(id=${product.id})}"
-                                            class="btn product-btn btn-edit w-50">
+                                            class="btn product-btn btn-edit w-50" th:if="${isAdmin}" >
                                             <i class="fas fa-edit me-2"></i> Edit
                                         </a>
-                                        <a th:href="@{/products/delete/{id}(id=${product.id})}" class="btn product-btn btn-delete w-50">
+                                        <a th:href="@{/products/delete/{id}(id=${product.id})}" class="btn product-btn btn-delete w-50" th:if="${isAdmin}" >
                                             <i class="fas fa-trash-alt me-2"></i> Delete
                                         </a>
                                     </div>

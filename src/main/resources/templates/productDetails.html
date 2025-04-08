@@ -178,7 +178,7 @@
         <div class="d-flex justify-content-between">
             <a th:href="@{/products/all}" class="btn btn-secondary">Back to Shop</a>
             <div>
-                <a th:href="@{/products/edit/{id}(id=${product.id})}" class="btn btn-edit">Edit Product</a>
+                <a th:href="@{/products/edit/{id}(id=${product.id})}" class="btn btn-edit" th:if="${isAdmin}"> Edit Product</a>
                 <!-- Replace link with form for proper POST handling -->
                 <form th:if="${product.stock > 0}" th:action="@{/cart/add}" method="post" style="display: inline-block;">
                     <input type="hidden" name="productId" th:value="${product.id}">

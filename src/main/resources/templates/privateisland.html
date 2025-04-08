@@ -267,7 +267,7 @@
         <div id="services">
             <div class="d-flex justify-content-between align-items-center mb-4">
                 <h2>Private Island Services</h2>
-                <a href="/services/new" class="btn btn-gold">
+                <a href="/services/new" class="btn btn-gold" th:if="${isAdmin}" >
                     <i class="fas fa-plus"></i> Add New Service
                 </a>
             </div>
@@ -299,11 +299,10 @@
                                             <i class="fas fa-info-circle me-2"></i> View Details
                                         </a>
                                         <div class="d-flex gap-2 mt-2">
-                                            <a th:href="@{/services/edit/{id}(id=${privateIsland.id})}" class="btn product-btn btn-edit w-50">
+                                            <a th:href="@{/services/edit/{id}(id=${privateIsland.id})}" class="btn product-btn btn-edit w-50" th:if="${isAdmin}" >
                                                 <i class="fas fa-edit me-2"></i> Edit
                                             </a>
-                                            <a th:href="@{/services/delete/{id}(id=${privateIsland.id})}" class="btn product-btn btn-delete w-50"
-                                               onclick="return confirm('Are you sure you want to delete this private island service?')">
+                                            <a th:href="@{/services/delete/{id}(id=${privateIsland.id})}" class="btn product-btn btn-delete w-50" th:if="${isAdmin}" >
                                                 <i class="fas fa-trash-alt me-2"></i> Delete
                                             </a>
                                         </div>
