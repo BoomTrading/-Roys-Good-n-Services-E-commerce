@@ -18,6 +18,7 @@ import hotel.HotelPackage.repository.ServiceRepository;
 import hotel.HotelPackage.repository.AdmUserRepository;
 import hotel.HotelPackage.model.AdmUser;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -49,7 +50,21 @@ public class CartController {
         // Check if username starts with "admin_" and show all cart items for admin
         if (username.startsWith("admin_")) {
             List<Cart> allCartItems = cartRepository.findAll();
+            
+            // Calculate cart total for all items
+            BigDecimal cartTotal = BigDecimal.ZERO;
+            for (Cart item : allCartItems) {
+                BigDecimal itemPrice;
+                if (item.getProduct() != null) {
+                    itemPrice = item.getProduct().getPrice();
+                } else {
+                    itemPrice = item.getService().getPrice();
+                }
+                cartTotal = cartTotal.add(itemPrice.multiply(BigDecimal.valueOf(item.getQuantity())));
+            }
+            
             model.addAttribute("cartItems", allCartItems);
+            model.addAttribute("cartTotal", cartTotal);
             model.addAttribute("isAdmin", true);
             return "cart";
         }
@@ -69,7 +84,21 @@ public class CartController {
 
         Guest guest = userOpt.get().getGuest();
         List<Cart> cartItems = cartRepository.findByGuest(guest);
+        
+        // Calculate cart total
+        BigDecimal cartTotal = BigDecimal.ZERO;
+        for (Cart item : cartItems) {
+            BigDecimal itemPrice;
+            if (item.getProduct() != null) {
+                itemPrice = item.getProduct().getPrice();
+            } else {
+                itemPrice = item.getService().getPrice();
+            }
+            cartTotal = cartTotal.add(itemPrice.multiply(BigDecimal.valueOf(item.getQuantity())));
+        }
+        
         model.addAttribute("cartItems", cartItems);
+        model.addAttribute("cartTotal", cartTotal);
         return "cart";
     }
 

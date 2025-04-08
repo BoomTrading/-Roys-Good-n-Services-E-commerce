@@ -203,8 +203,8 @@
                         <tfoot>
                             <tr>
                                 <td colspan="4" class="text-end fw-bold">Total:</td>
-                                <td class="fw-bold" th:with="total=${cartItems.stream().map(item -> (item.product != null ? item.product.price : item.service.price).multiply(new java.math.BigDecimal(item.quantity))).reduce(T(java.math.BigDecimal).ZERO, T(java.math.BigDecimal)::add)}">
-                                    €<span th:text="${#numbers.formatDecimal(total, 1, 2)}"></span>
+                                <td class="fw-bold">
+                                    €<span th:text="${#numbers.formatDecimal(cartTotal, 1, 2)}">0.00</span>
                                 </td>
                                 <td></td>
                             </tr>
