@@ -131,49 +131,97 @@
         <div class="table-section">
             <h2>Your Cart</h2>
             
-            <!-- Admin user message -->
+            <!-- Success/Error Messages -->
+            <div th:if="${successMessage}" class="alert alert-success">
+                <i class="fas fa-check-circle"></i> <span th:text="${successMessage}"></span>
+            </div>
+            <div th:if="${errorMessage}" class="alert alert-danger">
+                <i class="fas fa-exclamation-circle"></i> <span th:text="${errorMessage}"></span>
+            </div>
+            
+            <!-- Empty Cart Message -->
+            <div th:if="${#lists.isEmpty(cartItems) && !isAdmin}" class="alert alert-info">
+                <i class="fas fa-info-circle"></i> Your cart is empty. <a href="/products/all">Start shopping</a> to add items!
+            </div>
+            
+            <!-- Admin Message -->
             <div th:if="${isAdmin}" class="alert alert-info">
                 <i class="fas fa-info-circle"></i> Admin users don't have access to the shopping cart functionality. 
                 Please log in as a guest user to shop.
             </div>
             
-            <!-- Error message -->
-            <div th:if="${errorMessage}" class="alert alert-danger">
-                <i class="fas fa-exclamation-circle"></i> <span th:text="${errorMessage}"></span>
-            </div>
-            
-            <div th:if="${cartItems.isEmpty() && !isAdmin}" class="alert alert-info">
-                <i class="fas fa-info-circle"></i> Your cart is empty. Start shopping to add items!
-            </div>
-            <div th:unless="${cartItems.isEmpty() || isAdmin}">
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th>Product/Service</th>
-                            <th>Type</th>
-                            <th>Quantity</th>
-                            <th>Price (€)</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr th:each="cartItem : ${cartItems}">
-                            <td th:text="${cartItem.product != null ? cartItem.product.name : (cartItem.service != null ? cartItem.service.name : (cartItem.room != null ? 'Room ' + cartItem.room.roomNumber + ' (' + cartItem.room.type + ')' : 'Unknown Item'))}"></td>
-                            <td th:text="${cartItem.product != null ? 'Product' : (cartItem.service != null ? 'Service' : (cartItem.room != null ? 'Room' : 'Unknown'))}"></td>
-                            <td th:text="${cartItem.quantity}"></td>
-                            <td th:text="${cartItem.product != null ? '€' + #numbers.formatDecimal(cartItem.product.price, 1, 2) : (cartItem.service != null ? '€' + #numbers.formatDecimal(cartItem.service.price, 1, 2) : (cartItem.room != null ? '€' + #numbers.formatDecimal(cartItem.room.price, 1, 2) : '€0.00'))}"></td>
-                            <td>
-                                <a th:href="@{/cart/remove/{id}(id=${cartItem.id})}" class="btn btn-delete">
-                                    <i class="fas fa-trash-alt me-2"></i> Remove
-                                </a>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-                <div class="d-flex justify-content-end mt-4">
-                    <a href="/orders/create" class="btn btn-checkout">
-                        <i class="fas fa-shopping-cart me-2"></i> Proceed to Checkout
-                    </a>
+            <!-- Cart Items Table -->
+            <div th:if="${!#lists.isEmpty(cartItems) && !isAdmin}" class="card">
+                <div class="card-body">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Item</th>
+                                <th>Type</th>
+                                <th>Quantity</th>
+                                <th>Unit Price (€)</th>
+                                <th>Total (€)</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="cartItem : ${cartItems}">
+                                <td>
+                                    <a th:if="${cartItem.product != null}" 
+                                       th:href="@{/products/details/{id}(id=${cartItem.product.id})}" 
+                                       th:text="${cartItem.product.name}"></a>
+                                    <a th:if="${cartItem.service != null}" 
+                                       th:href="@{/services/details/{id}(id=${cartItem.service.id})}" 
+                                       th:text="${cartItem.service.name}"></a>
+                                </td>
+                                <td th:text="${cartItem.product != null ? 'Product' : 'Service'}"></td>
+                                <td>
+                                    <form th:action="@{/cart/update/{id}(id=${cartItem.id})}" 
+                                          method="post" class="d-flex align-items-center">
+                                        <input type="number" name="quantity" 
+                                               th:value="${cartItem.quantity}" 
+                                               min="1" 
+                                               th:max="${cartItem.product != null ? cartItem.product.stock : 999}"
+                                               class="form-control" style="width: 80px;">
+                                        <button type="submit" class="btn btn-sm btn-outline-primary ms-2">
+                                            <i class="fas fa-sync-alt"></i>
+                                        </button>
+                                    </form>
+                                </td>
+                                <td th:text="${'€' + #numbers.formatDecimal(cartItem.product != null ? cartItem.product.price : cartItem.service.price, 1, 2)}"></td>
+                                <td th:with="price=${cartItem.product != null ? cartItem.product.price : cartItem.service.price}"
+                                    th:text="${'€' + #numbers.formatDecimal(price * cartItem.quantity, 1, 2)}"></td>
+                                <td>
+                                    <form th:action="@{/cart/remove/{id}(id=${cartItem.id})}" method="post" style="display: inline;">
+                                        <button type="submit" class="btn btn-delete">
+                                            <i class="fas fa-trash-alt"></i>
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <td colspan="4" class="text-end fw-bold">Total:</td>
+                                <td class="fw-bold" th:with="total=${cartItems.stream().map(item -> (item.product != null ? item.product.price : item.service.price).multiply(new java.math.BigDecimal(item.quantity))).reduce(T(java.math.BigDecimal).ZERO, T(java.math.BigDecimal)::add)}">
+                                    €<span th:text="${#numbers.formatDecimal(total, 1, 2)}"></span>
+                                </td>
+                                <td></td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                    
+                    <!-- Checkout and Clear Cart Buttons -->
+                    <div class="d-flex justify-content-between mt-4">
+                        <form th:action="@{/cart/clear}" method="post">
+                            <button type="submit" class="btn btn-delete">
+                                <i class="fas fa-trash-alt me-2"></i> Clear Cart
+                            </button>
+                        </form>
+                        <a href="/orders/checkout" class="btn btn-checkout">
+                            <i class="fas fa-shopping-cart me-2"></i> Proceed to Checkout
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>

@@ -8,6 +8,9 @@ import java.util.Optional;
 
 public interface AdmUserRepository extends JpaRepository<AdmUser, Integer> {
 
+    // Trova un amministratore per email (usato per l'autenticazione)
+    Optional<AdmUser> findByGuestEmail(String email);
+    
     // Trova un amministratore per username (usato per l'autenticazione)
     Optional<AdmUser> findByUsername(String username);
 }

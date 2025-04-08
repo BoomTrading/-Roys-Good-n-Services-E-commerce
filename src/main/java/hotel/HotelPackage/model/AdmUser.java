@@ -19,6 +19,10 @@ public class AdmUser {
     @Column(name = "roles")
     private String roles;
     
+    @ManyToOne
+    @JoinColumn(name = "guest_id")
+    private Guest guest;
+    
     // Getter e Setter
     public int getId() { return id; }
     public void setId(int id) { this.id = id; }
@@ -28,4 +32,6 @@ public class AdmUser {
     public void setPassword(String password) { this.password = password; }
     public String getRoles() { return roles; }
     public void setRoles(String roles) { this.roles = roles; }
+    public Guest getGuest() { return guest; }
+    public void setGuest(Guest guest) { this.guest = guest; }
 }

@@ -1,7 +1,6 @@
 package hotel.HotelPackage.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
-
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -11,7 +10,6 @@ import org.springframework.stereotype.Service;
 import hotel.HotelPackage.model.AdmUser;
 import hotel.HotelPackage.repository.AdmUserRepository;
 
-
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
 
@@ -20,13 +18,21 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        // First try to find by username (for admin users)
         AdmUser user = admUserRepository.findByUsername(username)
-            .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+                .orElse(null);
+        
+        // If not found by username, try to find by guest email
+        if (user == null) {
+            user = admUserRepository.findByGuestEmail(username)
+                    .orElseThrow(() -> new UsernameNotFoundException("User not found with username/email: " + username));
+        }
 
+        // Build UserDetails with appropriate roles
         return User.builder()
-            .username(user.getUsername())
-            .password("{noop}" + user.getPassword())
-            .roles(user.getRoles().split(","))
-            .build();
+                .username(user.getUsername() != null ? user.getUsername() : user.getGuest().getEmail())
+                .password("{noop}" + user.getPassword())
+                .roles(user.getRoles().split(","))
+                .build();
     }
 }
