@@ -345,6 +345,14 @@ public class CartController {
             return "redirect:/cart";
         }
 
+        // Calculate total in controller
+        double orderTotal = 0.0;
+        for (Cart item : cartItems) {
+            double price = item.getProduct() != null ? item.getProduct().getPrice().doubleValue() : item.getService().getPrice().doubleValue();
+            orderTotal += price * item.getQuantity();
+        }
+        model.addAttribute("orderTotal", orderTotal);
+
         // Pass cart items and guest information to the checkout template
         model.addAttribute("cartItems", cartItems);
         model.addAttribute("guest", guest);
