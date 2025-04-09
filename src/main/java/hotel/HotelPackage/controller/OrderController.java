@@ -49,6 +49,7 @@ public class OrderController {
     private PaymentRepository paymentRepository;
 
     @GetMapping
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     public String listOrders(Model model, Authentication authentication) {
         String username = authentication.getName();
         
@@ -66,6 +67,7 @@ public class OrderController {
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN') or @orderSecurity.isOrderOwner(authentication, #id)")
     public String showOrderDetails(@PathVariable("id") int id, Model model, Authentication authentication) {
         String username = authentication.getName();
         Order order = orderRepository.findById(id)
@@ -97,6 +99,7 @@ public class OrderController {
     }
     
     @GetMapping("/checkout")
+    @PreAuthorize("hasRole('USER')")
     public String showCheckout(Model model, Authentication authentication) {
         String username = authentication.getName();
         
@@ -139,6 +142,7 @@ public class OrderController {
     }
 
     @PostMapping("/create")
+    @PreAuthorize("hasRole('USER')")
     public String createOrder(Authentication authentication, Model model) {
         try {
             String email = authentication.getName();
