@@ -314,4 +314,40 @@ public class CartController {
         model.addAttribute("isAdmin", true);
         return "allCarts";
     }
+
+    @PostMapping("/checkout")
+    public String proceedToCheckout(Authentication authentication, Model model) {
+        String username = authentication.getName();
+        
+        // Admin users don't have access to the checkout page
+        if (username.startsWith("admin_")) {
+            model.addAttribute("errorMessage", "Admin users cannot checkout. Please login as a regular user.");
+            return "redirect:/cart";
+        }
+
+        // For regular users, use the same guest lookup logic as in showCart method
+        Optional<AdmUser> userOpt = admUserRepository.findByUsername(username);
+        if (userOpt.isEmpty()) {
+            // If not found by username, try by guest email
+            userOpt = admUserRepository.findByGuestEmail(username);
+        }
+
+        if (userOpt.isEmpty() || userOpt.get().getGuest() == null) {
+            model.addAttribute("errorMessage", "User account not linked to a guest profile. Please contact support.");
+            return "redirect:/cart";
+        }
+
+        Guest guest = userOpt.get().getGuest();
+        List<Cart> cartItems = cartRepository.findByGuest(guest);
+        
+        if (cartItems.isEmpty()) {
+            model.addAttribute("errorMessage", "Your cart is empty. Add items before proceeding to checkout.");
+            return "redirect:/cart";
+        }
+
+        // Pass cart items and guest information to the checkout template
+        model.addAttribute("cartItems", cartItems);
+        model.addAttribute("guest", guest);
+        return "checkout";
+    }
 }

@@ -41,6 +41,9 @@ public class PaymentController {
     @Autowired
     private GuestRepository guestRepository;
 
+    @Autowired
+    private CartRepository cartRepository;
+
     // **Read: Lista di tutti i pagamenti**
     @GetMapping
     public String showPayments(Model model, Authentication authentication) {
@@ -320,6 +323,53 @@ public class PaymentController {
             model.addAttribute("errorMessage", "Error deleting payment: " + e.getMessage());
             return "redirect:/payments";
         }
+    }
+
+    @PostMapping("/create-from-cart")
+    public String createPaymentFromCart(Authentication authentication, Model model) {
+        String username = authentication.getName();
+
+        // Retrieve the guest associated with the logged-in user
+        Guest guest = guestRepository.findByEmail(username)
+            .orElseThrow(() -> new IllegalArgumentException("Guest not found: " + username));
+
+        // Retrieve all cart items for the guest
+        List<Cart> cartItems = cartRepository.findByGuest(guest);
+        if (cartItems.isEmpty()) {
+            model.addAttribute("errorMessage", "Your cart is empty. Add items before proceeding to payment.");
+            return "redirect:/cart";
+        }
+
+        // Create a new payment record
+        Payment payment = new Payment();
+        // Create an order for this payment
+        Order order = new Order();
+        order.setGuest(guest);
+        order.setOrderDate(LocalDateTime.now());
+        order.setTotalAmount(BigDecimal.ZERO); // Will set this later
+        orderRepository.save(order);
+        
+        payment.setOrder(order);
+        payment.setPaymentDate(LocalDateTime.now());
+        payment.setStatus("Pending");
+
+        BigDecimal totalAmount = BigDecimal.ZERO;
+        for (Cart cartItem : cartItems) {
+            BigDecimal itemPrice = cartItem.getProduct() != null
+                ? cartItem.getProduct().getPrice()
+                : cartItem.getService().getPrice();
+            totalAmount = totalAmount.add(itemPrice.multiply(BigDecimal.valueOf(cartItem.getQuantity())));
+        }
+        payment.setAmountPaid(totalAmount);
+
+        // Save the payment record
+        paymentRepository.save(payment);
+
+        // Clear the cart after creating the payment
+        cartRepository.deleteByGuest(guest);
+
+        model.addAttribute("successMessage", "Payment created successfully!");
+        return "redirect:/payments";
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
