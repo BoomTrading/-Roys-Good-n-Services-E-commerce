@@ -29,6 +29,8 @@ public class SecurityConfig {
                 .requestMatchers("/admin/**", "/cart/all", "/cart/guest/**").hasRole("ADMIN")
                 // User-required paths
                 .requestMatchers("/cart/**", "/orders/**").hasAnyRole("USER", "ADMIN")
+                // Payments page accessible to users and admins
+                .requestMatchers("/payments/**").hasAnyRole("USER", "ADMIN")
                 // Allow authenticated users to access other paths
                 .anyRequest().authenticated()
             )

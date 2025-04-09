@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import hotel.HotelPackage.model.AdmUser;
 import hotel.HotelPackage.repository.AdmUserRepository;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -22,24 +23,31 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        // First try to find by username (for admin users)
+        // Try to find by username first, then by email if not found
         AdmUser user = admUserRepository.findByUsername(username)
-                .orElse(null);
+                .orElseGet(() -> admUserRepository.findByGuestEmail(username)
+                        .orElseThrow(() -> new UsernameNotFoundException("User not found with username/email: " + username)));
+
+        // Determine the user identifier (username for admins, email for guests)
+        String userIdentifier = (user.getUsername() != null && !user.getUsername().isEmpty()) ? 
+                user.getUsername() : 
+                (user.getGuest() != null ? user.getGuest().getEmail() : username);
         
-        // If not found by username, try to find by guest email
-        if (user == null) {
-            user = admUserRepository.findByGuestEmail(username)
-                    .orElseThrow(() -> new UsernameNotFoundException("User not found with username/email: " + username));
+        // Generate authorities from roles
+        List<SimpleGrantedAuthority> authorities;
+        if (user.getRoles() != null && !user.getRoles().isEmpty()) {
+            authorities = Arrays.stream(user.getRoles().split(","))
+                    .map(String::trim)
+                    .map(role -> role.startsWith("ROLE_") ? role : "ROLE_" + role)
+                    .map(SimpleGrantedAuthority::new)
+                    .collect(Collectors.toList());
+        } else {
+            authorities = Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER"));
         }
 
-        // Convert comma-separated roles to list of authorities
-        List<SimpleGrantedAuthority> authorities = Arrays.stream(user.getRoles().split(","))
-                .map(role -> new SimpleGrantedAuthority("ROLE_" + role.trim()))
-                .collect(Collectors.toList());
-
-        // Build UserDetails with explicit authorities instead of roles
+        // Build and return user details
         return User.builder()
-                .username(user.getUsername() != null ? user.getUsername() : user.getGuest().getEmail())
+                .username(userIdentifier)
                 .password("{noop}" + user.getPassword())
                 .authorities(authorities)
                 .build();

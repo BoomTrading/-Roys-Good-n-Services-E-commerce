@@ -19,4 +19,7 @@ public interface PaymentRepository extends JpaRepository<Payment, Integer> {
 
     // Trova tutti i pagamenti associati a un ospite
     List<Payment> findByBookingGuest(Guest guest);
+
+    // Add this method if not already present
+    List<Payment> findByOrder_Guest(Guest guest);
 }

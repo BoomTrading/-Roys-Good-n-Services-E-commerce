@@ -10,14 +10,17 @@ import org.springframework.web.bind.annotation.*;
 import hotel.HotelPackage.model.*;
 import hotel.HotelPackage.repository.*;
 
+
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.List;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+import java.util.Optional;
 
 @Controller
 @RequestMapping("/payments")
-@PreAuthorize("hasRole('ADMIN')") // Solo ADMIN possono accedere
+@PreAuthorize("hasAnyRole('USER', 'ADMIN')") // Allow both USER and ADMIN roles
 public class PaymentController {
 
     @Autowired
@@ -39,10 +42,10 @@ public class PaymentController {
     private OrderRepository orderRepository;
 
     @Autowired
-    private GuestRepository guestRepository;
-
-    @Autowired
     private CartRepository cartRepository;
+    
+    @Autowired
+    private AdmUserRepository admUserRepository;
 
     // **Read: Lista di tutti i pagamenti**
     @GetMapping
@@ -54,9 +57,27 @@ public class PaymentController {
             payments = paymentRepository.findAll(); // Admin sees all payments
             model.addAttribute("isAdmin", true);
         } else {
-            Guest guest = guestRepository.findByEmail(username)
-                .orElseThrow(() -> new IllegalArgumentException("User not found"));
-            payments = paymentRepository.findByBookingGuest(guest); // User sees only their payments
+            // First try to find associated AdmUser
+            Optional<AdmUser> userOpt = admUserRepository.findByUsername(username);
+            if (userOpt.isEmpty()) {
+                // If not found by username, try by guest email
+                userOpt = admUserRepository.findByGuestEmail(username);
+            }
+
+            if (userOpt.isEmpty() || userOpt.get().getGuest() == null) {
+                model.addAttribute("errorMessage", "User account not linked to a guest profile. Please contact support.");
+                model.addAttribute("payments", new ArrayList<Payment>());
+                model.addAttribute("isAdmin", false);
+                return "payments";
+            }
+
+            Guest guest = userOpt.get().getGuest();
+            List<Payment> bookingPayments = paymentRepository.findByBookingGuest(guest);
+            List<Payment> orderPayments = paymentRepository.findByOrder_Guest(guest);
+
+            // Combine both lists
+            payments = new ArrayList<>(bookingPayments);
+            payments.addAll(orderPayments);
             model.addAttribute("isAdmin", false);
         }
         
@@ -330,8 +351,19 @@ public class PaymentController {
         String username = authentication.getName();
 
         // Retrieve the guest associated with the logged-in user
-        Guest guest = guestRepository.findByEmail(username)
-            .orElseThrow(() -> new IllegalArgumentException("Guest not found: " + username));
+        // First try to find associated AdmUser
+        Optional<AdmUser> userOpt = admUserRepository.findByUsername(username);
+        if (userOpt.isEmpty()) {
+            // If not found by username, try by guest email
+            userOpt = admUserRepository.findByGuestEmail(username);
+        }
+
+        if (userOpt.isEmpty() || userOpt.get().getGuest() == null) {
+            model.addAttribute("errorMessage", "User account not linked to a guest profile. Please contact support.");
+            return "redirect:/cart";
+        }
+
+        Guest guest = userOpt.get().getGuest();
 
         // Retrieve all cart items for the guest
         List<Cart> cartItems = cartRepository.findByGuest(guest);
@@ -346,6 +378,7 @@ public class PaymentController {
         Order order = new Order();
         order.setGuest(guest);
         order.setOrderDate(LocalDateTime.now());
+        order.setStatus("PENDING");
         order.setTotalAmount(BigDecimal.ZERO); // Will set this later
         orderRepository.save(order);
         
@@ -360,6 +393,10 @@ public class PaymentController {
                 : cartItem.getService().getPrice();
             totalAmount = totalAmount.add(itemPrice.multiply(BigDecimal.valueOf(cartItem.getQuantity())));
         }
+        
+        order.setTotalAmount(totalAmount);
+        orderRepository.save(order);
+        
         payment.setAmountPaid(totalAmount);
 
         // Save the payment record
