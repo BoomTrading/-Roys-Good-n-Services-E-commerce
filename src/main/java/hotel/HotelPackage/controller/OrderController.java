@@ -25,6 +25,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.Collections;
 
 @Controller
 @RequestMapping("/orders")
@@ -54,16 +55,27 @@ public class OrderController {
         String username = authentication.getName();
         
         // Check if an admin is viewing the page
-        if (username.startsWith("admin_")) {
+        if (username.startsWith("admin_") || 
+            authentication.getAuthorities().stream()
+                .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"))) {
             // For admin users, redirect to admin order view
             return "redirect:/orders/all";
         }
         
-        Guest guest = guestRepository.findByEmail(username)
-            .orElseThrow(() -> new IllegalArgumentException("Guest not found: " + username));
-        List<Order> orders = orderRepository.findByGuest(guest);
-        model.addAttribute("orders", orders);
-        return "orders";
+        try {
+            // Try to find guest by email (which might be the username)
+            Guest guest = guestRepository.findByEmail(username)
+                .orElseThrow(() -> new IllegalArgumentException("Guest not found: " + username));
+            
+            List<Order> orders = orderRepository.findByGuest(guest);
+            model.addAttribute("orders", orders);
+            return "orders";
+        } catch (Exception e) {
+            // If there's an error finding the guest or orders, show an empty list
+            model.addAttribute("errorMessage", "Could not retrieve your orders: " + e.getMessage());
+            model.addAttribute("orders", Collections.emptyList());
+            return "orders";
+        }
     }
 
     @GetMapping("/{id}")

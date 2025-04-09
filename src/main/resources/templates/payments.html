@@ -245,6 +245,83 @@
             font-size: 14px;
             text-align: center;
         }
+
+        .payment-actions {
+            position: absolute;
+            right: 0;
+            top: 100%;
+            background-color: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+            padding: 16px;
+            width: 200px;
+            z-index: 100;
+            display: none;
+        }
+
+        .payment-actions.show {
+            display: block;
+        }
+
+        .action-btn {
+            border: none;
+            background-color: transparent;
+            font-size: 14px;
+            padding: 8px;
+            text-align: left;
+            width: 100%;
+            transition: all 0.2s ease;
+            border-radius: 8px;
+            margin-bottom: 4px;
+        }
+
+        .action-btn:hover {
+            background-color: #f5f5f7;
+        }
+
+        .btn-details {
+            color: #0071e3;
+        }
+
+        .btn-edit {
+            color: #ff9500;
+        }
+
+        .btn-delete {
+            color: #ff3b30;
+        }
+
+        .footer {
+            background-color: #f5f5f7;
+            color: #6e6e73;
+            padding: 20px 0;
+            font-size: 14px;
+            text-align: center;
+        }
+
+        .btn-primary {
+            background-color: #0071e3;
+            border-color: #0071e3;
+        }
+
+        .btn-primary:hover {
+            background-color: #0062c3;
+            border-color: #0062c3;
+            transform: translateY(-2px);
+        }
+
+        .alert {
+            border-radius: 12px;
+            padding: 16px 24px;
+        }
+
+        .payment-type-badge {
+            font-size: 12px;
+            padding: 4px 8px;
+            border-radius: 4px;
+            background-color: #f5f5f7;
+            color: #6e6e73;
+        }
     </style>
 </head>
 
@@ -262,69 +339,101 @@
                     <li class="nav-item"><a class="nav-link" href="/services/all">Services</a></li>
                     <li class="nav-item"><a class="nav-link" href="/rooms/all">Accommodations</a></li>
                     <li class="nav-item"><a class="nav-link" href="/products/all">Shop</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/bookings/all">Bookings</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="/payments">Payments</a></li>
                     <li class="nav-item"><a class="nav-link" href="/guests/all">Guests</a></li>
-
                 </ul>
             </div>
         </div>
     </nav>
 
-
     <div class="container mt-5">
-        <!-- Payments Table -->
-        <div class="table-section">
-            <div class="d-flex justify-content-between align-items-center mb-4">
-                <h2 th:text="${isAdmin ? 'All Payments' : 'My Payment History'}"></h2>
-                <a href="/payments/new" class="btn btn-gold" th:if="${isAdmin}">
-                    <i class="fas fa-plus"></i> Add New Payment
+        <!-- Header Section -->
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2 th:text="${isAdmin ? 'All Payments' : 'My Payments'}">Payments</h2>
+            <div th:if="${isAdmin}">
+                <a href="/payments/new" class="btn btn-primary">
+                    <i class="fas fa-plus-circle me-2"></i> New Payment
                 </a>
             </div>
+        </div>
+
+        <!-- Alert Messages -->
+        <div th:if="${successMessage}" class="alert alert-success" role="alert">
+            <i class="fas fa-check-circle me-2"></i> <span th:text="${successMessage}"></span>
+        </div>
+        <div th:if="${errorMessage}" class="alert alert-danger" role="alert">
+            <i class="fas fa-exclamation-triangle me-2"></i> <span th:text="${errorMessage}"></span>
+        </div>
+
+        <!-- Payments Table -->
+        <div class="table-section">
             <div th:if="${payments.isEmpty()}" class="alert alert-info">
-                <i class="fas fa-info-circle"></i> 
-                <span th:text="${isAdmin ? 'No payments available in the system.' : 'You have no payment history yet.'}"></span>
+                <i class="fas fa-info-circle me-2"></i> No payments found.
             </div>
             <div th:unless="${payments.isEmpty()}">
                 <table class="table">
                     <thead>
                         <tr>
                             <th>ID</th>
-                            <th>Amount Paid</th>
-                            <th>Payment Date</th>
+                            <th>Date</th>
+                            <th>Amount</th>
                             <th>Status</th>
-                            <th>Booking ID</th>
-                            <th th:if="${isAdmin}">Guest</th>
+                            <th>Type</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr th:each="payment : ${payments}">
                             <td th:text="${payment.id}"></td>
-                            <td th:text="'€' + ${#numbers.formatDecimal(payment.amountPaid, 1, 2)}"></td>
                             <td th:text="${#temporals.format(payment.paymentDate, 'dd MMM yyyy HH:mm')}"></td>
+                            <td th:text="'€' + ${#numbers.formatDecimal(payment.amountPaid, 1, 2)}"></td>
                             <td>
-                                <span class="badge"
-                                    th:classappend="${payment.status == 'Paid' ? 'bg-success' : payment.status == 'Pending' ? 'bg-warning' : 'bg-danger'}"
-                                    th:text="${payment.status}"></span>
+                                <span class="badge" 
+                                      th:classappend="${payment.status == 'Paid' ? 'bg-success' : payment.status == 'Pending' ? 'bg-warning' : 'bg-danger'}"
+                                      th:text="${payment.status}"></span>
                             </td>
-                            <td th:text="${payment.booking.id}"></td>
-                            <td th:if="${isAdmin}" th:text="${payment.booking.guest.firstName + ' ' + payment.booking.guest.lastName}"></td>
+                            <td>
+                                <span class="payment-type-badge" th:if="${payment.booking != null}">
+                                    <i class="fas fa-calendar-check me-1"></i> Booking
+                                </span>
+                                <span class="payment-type-badge" th:if="${payment.order != null}">
+                                    <i class="fas fa-shopping-bag me-1"></i> Order
+                                </span>
+                                <span class="payment-type-badge" th:if="${payment.product != null}">
+                                    <i class="fas fa-box me-1"></i> Product
+                                </span>
+                                <span class="payment-type-badge" th:if="${payment.service != null}">
+                                    <i class="fas fa-concierge-bell me-1"></i> Service
+                                </span>
+                                <span class="payment-type-badge" th:if="${payment.room != null}">
+                                    <i class="fas fa-door-open me-1"></i> Room
+                                </span>
+                            </td>
                             <td>
                                 <div class="actions-container">
                                     <div class="toggle-actions" onclick="toggleActions(this)">
                                         <i class="fas fa-ellipsis-h"></i>
                                     </div>
-                                    <div class="product-actions">
-                                        <div class="d-grid gap-2 mt-2">
-                                            <a th:href="@{/payments/details/{id}(id=${payment.id})}"
-                                                class="btn product-btn btn-details">
-                                                <i class="fas fa-info-circle me-2"></i> View Details
-                                            </a>
-                                            <a th:href="@{/payments/delete/{id}(id=${payment.id})}"
-                                                class="btn btn-danger-outline"
-                                                th:if="${isAdmin and payment.status != 'Deleted'}">
-                                                <i class="fas fa-trash-alt me-2"></i> Delete
-                                            </a>
-                                        </div>
+                                    <div class="payment-actions">
+                                        <a th:href="@{/payments/details/{id}(id=${payment.id})}" class="action-btn btn-details">
+                                            <i class="fas fa-info-circle me-2"></i> View Details
+                                        </a>
+                                        <a th:if="${isAdmin}" th:href="@{/payments/edit/{id}(id=${payment.id})}" class="action-btn btn-edit">
+                                            <i class="fas fa-edit me-2"></i> Edit
+                                        </a>
+                                        <a th:if="${isAdmin && payment.status != 'Deleted'}" 
+                                            th:href="@{/payments/delete/{id}(id=${payment.id})}" 
+                                            class="action-btn btn-delete" 
+                                            onclick="return confirm('Are you sure you want to delete this payment?')">
+                                            <i class="fas fa-trash-alt me-2"></i> Delete
+                                        </a>
+                                        <a th:if="${payment.status == 'Paid'}" 
+                                            th:href="@{/payments/refunded/{id}(id=${payment.id})}" 
+                                            class="action-btn"
+                                            onclick="return confirm('Mark this payment as refunded?')">
+                                            <i class="fas fa-undo me-2"></i> Mark as Refunded
+                                        </a>
                                     </div>
                                 </div>
                             </td>
@@ -336,7 +445,7 @@
     </div>
 
     <!-- Footer -->
-    <footer class="py-4 mt-5">
+    <footer class="footer mt-5">
         <div class="container">
             <p class="mb-0">© 2025 Roys Luxury Goods n' Services</p>
         </div>
@@ -345,12 +454,38 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         function toggleActions(button) {
+            // Close all other open action menus first
+            document.querySelectorAll('.toggle-actions.active').forEach(btn => {
+                if(btn !== button) {
+                    btn.classList.remove('active');
+                    btn.nextElementSibling.classList.remove('show');
+                    btn.querySelector('i').className = 'fas fa-ellipsis-h';
+                }
+            });
+            
+            // Toggle the clicked action menu
             button.classList.toggle('active');
             const actionsContainer = button.nextElementSibling;
             actionsContainer.classList.toggle('show');
             const icon = button.querySelector('i');
-            icon.className = button.classList.contains('active') ? 'fas fa-times' : 'fas fa-ellipsis-h';
+            
+            if (actionsContainer.classList.contains('show')) {
+                icon.className = 'fas fa-times';
+            } else {
+                icon.className = 'fas fa-ellipsis-h';
+            }
         }
+
+        // Close action menus when clicking outside
+        document.addEventListener('click', function(event) {
+            if (!event.target.closest('.actions-container')) {
+                document.querySelectorAll('.toggle-actions.active').forEach(btn => {
+                    btn.classList.remove('active');
+                    btn.nextElementSibling.classList.remove('show');
+                    btn.querySelector('i').className = 'fas fa-ellipsis-h';
+                });
+            }
+        });
     </script>
 </body>
 

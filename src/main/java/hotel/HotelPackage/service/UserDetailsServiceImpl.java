@@ -41,6 +41,12 @@ public class UserDetailsServiceImpl implements UserDetailsService {
                     .map(role -> role.startsWith("ROLE_") ? role : "ROLE_" + role)
                     .map(SimpleGrantedAuthority::new)
                     .collect(Collectors.toList());
+            
+            // Make sure ROLE_USER is added for non-admin users (if they don't already have it)
+            if (!user.getRoles().toUpperCase().contains("ADMIN") && 
+                !authorities.stream().anyMatch(a -> a.getAuthority().equals("ROLE_USER"))) {
+                authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
+            }
         } else {
             authorities = Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER"));
         }

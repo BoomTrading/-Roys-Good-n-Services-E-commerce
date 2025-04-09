@@ -26,9 +26,9 @@ public class SecurityConfig {
                 // Public resources
                 .requestMatchers("/login", "/css/**", "/js/**", "/images/**").permitAll()
                 // Admin-only paths
-                .requestMatchers("/admin/**", "/cart/all", "/cart/guest/**").hasRole("ADMIN")
-                // User-required paths
-                .requestMatchers("/cart/**", "/orders/**").hasAnyRole("USER", "ADMIN")
+                .requestMatchers("/admin/**", "/cart/all", "/cart/guest/**", "/orders/all").hasRole("ADMIN")
+                // User-required paths - explicitly define orders access for clarity
+                .requestMatchers("/cart/**", "/orders", "/orders/checkout", "/orders/create", "/orders/{id}").hasAnyRole("USER", "ADMIN")
                 // Payments page accessible to users and admins
                 .requestMatchers("/payments/**").hasAnyRole("USER", "ADMIN")
                 // Allow authenticated users to access other paths
