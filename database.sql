@@ -18,22 +18,6 @@ CREATE SCHEMA IF NOT EXISTS `hotel` ;
 USE `hotel` ;
 
 -- -----------------------------------------------------
--- Table `hotel`.`AdmUser`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `hotel`.`AdmUser` (
-  `id` INT(11) NOT NULL AUTO_INCREMENT,
-  `username` VARCHAR(100) NOT NULL,
-  `password` VARCHAR(100) NOT NULL,
-  `roles` VARCHAR(100) NULL DEFAULT NULL,
-  `name` VARCHAR(100) NULL DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE INDEX `AdmUser_UNIQUE` (`username` ASC) VISIBLE,
-  UNIQUE INDEX `unique_username` (`username` ASC) VISIBLE)
-ENGINE = InnoDB
-AUTO_INCREMENT = 11;
-
-
--- -----------------------------------------------------
 -- Table `hotel`.`Guests`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `hotel`.`Guests` (
@@ -59,6 +43,27 @@ AUTO_INCREMENT = 29;
 
 
 -- -----------------------------------------------------
+-- Table `hotel`.`AdmUser`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `hotel`.`AdmUser` (
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
+  `username` VARCHAR(100) NOT NULL,
+  `password` VARCHAR(100) NOT NULL,
+  `roles` VARCHAR(100) NULL DEFAULT NULL,
+  `name` VARCHAR(100) NULL DEFAULT NULL,
+  `guest_id` INT(11) NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE INDEX `AdmUser_UNIQUE` (`username` ASC) VISIBLE,
+  UNIQUE INDEX `unique_username` (`username` ASC) VISIBLE,
+  INDEX `fk_admuser_guest` (`guest_id` ASC) VISIBLE,
+  CONSTRAINT `fk_admuser_guest`
+    FOREIGN KEY (`guest_id`)
+    REFERENCES `hotel`.`Guests` (`id`))
+ENGINE = InnoDB
+AUTO_INCREMENT = 11;
+
+
+-- -----------------------------------------------------
 -- Table `hotel`.`Rooms`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `hotel`.`Rooms` (
@@ -73,7 +78,7 @@ CREATE TABLE IF NOT EXISTS `hotel`.`Rooms` (
   UNIQUE INDEX `roomNumber_UNIQUE` (`roomNumber` ASC) VISIBLE,
   UNIQUE INDEX `unique_room_number` (`roomNumber` ASC) VISIBLE)
 ENGINE = InnoDB
-AUTO_INCREMENT = 260;
+AUTO_INCREMENT = 261;
 
 
 -- -----------------------------------------------------
@@ -166,7 +171,7 @@ CREATE TABLE IF NOT EXISTS `hotel`.`Cart` (
     FOREIGN KEY (`Room_id`)
     REFERENCES `hotel`.`Rooms` (`id`))
 ENGINE = InnoDB
-AUTO_INCREMENT = 11;
+AUTO_INCREMENT = 17;
 
 
 -- -----------------------------------------------------
