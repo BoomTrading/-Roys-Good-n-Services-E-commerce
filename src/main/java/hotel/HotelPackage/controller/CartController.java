@@ -20,283 +20,151 @@ import hotel.HotelPackage.model.AdmUser;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Controller
 @RequestMapping("/cart")
 public class CartController {
 
-    @Autowired
-    private CartRepository cartRepository;
+    @Autowired private CartRepository cartRepository;
+    @Autowired private GuestRepository guestRepository;
+    @Autowired private ProductRepository productRepository;
+    @Autowired private ServiceRepository serviceRepository;
+    @Autowired private AdmUserRepository admUserRepository;
 
-    @Autowired
-    private GuestRepository guestRepository;
-
-    @Autowired
-    private ProductRepository productRepository;
-
-    @Autowired
-    private ServiceRepository serviceRepository;
-
-    @Autowired
-    private AdmUserRepository admUserRepository;
-
+    // Mostra il carrello corrente
     @GetMapping
     public String showCart(Model model, Authentication authentication) {
         String username = authentication.getName();
 
-        // Check if username starts with "admin_" and show all cart items for admin
+        // Se admin, mostra tutti gli articoli del carrello
         if (username.startsWith("admin_")) {
-            List<Cart> allCartItems = cartRepository.findAll();
-            
-            // Calculate cart total for all items
-            BigDecimal cartTotal = BigDecimal.ZERO;
-            for (Cart item : allCartItems) {
-                BigDecimal itemPrice;
-                if (item.getProduct() != null) {
-                    itemPrice = item.getProduct().getPrice();
-                } else {
-                    itemPrice = item.getService().getPrice();
-                }
-                cartTotal = cartTotal.add(itemPrice.multiply(BigDecimal.valueOf(item.getQuantity())));
-            }
-            
-            model.addAttribute("cartItems", allCartItems);
-            model.addAttribute("cartTotal", cartTotal);
+            List<Cart> allItems = cartRepository.findAll();
+            BigDecimal total = calculateCartTotal(allItems);
+            model.addAttribute("cartItems", allItems);
+            model.addAttribute("cartTotal", total);
             model.addAttribute("isAdmin", true);
             return "cart";
         }
 
-        // For regular users, first try to find associated AdmUser
-        Optional<AdmUser> userOpt = admUserRepository.findByUsername(username);
-        if (userOpt.isEmpty()) {
-            // If not found by username, try by guest email
-            userOpt = admUserRepository.findByGuestEmail(username);
-        }
-
-        if (userOpt.isEmpty() || userOpt.get().getGuest() == null) {
+        // Recupera l'utente e il relativo guest
+        Optional<Guest> guestOpt = getGuestByUsername(username);
+        if (guestOpt.isEmpty()) {
             model.addAttribute("errorMessage", "User account not linked to a guest profile. Please contact support.");
             model.addAttribute("cartItems", new ArrayList<Cart>());
             return "cart";
         }
 
-        Guest guest = userOpt.get().getGuest();
-        List<Cart> cartItems = cartRepository.findByGuest(guest);
-        
-        // Calculate cart total
-        BigDecimal cartTotal = BigDecimal.ZERO;
-        for (Cart item : cartItems) {
-            BigDecimal itemPrice;
-            if (item.getProduct() != null) {
-                itemPrice = item.getProduct().getPrice();
-            } else {
-                itemPrice = item.getService().getPrice();
-            }
-            cartTotal = cartTotal.add(itemPrice.multiply(BigDecimal.valueOf(item.getQuantity())));
-        }
-        
-        model.addAttribute("cartItems", cartItems);
-        model.addAttribute("cartTotal", cartTotal);
+        List<Cart> items = cartRepository.findByGuest(guestOpt.get());
+        model.addAttribute("cartItems", items);
+        model.addAttribute("cartTotal", calculateCartTotal(items));
         return "cart";
     }
 
+    // Aggiunge un prodotto o servizio al carrello
     @PostMapping("/add")
-    public String addToCart(
-            @RequestParam(value = "productId", required = false) Integer productId,
-            @RequestParam(value = "serviceId", required = false) Integer serviceId,
-            @RequestParam("quantity") int quantity,
-            @RequestParam(value = "guestId", required = false) Integer guestId,
-            Authentication authentication,
-            Model model) {
+    public String addToCart(@RequestParam(required = false) Integer productId,
+                            @RequestParam(required = false) Integer serviceId,
+                            @RequestParam int quantity,
+                            @RequestParam(required = false) Integer guestId,
+                            Authentication auth, Model model) {
         try {
-            String username = authentication.getName();
-            Guest guest;
+            String username = auth.getName();
+            Guest guest = resolveGuest(username, guestId, model);
+            if (guest == null) return "redirect:/cart";
 
-            // Regular user flow
-            if (!username.startsWith("admin_")) {
-                // First try to find associated AdmUser
-                Optional<AdmUser> userOpt = admUserRepository.findByUsername(username);
-                if (userOpt.isEmpty()) {
-                    // If not found by username, try by guest email
-                    userOpt = admUserRepository.findByGuestEmail(username);
-                }
-
-                if (userOpt.isEmpty() || userOpt.get().getGuest() == null) {
-                    model.addAttribute("errorMessage", "User account not linked to a guest profile. Please contact support.");
-                    return "redirect:/cart";
-                }
-                guest = userOpt.get().getGuest();
-            } else {
-                // Admin flow - must specify a guest
-                if (guestId == null) {
-                    model.addAttribute("errorMessage", "Admin must specify a guest when adding items to cart");
-                    return "redirect:/cart";
-                }
-                guest = guestRepository.findById(guestId)
-                        .orElseThrow(() -> new IllegalArgumentException("Guest not found: " + guestId));
-            }
-
-            // Rest of the method remains unchanged
-            Cart existingItem = null;
-            if (productId != null) {
-                existingItem = cartRepository.findByGuestAndProduct(guest,
-                        productRepository.findById(productId).orElse(null));
-            } else if (serviceId != null) {
-                existingItem = cartRepository.findByGuestAndService(guest,
-                        serviceRepository.findById(serviceId).orElse(null));
-            }
-
-            Cart cartItem = existingItem != null ? existingItem : new Cart();
-            if (existingItem == null) {
-                cartItem.setGuest(guest);
-                cartItem.setAddedAt(LocalDateTime.now());
-            }
-
-            int newQuantity = existingItem != null ? existingItem.getQuantity() + quantity : quantity;
-            cartItem.setQuantity(newQuantity);
-
-            if (productId != null) {
-                Product product = productRepository.findById(productId)
-                        .orElseThrow(() -> new IllegalArgumentException("Product not found: " + productId));
-                if (product.getStock() < newQuantity) {
-                    model.addAttribute("errorMessage", "Not enough stock for product: " + product.getName());
-                    return "redirect:/products/details/" + productId;
-                }
-                cartItem.setProduct(product);
-            } else if (serviceId != null) {
-                Service service = serviceRepository.findById(serviceId)
-                        .orElseThrow(() -> new IllegalArgumentException("Service not found: " + serviceId));
-                if (!service.isAvailable()) {
-                    model.addAttribute("errorMessage", "Service not available: " + service.getName());
-                    return "redirect:/services/details/" + serviceId;
-                }
-                cartItem.setService(service);
-            } else {
-                throw new IllegalArgumentException("Either productId or serviceId must be provided.");
-            }
+            Cart cartItem = findOrCreateCartItem(guest, productId, serviceId, quantity);
+            if (!validateAndAssignItem(cartItem, productId, serviceId, quantity, model)) return "redirect:/cart";
 
             cartRepository.save(cartItem);
             model.addAttribute("successMessage", "Item added to cart successfully!");
-            return "redirect:/cart";
         } catch (Exception e) {
             model.addAttribute("errorMessage", "Error adding to cart: " + e.getMessage());
-            if (productId != null) {
-                return "redirect:/products/details/" + productId;
-            } else if (serviceId != null) {
-                return "redirect:/services/details/" + serviceId;
-            }
-            return "redirect:/cart";
         }
+        return "redirect:/cart";
     }
 
+    // Rimuove un elemento dal carrello
     @PostMapping("/remove/{id}")
-    public String removeFromCart(@PathVariable("id") int id, Model model) {
+    public String removeFromCart(@PathVariable int id, Model model) {
         try {
-            if (cartRepository.existsById(id)) {
+            cartRepository.findById(id).ifPresent(cart -> {
                 cartRepository.deleteById(id);
                 model.addAttribute("successMessage", "Item removed from cart!");
-            }
-            return "redirect:/cart";
+            });
         } catch (Exception e) {
             model.addAttribute("errorMessage", "Error removing item: " + e.getMessage());
-            return "redirect:/cart";
         }
+        return "redirect:/cart";
     }
 
+    // Svuota il carrello di un utente o tutti i carrelli se admin
     @PostMapping("/clear")
-    public String clearCart(Authentication authentication,
-            @RequestParam(value = "guestId", required = false) Integer guestId,
-            Model model) {
+    public String clearCart(Authentication auth, @RequestParam(required = false) Integer guestId, Model model) {
         try {
-            String username = authentication.getName();
-
-            // Admin can clear a specific guest's cart
-            if (username.startsWith("admin_") && guestId != null) {
-                Guest guest = guestRepository.findById(guestId)
+            String username = auth.getName();
+            if (username.startsWith("admin_")) {
+                if (guestId != null) {
+                    Guest guest = guestRepository.findById(guestId)
                         .orElseThrow(() -> new IllegalArgumentException("Guest not found: " + guestId));
-                cartRepository.deleteByGuest(guest);
-                model.addAttribute("successMessage", "Cart cleared successfully for guest: " +
-                        guest.getFirstName() + " " + guest.getLastName());
-                return "redirect:/cart";
+                    cartRepository.deleteByGuest(guest);
+                    model.addAttribute("successMessage", "Cart cleared for guest: " + guest.getFirstName());
+                } else {
+                    cartRepository.deleteAll();
+                    model.addAttribute("successMessage", "All carts cleared.");
+                }
+            } else {
+                Optional<Guest> guestOpt = guestRepository.findByEmail(username);
+                if (guestOpt.isEmpty()) throw new Exception("User not linked to guest profile");
+                cartRepository.deleteByGuest(guestOpt.get());
+                model.addAttribute("successMessage", "Cart cleared successfully!");
             }
-            // Admin wants to clear all carts (system-wide)
-            else if (username.startsWith("admin_") && guestId == null) {
-                cartRepository.deleteAll();
-                model.addAttribute("successMessage", "All carts cleared from the system");
-                return "redirect:/cart";
-            }
-
-            // Regular user clears their own cart
-            Optional<Guest> guestOpt = guestRepository.findByEmail(username);
-            if (guestOpt.isEmpty()) {
-                model.addAttribute("errorMessage", "User account not linked to a guest profile");
-                return "redirect:/cart";
-            }
-
-            Guest guest = guestOpt.get();
-            cartRepository.deleteByGuest(guest);
-            model.addAttribute("successMessage", "Cart cleared successfully!");
-            return "redirect:/cart";
         } catch (Exception e) {
             model.addAttribute("errorMessage", "Error clearing cart: " + e.getMessage());
-            return "redirect:/cart";
         }
+        return "redirect:/cart";
     }
 
+    // Mostra i dettagli di un item nel carrello
     @GetMapping("/details/{id}")
-    public String showCartItemDetails(@PathVariable("id") int id, Model model) {
+    public String showCartItemDetails(@PathVariable int id, Model model) {
         try {
-            Cart cartItem = cartRepository.findById(id)
-                    .orElseThrow(() -> new IllegalArgumentException("Invalid cart item Id:" + id));
-            model.addAttribute("cartItem", cartItem);
+            Cart item = cartRepository.findById(id)
+                    .orElseThrow(() -> new IllegalArgumentException("Invalid cart item Id: " + id));
+            model.addAttribute("cartItem", item);
             return "cartItemDetails";
         } catch (Exception e) {
-            model.addAttribute("errorMessage", "Error retrieving cart item details: " + e.getMessage());
+            model.addAttribute("errorMessage", "Error retrieving item: " + e.getMessage());
             return "redirect:/cart";
         }
     }
 
+    // Aggiorna la quantità di un item nel carrello
     @PostMapping("/update/{id}")
-    public String updateCartItem(@PathVariable("id") int id,
-            @RequestParam("quantity") int quantity,
-            Model model) {
+    public String updateCartItem(@PathVariable int id, @RequestParam int quantity, Model model) {
         try {
-            Cart cartItem = cartRepository.findById(id)
-                    .orElseThrow(() -> new IllegalArgumentException("Invalid cart item Id:" + id));
-
-            // Validate quantity
-            if (quantity <= 0) {
-                model.addAttribute("errorMessage", "Quantity must be greater than zero");
-                return "redirect:/cart/details/" + id;
-            }
-
-            // Check stock if it's a product
-            if (cartItem.getProduct() != null && cartItem.getProduct().getStock() < quantity) {
-                model.addAttribute("errorMessage", "Not enough stock for product: " +
-                        cartItem.getProduct().getName());
-                return "redirect:/cart/details/" + id;
-            }
-
-            cartItem.setQuantity(quantity);
-            cartRepository.save(cartItem);
-            model.addAttribute("successMessage", "Cart item updated successfully!");
-            return "redirect:/cart";
+            Cart item = cartRepository.findById(id)
+                    .orElseThrow(() -> new IllegalArgumentException("Invalid cart item Id: " + id));
+            if (quantity <= 0) throw new IllegalArgumentException("Quantity must be > 0");
+            if (item.getProduct() != null && item.getProduct().getStock() < quantity)
+                throw new IllegalArgumentException("Insufficient stock for: " + item.getProduct().getName());
+            item.setQuantity(quantity);
+            cartRepository.save(item);
+            model.addAttribute("successMessage", "Item updated!");
         } catch (Exception e) {
-            model.addAttribute("errorMessage", "Error updating cart item: " + e.getMessage());
-            return "redirect:/cart";
+            model.addAttribute("errorMessage", e.getMessage());
         }
+        return "redirect:/cart";
     }
 
+    // Mostra il carrello di uno specifico guest (solo per admin)
     @GetMapping("/guest/{guestId}")
     @PreAuthorize("hasRole('ADMIN')")
-    public String showGuestCart(@PathVariable("guestId") int guestId, Model model) {
+    public String showGuestCart(@PathVariable int guestId, Model model) {
         try {
             Guest guest = guestRepository.findById(guestId)
-                    .orElseThrow(() -> new IllegalArgumentException("Invalid guest Id:" + guestId));
-            List<Cart> cartItems = cartRepository.findByGuest(guest);
-            model.addAttribute("cartItems", cartItems);
+                    .orElseThrow(() -> new IllegalArgumentException("Invalid guest Id: " + guestId));
+            model.addAttribute("cartItems", cartRepository.findByGuest(guest));
             model.addAttribute("guestName", guest.getFirstName() + " " + guest.getLastName());
             model.addAttribute("isAdmin", true);
             return "guestCart";
@@ -306,56 +174,111 @@ public class CartController {
         }
     }
 
+    // Mostra tutti i carrelli (solo admin)
     @GetMapping("/all")
     @PreAuthorize("hasRole('ADMIN')")
     public String listAllCartItems(Model model) {
-        List<Cart> cartItems = cartRepository.findAll();
-        model.addAttribute("cartItems", cartItems);
+        model.addAttribute("cartItems", cartRepository.findAll());
         model.addAttribute("isAdmin", true);
         return "allCarts";
     }
 
+    // Procedi al checkout per un utente normale
     @PostMapping("/checkout")
-    public String proceedToCheckout(Authentication authentication, Model model) {
-        String username = authentication.getName();
-        
-        // Admin users don't have access to the checkout page
+    public String proceedToCheckout(Authentication auth, Model model) {
+        String username = auth.getName();
         if (username.startsWith("admin_")) {
-            model.addAttribute("errorMessage", "Admin users cannot checkout. Please login as a regular user.");
+            model.addAttribute("errorMessage", "Admin users cannot checkout.");
             return "redirect:/cart";
         }
 
-        // For regular users, use the same guest lookup logic as in showCart method
-        Optional<AdmUser> userOpt = admUserRepository.findByUsername(username);
-        if (userOpt.isEmpty()) {
-            // If not found by username, try by guest email
-            userOpt = admUserRepository.findByGuestEmail(username);
-        }
-
-        if (userOpt.isEmpty() || userOpt.get().getGuest() == null) {
-            model.addAttribute("errorMessage", "User account not linked to a guest profile. Please contact support.");
+        Optional<Guest> guestOpt = getGuestByUsername(username);
+        if (guestOpt.isEmpty()) {
+            model.addAttribute("errorMessage", "User account not linked to a guest profile.");
             return "redirect:/cart";
         }
 
-        Guest guest = userOpt.get().getGuest();
-        List<Cart> cartItems = cartRepository.findByGuest(guest);
-        
+        List<Cart> cartItems = cartRepository.findByGuest(guestOpt.get());
         if (cartItems.isEmpty()) {
-            model.addAttribute("errorMessage", "Your cart is empty. Add items before proceeding to checkout.");
+            model.addAttribute("errorMessage", "Cart is empty.");
             return "redirect:/cart";
         }
 
-        // Calculate total in controller
-        double orderTotal = 0.0;
-        for (Cart item : cartItems) {
-            double price = item.getProduct() != null ? item.getProduct().getPrice().doubleValue() : item.getService().getPrice().doubleValue();
-            orderTotal += price * item.getQuantity();
-        }
-        model.addAttribute("orderTotal", orderTotal);
+        double total = cartItems.stream()
+                .mapToDouble(item -> (item.getProduct() != null ? item.getProduct().getPrice().doubleValue() : item.getService().getPrice().doubleValue()) * item.getQuantity())
+                .sum();
 
-        // Pass cart items and guest information to the checkout template
+        model.addAttribute("orderTotal", total);
         model.addAttribute("cartItems", cartItems);
-        model.addAttribute("guest", guest);
+        model.addAttribute("guest", guestOpt.get());
         return "checkout";
+    }
+
+    // ===== METODI DI SUPPORTO =====
+
+    private BigDecimal calculateCartTotal(List<Cart> items) {
+        return items.stream().map(item -> {
+            BigDecimal price = item.getProduct() != null ? item.getProduct().getPrice() : item.getService().getPrice();
+            return price.multiply(BigDecimal.valueOf(item.getQuantity()));
+        }).reduce(BigDecimal.ZERO, BigDecimal::add);
+    }
+
+    private Optional<Guest> getGuestByUsername(String username) {
+        return admUserRepository.findByUsername(username)
+                .or(() -> admUserRepository.findByGuestEmail(username))
+                .map(AdmUser::getGuest);
+    }
+
+    private Guest resolveGuest(String username, Integer guestId, Model model) {
+        if (username.startsWith("admin_")) {
+            if (guestId == null) {
+                model.addAttribute("errorMessage", "Admin must specify a guest.");
+                return null;
+            }
+            return guestRepository.findById(guestId)
+                    .orElseThrow(() -> new IllegalArgumentException("Guest not found: " + guestId));
+        } else {
+            return getGuestByUsername(username).orElse(null);
+        }
+    }
+
+    private Cart findOrCreateCartItem(Guest guest, Integer productId, Integer serviceId, int quantity) {
+        Cart existing = null;
+        if (productId != null) {
+            existing = cartRepository.findByGuestAndProduct(guest, productRepository.findById(productId).orElse(null));
+        } else if (serviceId != null) {
+            existing = cartRepository.findByGuestAndService(guest, serviceRepository.findById(serviceId).orElse(null));
+        }
+
+        Cart cart = existing != null ? existing : new Cart();
+        if (existing == null) {
+            cart.setGuest(guest);
+            cart.setAddedAt(LocalDateTime.now());
+        }
+        cart.setQuantity(existing != null ? existing.getQuantity() + quantity : quantity);
+        return cart;
+    }
+
+    private boolean validateAndAssignItem(Cart cart, Integer productId, Integer serviceId, int quantity, Model model) {
+        if (productId != null) {
+            Product product = productRepository.findById(productId)
+                    .orElseThrow(() -> new IllegalArgumentException("Product not found: " + productId));
+            if (product.getStock() < quantity) {
+                model.addAttribute("errorMessage", "Not enough stock for: " + product.getName());
+                return false;
+            }
+            cart.setProduct(product);
+        } else if (serviceId != null) {
+            Service service = serviceRepository.findById(serviceId)
+                    .orElseThrow(() -> new IllegalArgumentException("Service not found: " + serviceId));
+            if (!service.isAvailable()) {
+                model.addAttribute("errorMessage", "Service not available: " + service.getName());
+                return false;
+            }
+            cart.setService(service);
+        } else {
+            throw new IllegalArgumentException("Either productId or serviceId must be provided.");
+        }
+        return true;
     }
 }

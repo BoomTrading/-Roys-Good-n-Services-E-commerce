@@ -13,74 +13,70 @@ import java.util.List;
 
 @Controller
 @RequestMapping("/admin/users")
-@PreAuthorize("hasRole('ADMIN')") // Solo ADMIN possono accedere
+@PreAuthorize("hasRole('ADMIN')") // Accesso consentito solo agli utenti con ruolo ADMIN
 public class AdmUserController {
 
     @Autowired
     private AdmUserRepository admUserRepository;
 
-    // **Read: Lista di tutti gli utenti admin**
+    // === READ: Visualizza tutti gli utenti admin ===
     @GetMapping
     public String listAdmUsers(Model model) {
-        List<AdmUser> admUsers = admUserRepository.findAll();
-        model.addAttribute("admUsers", admUsers);
-        return "adminUsers"; // Vista Thymeleaf per la lista
+        List<AdmUser> admUsers = admUserRepository.findAll(); // Recupera tutti gli admin
+        model.addAttribute("admUsers", admUsers);              // Aggiunge lista al modello
+        return "adminUsers";                                   // Ritorna la vista Thymeleaf
     }
 
-    // **Create: Mostra form per nuovo admin**
+    // === CREATE: Mostra il form per creare un nuovo admin ===
     @GetMapping("/new")
     public String showNewAdmUserForm(Model model) {
-        model.addAttribute("admUser", new AdmUser());
-        return "newAdmUser"; // Vista Thymeleaf per il form
+        model.addAttribute("admUser", new AdmUser()); // Aggiunge oggetto vuoto al modello
+        return "newAdmUser";                          // Vista del form di inserimento
     }
 
-    // **Create: Salva nuovo admin**
+    // === CREATE: Salva il nuovo admin nel database ===
     @PostMapping("/ins")
     public String saveAdmUser(@ModelAttribute("admUser") AdmUser admUser, Model model) {
         try {
-            admUserRepository.save(admUser);
-            model.addAttribute("successMessage", "Admin user saved successfully!");
-            return "redirect:/admin/users";
+            admUserRepository.save(admUser); // Salva nel database
+            return "redirect:/admin/users";  // Redirect alla lista utenti
         } catch (Exception e) {
-            model.addAttribute("errorMessage", "Error saving admin user: " + e.getMessage());
-            return "newAdmUser";
+            model.addAttribute("errorMessage", "Errore durante il salvataggio: " + e.getMessage());
+            return "newAdmUser";             // Ritorna alla form in caso di errore
         }
     }
 
-    // **Update: Mostra form per modificare admin**
+    // === UPDATE: Mostra il form per modificare un admin esistente ===
     @GetMapping("/edit/{id}")
     public String showEditAdmUserForm(@PathVariable("id") int id, Model model) {
         AdmUser admUser = admUserRepository.findById(id)
-            .orElseThrow(() -> new IllegalArgumentException("Invalid admin user Id:" + id));
-        model.addAttribute("admUser", admUser);
-        return "editAdmUser"; // Vista Thymeleaf per il form di modifica
+            .orElseThrow(() -> new IllegalArgumentException("ID utente non valido: " + id));
+        model.addAttribute("admUser", admUser); // Aggiunge utente esistente al modello
+        return "editAdmUser";                  // Vista del form di modifica
     }
 
-    // **Update: Aggiorna admin esistente**
+    // === UPDATE: Aggiorna i dati dell'admin ===
     @PostMapping("/upd")
     public String updateAdmUser(@ModelAttribute("admUser") AdmUser admUser, Model model) {
         try {
-            admUserRepository.save(admUser);
-            model.addAttribute("successMessage", "Admin user updated successfully!");
-            return "redirect:/admin/users";
+            admUserRepository.save(admUser);  // Salva modifiche
+            return "redirect:/admin/users";   // Redirect alla lista utenti
         } catch (Exception e) {
-            model.addAttribute("errorMessage", "Error updating admin user: " + e.getMessage());
-            return "editAdmUser";
+            model.addAttribute("errorMessage", "Errore durante l'aggiornamento: " + e.getMessage());
+            return "editAdmUser";             // Ritorna al form in caso di errore
         }
     }
 
-    // **Delete: Elimina admin**
+    // === DELETE: Elimina un admin ===
     @GetMapping("/delete/{id}")
     public String deleteAdmUser(@PathVariable("id") int id, Model model) {
         try {
             if (admUserRepository.existsById(id)) {
-                admUserRepository.deleteById(id);
-                model.addAttribute("successMessage", "Admin user deleted successfully!");
+                admUserRepository.deleteById(id); // Elimina se esiste
             }
-            return "redirect:/admin/users";
         } catch (Exception e) {
-            model.addAttribute("errorMessage", "Error deleting admin user: " + e.getMessage());
-            return "redirect:/admin/users";
+            model.addAttribute("errorMessage", "Errore durante l'eliminazione: " + e.getMessage());
         }
+        return "redirect:/admin/users"; // Redirect in ogni caso alla lista
     }
 }
