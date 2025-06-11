@@ -2,6 +2,7 @@ package hotel.HotelPackage.model;
 
 import jakarta.persistence.*;
 
+
 @Entity
 @Table(name = "AdmUser")
 public class AdmUser {
